@@ -27,7 +27,14 @@ test.describe('architecture diagram', () => {
     await expect(d).toContainText('Typical responsibilities')
     await expect(d).toContainText('API design and contracts')
     for (const t of ['PHP', 'Laravel', 'Node.js', 'Python', 'WebSockets']) await expect(d).toContainText(t)
-    await expect(d).not.toContainText('Project examples')
+    await expect(d).toContainText('Where I have worked at this layer')
+  })
+
+  test('an example links to the scene that documents it', async ({ page }) => {
+    await page.locator('#architecture svg').getByRole('button', { name: /^Business Logic/ }).click()
+    await page.getByTestId('architecture-detail').getByRole('link', { name: /ERP APIs and XML-RPC/ }).click()
+    await expect(page).toHaveURL(/#experience$/)
+    await expect(page.locator('#experience')).toBeInViewport({ ratio: 0.2 })
   })
 
   test('the AI lane is marked optional and its details are shown on selection', async ({ page }) => {

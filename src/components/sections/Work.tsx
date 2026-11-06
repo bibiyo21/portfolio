@@ -40,6 +40,7 @@ export function Work() {
   return (
     <Scene id="work" tone="ivory" backdrop={<SceneBackdrop tone="ivory" />}>
       <SectionHeading
+        layout="split"
         index="03"
         eyebrow={family?.eyebrow ?? 'Featured work'}
         id="work-title"
@@ -49,7 +50,7 @@ export function Work() {
 
       {family?.relationship ? (
         <Reveal>
-          <p className="mb-10 max-w-2xl border-l-2 border-burgundy pl-5 text-ink-soft">{family.relationship}</p>
+          <p className="-mt-4 mb-10 max-w-2xl border-l-2 border-burgundy pl-5 text-ink-soft md:-mt-6 lg:ml-auto lg:max-w-[calc(5/12*100%-1.5rem)]">{family.relationship}</p>
         </Reveal>
       ) : null}
 

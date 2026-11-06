@@ -78,7 +78,7 @@ The identity is the **IS monogram**: a straight I and a stepped, round-cornered 
 | Asset | Files (`public/`) | Use |
 |---|---|---|
 | Horizontal logo | `images/brand/logo-horizontal-{light,dark}.svg` | Desktop header (46px tall), drawer (44px), footer (48px). Mark plus "Ibrahem Sotejo" in Space Grotesk 600 plus "SOLUTIONS ARCHITECT" in JetBrains Mono 500. Wordmarks are outlined, so no font is needed |
-| Symbol | `images/brand/logo-symbol-{light,dark}.svg` | Mobile and tablet header (40px), hero mark (48px) |
+| Symbol | `images/brand/logo-symbol-{light,dark}.svg` | Mobile and tablet header (40px). The hero shows the name as text instead, so the mark appears once per screen |
 | Favicon | `favicon.svg`, `favicon.ico` (16, 32, 48), `favicon-16x16.png`, `favicon-32x32.png` | Burgundy tile with a peach monogram. The SVG switches to a peach tile with a deep-burgundy monogram on dark browser themes |
 | App icons | `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png`, `site.webmanifest` | Home screen and install |
 | Social | `images/illustrations/og-image.png` (1200 x 630) | Open Graph and Twitter card |
@@ -110,7 +110,7 @@ Each scene is a semantic `<section>` with a stable `id`, `data-scene`, `aria-lab
 
 | # | id | Tab group | Tone | Content |
 |---|---|---|---|---|
-| 1 | `home` | Home | dark | Hero. Staggered headline, architectural geometry at depth |
+| 1 | `home` | Home | dark | Hero. Name first, staggered headline, then the representative system layers (from `philosophy.yaml`) at depth, linking to Architecture. Phones show the copy only |
 | 2 | `about` | About | ivory | Biography, three strengths, layered shapes |
 | 3 | `expertise` | Expertise | soft peach | Capability pillars and categorised skills |
 | 4 | `work` | Work | ivory | Featured work, GTI family entry cards |
@@ -242,7 +242,7 @@ Used for Contact ("Let's Start a Conversation") and Project detail. Built on Rad
 
 - Warm grading: photos feel slightly warm, soft contrast. Cool/blue-heavy imagery is avoided or overlaid with a `burgundy @ 12%` multiply tint.
 - All images sit inside a clipped container with a radius token and a fixed aspect ratio (no layout shift). `object-fit: cover`.
-- Portrait (only when the owner supplies an approved photo): 4:5, radius 28px, an offset `peach` block behind. Until then the hero uses original SVG architectural geometry and no person image or silhouette.
+- Portrait (only when the owner supplies an approved photo): 4:5, radius 28px, an offset `peach` block behind. Until then the hero shows the representative system layers (real content from the Architecture scene) and no person image or silhouette.
 - Project media: 4:3 or 3:2. Hover scale 1.04. Screenshots sit on a `peach-soft` backdrop with 20px inner padding when shown contained.
 - Stock and architectural imagery: desaturate 10-15%, overlay `linear-gradient(to top, rgba(61,20,38,.55), transparent)` when text sits on it.
 - Logos: 48px tile, radius 12px, `peach-soft` fill, `object-contain` with 8px padding. Missing logos use a monogram tile (Space Grotesk initial on `peach`).
@@ -314,3 +314,12 @@ Rules: no horizontal overflow from 320px up. Touch targets at least 44x44px. Inp
 - Navigation: `src/components/layout/Navbar.tsx` (desktop tabs, mobile label and drawer).
 - Sections: `src/components/sections/*`; FAQ: `src/components/faq/*`; case studies: `src/components/projects/*`; diagrams: `src/components/diagrams/*`.
 - Content: `src/content/*.yaml`, validated by `src/lib/content-schemas.ts` at build.
+
+## Scene rhythm (2026-11 refinement)
+
+- **Section headings** come in two layouts. `stack` (eyebrow, title, intro below) is used for About, Experience, Recognition and FAQ. `split` (intro beside the title on large screens) is used for Expertise, Work, Architecture and CI/CD. Alternating them breaks the repeated template feel and shortens the header.
+- **Evidence first.** The first four contributions of a role are visible without a click, in a two-column list with a burgundy rule. Roles with no published details sit side by side in one compact row. GTI case studies open Role and Architecture by default.
+- **Short scenes.** CI/CD keeps the pipeline diagram, stage detail and the two summaries visible; stages, jobs, quality gates, tools and the workflow file sit in an accordion. On phones the pipeline nodes are single-line, and capability cards become a swipeable row (scroll-snap, focusable region).
+- **Connections.** Capability cards and architecture layers link to the scene that documents the work (Work, GTI, Experience). Architecture examples name only work documented elsewhere on the site.
+- **GTI pair.** The Work cards use different crops of each live site (Main: homepage hero, North: its Ongoing Programs section) so they are told apart at a glance.
+- **Hero motion.** Hero copy fades over 550ms with delays under 0.5s. On phones the intro paragraph is the largest element, so it must paint early.

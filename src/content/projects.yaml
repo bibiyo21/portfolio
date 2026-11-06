@@ -120,8 +120,10 @@ items:
         text: "Keeping location-specific rules from leaking into shared code."
     outcome: []
     thumbnail:
-      src: "/images/projects/gti-north-desktop-720.webp"
-      alt: "Screenshot of the GTI North homepage on desktop: a coach in a navy GTI cap in front of a goal net behind the headline Become the trusted goaltender that every team wants, with a teal Book Now button and Find Your Program and Be a GTInsider buttons."
+      # A different crop from the homepage hero, so the two GTI cards are told apart at a glance.
+      src: "/images/projects/gti-north-programs-720.webp"
+      srcSet: "/images/projects/gti-north-programs-720.webp 720w, /images/projects/gti-north-programs.webp 1440w"
+      alt: "Screenshot of the GTI North homepage on desktop: the Ongoing Programs section with Pre-Season Program 2026, In-Season Phase 1 and In-Season Phase 2 cards, each showing a goalie photo, a season label and a Learn More button."
       width: 720
       height: 450
     preview:

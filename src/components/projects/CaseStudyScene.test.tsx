@@ -26,16 +26,19 @@ describe('CaseStudyScene', () => {
     expect(within(nav).getByText('GTI North')).toHaveAttribute('aria-current', 'true')
   })
 
-  it('exposes the case-study sections as an accessible accordion, role open by default', async () => {
+  it('exposes the case-study sections as an accessible accordion, role and approach open by default', async () => {
     const user = userEvent.setup()
     renderWithApp(<CaseStudyScene project={main} tone="dark" number="04" />)
     const role = screen.getByRole('button', { name: 'Role and contribution' })
     expect(role).toHaveAttribute('aria-expanded', 'true')
     expect(screen.getByText('Worked on the GTI website redesign.')).toBeInTheDocument()
     const approach = screen.getByRole('button', { name: 'Architecture and approach' })
-    expect(approach).toHaveAttribute('aria-expanded', 'false')
-    await user.click(approach)
-    expect(await screen.findAllByText('Proposed / designed')).toHaveLength(main.approach.length)
+    expect(approach).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getAllByText('Proposed / designed')).toHaveLength(main.approach.length)
+    const tech = screen.getByRole('button', { name: 'Technology' })
+    expect(tech).toHaveAttribute('aria-expanded', 'false')
+    await user.click(tech)
+    expect(tech).toHaveAttribute('aria-expanded', 'true')
   })
 
   it('omits the outcome section when no verified outcome is supplied, and links only to the supplied URL', () => {

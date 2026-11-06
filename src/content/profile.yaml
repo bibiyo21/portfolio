@@ -67,22 +67,27 @@ capabilities:
       title: "Solution Architecture"
       text: "Requirements analysis, architecture documents with sequence diagrams and flowcharts, and application and infrastructure analysis."
       technologies: ["Microservices", "Micro-frontends", "Docker", "AWS"]
+      link: { label: "See the architecture view", href: "#architecture" }
     - id: fullstack
       title: "Full-Stack Application Development"
       text: "Frontend and backend web applications, from interfaces to services and data."
       technologies: ["React.js", "TypeScript", "PHP", "Node.js", "Laravel"]
+      link: { label: "See the Venue Seat Planner", href: "#work" }
     - id: modernization
       title: "Application Modernization"
       text: "Moving legacy applications to current stacks while keeping the business running."
       technologies: ["CakePHP", "Laravel", "React.js"]
+      link: { label: "See the Solutions30 role", href: "#experience" }
     - id: micro
       title: "Microservices and Micro-frontends"
       text: "Service and frontend decomposition that teams can manage and ship independently."
       technologies: ["Single-SPA", "Webpack", "TurboRepo", "Microservices"]
+      link: { label: "See the Solutions30 role", href: "#experience" }
     - id: integration
       title: "API and Enterprise Integrations"
       text: "Connecting applications to ERP systems and other services so data becomes useful information."
       technologies: ["REST APIs", "XML-RPC", "WebSockets"]
+      link: { label: "See the Solutions30 role", href: "#experience" }
     - id: wordpress
       title: "WordPress and WooCommerce"
       text: "Content and commerce platforms, including the GTI digital platform work."

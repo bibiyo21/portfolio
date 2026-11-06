@@ -1,11 +1,11 @@
-import { render, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MotionConfig } from 'framer-motion'
 import { describe, expect, it } from 'vitest'
 import { philosophy } from '../../lib/content-loader'
 import { ArchitectureDiagram } from './ArchitectureDiagram'
+import { renderWithApp } from '../../test/render'
 
-const wrap = () => render(<MotionConfig reducedMotion="always"><ArchitectureDiagram /></MotionConfig>)
+const wrap = () => renderWithApp(<ArchitectureDiagram />)
 
 describe('ArchitectureDiagram', () => {
   it('renders a pressable node for every layer including the optional AI lane', () => {
@@ -33,13 +33,25 @@ describe('ArchitectureDiagram', () => {
     for (const r of node.responsibilities) expect(within(detail).getByText(r)).toBeInTheDocument()
   })
 
-  it('does not claim project examples when none are supported', async () => {
+  it('names only documented work as examples, each linking to the scene that documents it', async () => {
     const user = userEvent.setup()
     wrap()
+    const scenes = ['#work', '#gti-main', '#experience']
     for (const n of philosophy.diagram.nodes) {
       await user.click(screen.getByRole('button', { name: new RegExp(`^${n.label.replace(/[/]/g, '\\/')}`) }))
-      expect(within(screen.getByTestId('architecture-detail')).queryByText('Project examples')).not.toBeInTheDocument()
+      const detail = screen.getByTestId('architecture-detail')
+      if (n.examples.length === 0) {
+        expect(within(detail).queryByText('Where I have worked at this layer')).not.toBeInTheDocument()
+        continue
+      }
+      for (const x of n.examples) {
+        if (typeof x === 'string') continue
+        expect(scenes).toContain(x.href)
+        expect(within(detail).getByRole('link', { name: x.text })).toHaveAttribute('href', x.href)
+      }
     }
+    // The optional AI lane has no delivery example, so it shows none.
+    expect(philosophy.diagram.nodes.find((n) => n.lane === 'ai')!.examples).toEqual([])
   })
 
   it('labels the diagram as representative and supports keyboard selection', async () => {

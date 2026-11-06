@@ -1,6 +1,5 @@
 import { MotionConfig } from 'framer-motion'
-import { useEffect } from 'react'
-import { ContactModal } from './components/contact/ContactModal'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Footer } from './components/layout/Footer'
 import { Navbar } from './components/layout/Navbar'
 import { CaseStudyScene } from './components/projects/CaseStudyScene'
@@ -15,10 +14,39 @@ import { Faq } from './components/sections/Faq'
 import { Hero } from './components/sections/Hero'
 import { Recognition } from './components/sections/Recognition'
 import { Work } from './components/sections/Work'
-import { ContactModalProvider } from './hooks/useContactModal'
+import { ContactModalProvider, useContactModal } from './hooks/useContactModal'
 import { SceneProvider } from './hooks/useScene'
 import { profile, projects } from './lib/content-loader'
 import { scenes } from './lib/scenes'
+
+// The inquiry form (with its validation and reCAPTCHA code) loads on first open, and is fetched in the
+// background shortly after the page settles so opening it rarely waits.
+const loadContactModal = () => import('./components/contact/ContactModal')
+const ContactModal = lazy(() => loadContactModal().then((m) => ({ default: m.ContactModal })))
+
+function LazyContactModal() {
+  const { open } = useContactModal()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    if (open) setMounted(true)
+  }, [open])
+  useEffect(() => {
+    const warm = () => void loadContactModal()
+    const t = window.setTimeout(warm, 2500)
+    window.addEventListener('pointerdown', warm, { once: true, capture: true })
+    window.addEventListener('keydown', warm, { once: true, capture: true })
+    return () => {
+      window.clearTimeout(t)
+      window.removeEventListener('pointerdown', warm, { capture: true })
+      window.removeEventListener('keydown', warm, { capture: true })
+    }
+  }, [])
+  return mounted ? (
+    <Suspense fallback={null}>
+      <ContactModal />
+    </Suspense>
+  ) : null
+}
 
 export default function App() {
   useEffect(() => {
@@ -59,7 +87,7 @@ export default function App() {
             <Contact />
           </main>
           <Footer />
-          <ContactModal />
+          <LazyContactModal />
         </SceneProvider>
       </ContactModalProvider>
     </MotionConfig>

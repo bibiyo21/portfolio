@@ -1,5 +1,5 @@
 import { load } from 'js-yaml'
-import { contentSchemas, formatZodError, type ContentName } from './content-schemas'
+import { contentSchemas, formatZodError, type ContentName } from './content-schemas.ts'
 
 type Output<N extends ContentName> = ReturnType<(typeof contentSchemas)[N]['parse']>
 

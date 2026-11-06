@@ -1,24 +1,18 @@
-import { parseContent } from './content-parse'
-import profileRaw from '../content/profile.yaml?raw'
-import experienceRaw from '../content/experience.yaml?raw'
-import educationRaw from '../content/education.yaml?raw'
-import certificationsRaw from '../content/certifications.yaml?raw'
-import awardsRaw from '../content/awards.yaml?raw'
-import skillsRaw from '../content/skills.yaml?raw'
-import projectsRaw from '../content/projects.yaml?raw'
-import affiliationsRaw from '../content/affiliations.yaml?raw'
-import philosophyRaw from '../content/philosophy.yaml?raw'
-import cicdRaw from '../content/cicd.yaml?raw'
-import faqRaw from '../content/faq.yaml?raw'
+// Content is parsed and validated at build time by scripts/vite-content-plugin.ts, so this module only
+// re-exports plain data. To change what the site says, edit the YAML files in src/content.
+import raw from 'virtual:content'
+import type { ContentData } from './content-schemas'
 
-export const profile = parseContent('profile', profileRaw)
-export const experience = parseContent('experience', experienceRaw)
-export const education = parseContent('education', educationRaw)
-export const certifications = parseContent('certifications', certificationsRaw)
-export const awards = parseContent('awards', awardsRaw)
-export const skills = parseContent('skills', skillsRaw)
-export const projects = parseContent('projects', projectsRaw)
-export const affiliations = parseContent('affiliations', affiliationsRaw)
-export const philosophy = parseContent('philosophy', philosophyRaw)
-export const cicd = parseContent('cicd', cicdRaw).cicd
-export const faq = parseContent('faq', faqRaw)
+const content = raw as ContentData
+
+export const profile = content.profile
+export const experience = content.experience
+export const education = content.education
+export const certifications = content.certifications
+export const awards = content.awards
+export const skills = content.skills
+export const projects = content.projects
+export const affiliations = content.affiliations
+export const philosophy = content.philosophy
+export const cicd = content.cicd.cicd
+export const faq = content.faq

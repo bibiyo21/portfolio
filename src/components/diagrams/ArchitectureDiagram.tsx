@@ -1,3 +1,4 @@
+import { useScene } from '../../hooks/useScene'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useId, useState, type KeyboardEvent } from 'react'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
@@ -31,6 +32,7 @@ interface Box {
 
 /** Representative architecture. Nodes are buttons. Wide screens flow left to right, narrow screens top to bottom. */
 export function ArchitectureDiagram() {
+  const { goTo } = useScene()
   const nodes = philosophy.diagram.nodes
   const main = nodes.filter((n) => n.lane === 'main')
   const ai = nodes.find((n) => n.lane === 'ai')
@@ -217,11 +219,26 @@ export function ArchitectureDiagram() {
             ) : null}
             {active.examples.length > 0 ? (
               <div className="md:col-span-2">
-                <h4 className="t-eyebrow mb-3 text-peach">Project examples</h4>
+                <h4 className="t-eyebrow mb-3 text-peach">Where I have worked at this layer</h4>
                 <ul className="list-disc space-y-1.5 pl-5 text-on-dark-soft marker:text-peach">
-                  {active.examples.map((x) => (
-                    <li key={x}>{x}</li>
-                  ))}
+                  {active.examples.map((x) =>
+                    typeof x === 'string' ? (
+                      <li key={x}>{x}</li>
+                    ) : (
+                      <li key={x.text}>
+                        <a
+                          href={x.href}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            goTo(x.href.slice(1))
+                          }}
+                          className="underline decoration-peach/40 underline-offset-4 transition-colors hover:text-ivory hover:decoration-peach"
+                        >
+                          {x.text}
+                        </a>
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
             ) : null}

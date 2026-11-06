@@ -65,16 +65,17 @@ test.describe('featured work and GTI case studies', () => {
     await jumpToScene(page, 'gti-main')
     const scene = page.locator('#gti-main')
     const approach = scene.getByRole('button', { name: 'Architecture and approach' })
-    await expect(approach).toHaveAttribute('aria-expanded', 'false')
+    // Role and approach are open by default so the evidence needs no click.
+    await expect(approach).toHaveAttribute('aria-expanded', 'true')
     await approach.click()
+    await expect(approach).toHaveAttribute('aria-expanded', 'false')
+    await approach.focus()
+    await page.keyboard.press('Enter')
     await expect(approach).toHaveAttribute('aria-expanded', 'true')
     const region = scene.getByRole('region', { name: 'Architecture and approach' })
     await expect(region).toContainText('Proposed / designed')
     await expect(region).toContainText('Registration and payment workflow')
     await expect.poll(() => region.evaluate((e) => e.scrollHeight - e.clientHeight), { timeout: 4000 }).toBeLessThanOrEqual(2)
-    await approach.focus()
-    await page.keyboard.press('Enter')
-    await expect(approach).toHaveAttribute('aria-expanded', 'false')
   })
 
   test('statuses are labelled and nothing is claimed as implemented', async ({ page }) => {

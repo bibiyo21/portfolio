@@ -242,8 +242,10 @@ export const philosophySchema = z.object({
           purpose: nonEmpty,
           responsibilities: z.array(nonEmpty).default([]),
           technologies: z.array(nonEmpty).default([]),
-          // Project examples, only when supported.
-          examples: z.array(nonEmpty).default([]),
+          // Examples of documented work. Plain text, or text with an in-page link to the scene that documents it.
+          examples: z
+            .array(z.union([nonEmpty, z.object({ text: nonEmpty, href: z.string().regex(/^#[a-z0-9-]+$/) })]))
+            .default([]),
         }),
       )
       .min(2),
@@ -320,3 +322,6 @@ export function formatZodError(name: string, error: z.ZodError): string {
   const lines = error.issues.map((i) => `  - ${i.path.join('.') || '(root)'}: ${i.message}`)
   return `Invalid content in src/content/${name}.yaml\n${lines.join('\n')}`
 }
+
+/** Every content file after parsing and validation, as served by the build-time content plugin. */
+export type ContentData = { [N in ContentName]: z.output<(typeof contentSchemas)[N]> }

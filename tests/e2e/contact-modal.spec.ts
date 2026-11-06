@@ -34,6 +34,8 @@ test.describe('contact modal', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: /Let.s Connect/ }).first().click()
+    // The form loads on demand, so wait for it before each check.
+    await expect(page.getByRole('dialog', { name: title })).toBeVisible()
   })
 
   test('opens from the hero with title, description, fields and buttons', async ({ page }) => {

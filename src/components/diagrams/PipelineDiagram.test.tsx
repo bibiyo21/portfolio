@@ -37,7 +37,7 @@ describe('PipelineDiagram', () => {
   it('supports keyboard selection', async () => {
     const user = userEvent.setup()
     wrap(<PipelineDiagram platform={github} />)
-    const second = screen.getAllByRole('button', { name: /^Stage/ })[1]!
+    const second = screen.getAllByRole('button', { name: /^Stage \d/ })[1]!
     second.focus()
     await user.keyboard('{Enter}')
     expect(second).toHaveAttribute('aria-pressed', 'true')
@@ -67,15 +67,18 @@ describe('CICDShowcase', () => {
     const user = userEvent.setup()
     wrap(<CICDShowcase />)
     expect(screen.getByRole('tab', { name: 'GitHub Actions' })).toHaveAttribute('aria-selected', 'true')
+    await user.click(screen.getByRole('button', { name: 'Workflow example' }))
     expect(screen.getByRole('region', { name: /GitHub Actions workflow file/ })).toBeInTheDocument()
     await user.click(screen.getByRole('tab', { name: 'GitLab CI/CD' }))
     expect(screen.getByRole('tab', { name: 'GitLab CI/CD' })).toHaveAttribute('aria-selected', 'true')
+    await user.click(screen.getByRole('button', { name: 'Workflow example' }))
     expect(screen.getByRole('region', { name: /GitLab CI\/CD workflow file/ })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /^Stage/ })).toHaveLength(gitlab.stages.length)
+    expect(screen.getAllByRole('button', { name: /^Stage \d/ })).toHaveLength(gitlab.stages.length)
   })
 
-  it('only links to workflow files that exist in this repository', () => {
+  it('only links to workflow files that exist in this repository', async () => {
     wrap(<CICDShowcase />)
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Workflow example' }))
     const link = screen.getByRole('link', { name: /View on GitHub/ })
     expect(link).toHaveAttribute('href', 'https://github.com/bibiyo21/portfolio/blob/main/.github/workflows/ci-cd.yml')
     expect(existsSync(join(process.cwd(), github.workflow))).toBe(true)
@@ -99,6 +102,13 @@ describe('CICDShowcase', () => {
     expect(gh).not.toContain('  e2e-test:')
     // The Playwright tests themselves are still in the repo and run locally.
     expect(existsSync(join(process.cwd(), 'tests/playwright.config.ts'))).toBe(true)
+  })
+
+  it('keeps reference detail collapsed so the scene stays short', () => {
+    wrap(<CICDShowcase />)
+    for (const name of ['Stages', 'Jobs', 'Quality gates', 'Tools', 'Workflow example'])
+      expect(screen.getByRole('button', { name })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('heading', { name: 'Pipeline architecture' })).toBeInTheDocument()
   })
 
   it('does not claim a live or successful pipeline', () => {

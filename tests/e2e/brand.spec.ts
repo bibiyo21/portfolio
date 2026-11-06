@@ -25,9 +25,10 @@ test.describe('logo', () => {
     expect((box!.height * 22) / 64).toBeGreaterThanOrEqual(14)
   })
 
-  test('the hero carries the IS mark and the footer carries the full logo', async ({ page }) => {
+  test('the hero names the owner once (no second logo) and the footer carries the full logo', async ({ page }) => {
     await page.goto('/')
-    await expect(page.locator('#home img[src*="logo-symbol-dark"]')).toBeVisible()
+    await expect(page.getByTestId('hero-name')).toHaveText(/Ibrahem Sotejo/)
+    await expect(page.locator('#home img[src*="logo-symbol"]')).toHaveCount(0)
     await page.keyboard.press('End')
     await expect(page.getByRole('contentinfo').getByRole('img', { name: 'Ibrahem Sotejo, Solutions Architect' })).toBeVisible()
   })

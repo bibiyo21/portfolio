@@ -23,13 +23,17 @@ test.describe('experience and recognition', () => {
   test('Solutions30 contributions expand and use the supported wording', async ({ page }) => {
     await page.goto('/')
     await jumpToScene(page, 'experience')
-    const btn = page.getByRole('button', { name: /show details for solutions architect/i })
-    await btn.click()
+    // The first contributions are visible without a click.
     await expect(page.getByText('Initiated migration from older frameworks')).toBeVisible()
+    await expect(page.getByText('Contributed to migration from CakePHP 1.3')).toBeHidden()
+    const btn = page.getByRole('button', { name: /show details for solutions architect/i })
+    await expect(btn).toContainText('All 15 contributions')
+    await btn.click()
     await expect(page.getByText('Contributed to migration from CakePHP 1.3')).toBeVisible()
     await expect(page.getByText('Conducted code reviews')).toBeVisible()
     await page.getByRole('button', { name: /hide details for solutions architect/i }).click()
-    await expect(page.getByText('Initiated migration from older frameworks')).toBeHidden()
+    await expect(page.getByText('Contributed to migration from CakePHP 1.3')).toBeHidden()
+    await expect(page.getByText('Initiated migration from older frameworks')).toBeVisible()
   })
 
   test('shows no placeholder text for roles without supplied details', async ({ page }) => {

@@ -15,11 +15,16 @@ function hasDetails(r: ExperienceRole): boolean {
   return r.responsibilities.length > 0 || r.achievements.length > 0 || r.technologies.length > 0
 }
 
+const PREVIEW = 4
+
 function RoleRow({ role }: { role: ExperienceRole }) {
   const [open, setOpen] = useState(false)
   const reduce = useReducedMotion()
   const panelId = useId()
-  const expandable = hasDetails(role)
+  // The first few contributions are always visible so the strongest evidence needs no click.
+  const preview = role.responsibilities.slice(0, PREVIEW)
+  const rest = role.responsibilities.slice(PREVIEW)
+  const expandable = rest.length > 0 || role.achievements.length > 0 || role.technologies.length > 0
   const count = role.responsibilities.length + role.achievements.length
 
   return (
@@ -38,12 +43,21 @@ function RoleRow({ role }: { role: ExperienceRole }) {
             onClick={() => setOpen((v) => !v)}
             className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-peach-soft px-4 text-sm font-medium text-burgundy-dark transition-colors hover:bg-peach"
           >
-            {open ? 'Hide' : count > 0 ? `${count} contributions` : 'Details'}
+            {open ? 'Show fewer' : preview.length > 0 ? `All ${count} contributions` : count > 0 ? `${count} contributions` : 'Details'}
             <ChevronDown className={`size-4 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden />
           </button>
         ) : null}
       </div>
       {role.summary ? <p className="mt-3 max-w-[62ch] text-ink-soft">{role.summary}</p> : null}
+      {preview.length > 0 ? (
+        <ul className="mt-4 grid gap-x-10 gap-y-3 text-ink-soft md:grid-cols-2" data-testid="contribution-preview">
+          {preview.map((r) => (
+            <li key={r} className="border-l-2 border-burgundy/30 pl-4">
+              {r}
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <AnimatePresence initial={false}>
         {open && expandable ? (
           <motion.div
@@ -55,10 +69,12 @@ function RoleRow({ role }: { role: ExperienceRole }) {
             className="overflow-hidden"
           >
             <div className="space-y-5 pt-4">
-              {role.responsibilities.length > 0 ? (
-                <ul className="list-disc space-y-2 pl-5 text-ink-soft marker:text-burgundy">
-                  {role.responsibilities.map((r) => (
-                    <li key={r}>{r}</li>
+              {rest.length > 0 ? (
+                <ul className="grid gap-x-10 gap-y-3 text-ink-soft md:grid-cols-2">
+                  {rest.map((r) => (
+                    <li key={r} className="border-l-2 border-burgundy/30 pl-4">
+                      {r}
+                    </li>
                   ))}
                 </ul>
               ) : null}
@@ -138,11 +154,23 @@ export function Experience() {
                 className="rounded-[20px] border border-line bg-ivory p-6 transition-colors duration-300 hover:border-burgundy md:p-8"
               >
                 <h3 className="t-heading-m">{g.company}</h3>
-                <div className="mt-2 divide-y divide-line">
-                  {g.roles.map((r) => (
-                    <RoleRow key={r.id} role={r} />
-                  ))}
-                </div>
+                {g.roles.some(hasDetails) ? (
+                  <div className="mt-2 divide-y divide-line">
+                    {g.roles.map((r) => (
+                      <RoleRow key={r.id} role={r} />
+                    ))}
+                  </div>
+                ) : (
+                  // Roles without published details sit side by side, so an empty role does not take a full card.
+                  <ul className="mt-4 grid gap-4 sm:grid-cols-2" data-testid="compact-roles">
+                    {g.roles.map((r) => (
+                      <li key={r.id}>
+                        <h4 className="t-heading-s">{r.title}</h4>
+                        <p className="t-caption mt-1 tabular-nums text-ink-mute">{r.period}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 {leadership.map((l) => (
                   <LeadershipRow key={l.id} item={l} />
                 ))}

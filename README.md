@@ -35,7 +35,7 @@ The page is twelve near-full-viewport **scenes** on native scrolling with CSS Sc
 |---|---|
 | `npm run dev` / `build` / `preview` | Vite dev server, production build, preview |
 | `npm run typecheck` | `tsc --noEmit` (strict) |
-| `npm run content:validate` | Parses and validates every `src/content/*.yaml` with Zod. `build` runs it first |
+| `npm run content:validate` | Parses and validates every `src/content/*.yaml` with Zod. `build` runs it first. The build also parses the YAML through `scripts/vite-content-plugin.ts`, so the browser receives plain JSON and never ships the YAML parser |
 | `npm run test:unit` | Vitest and React Testing Library (also covers the `api/contact.ts` handler) |
 | `npm run test:coverage` | Unit tests with a coverage report in `coverage/` |
 | `npm run test:e2e` | Playwright. Starts the dev server, or the preview server when `E2E_PREVIEW=1`. `E2E_PORT` picks another port so a dev server you already run is not reused |
@@ -216,10 +216,10 @@ The CI/CD scene on the site is driven by `cicd.yaml` and shows the real workflow
 |---|---|
 | `npm run content:validate` | 11 of 11 files valid |
 | `npm run typecheck` | no errors |
-| `npm run test:unit` | 199 tests passed (coverage: 86% lines, 85% statements, 72% branches, 81% functions) |
-| `npm run build` | succeeded (JS 713 kB, 218 kB gzip) |
-| Playwright, Chromium, against a production build (built with a fake site key, Google stubbed) | 308 passed, 5 skipped (touch-target checks that only apply below 1024px) |
-| Playwright, Firefox and WebKit | **not run**. Firefox fails to launch and WebKit blocks localhost in the sandbox used for development. The GitHub workflow installs all browsers and runs them |
+| `npm run test:unit` | 205 tests passed (coverage: 86% lines, 85% statements) |
+| `npm run build` | succeeded (main JS 570 kB, 178 kB gzip; the inquiry form is a separate 87 kB chunk loaded on demand) |
+| Playwright, Chromium, against a production build (built with a fake site key, Google stubbed) | 309 passed, 5 skipped (touch-target checks that only apply below 1024px) |
+| Playwright, Firefox and WebKit | **not run**. Firefox fails to launch and WebKit blocks localhost in the sandbox used for development. Playwright is not run in CI at the moment |
 | GitHub Actions, GitLab CI/CD | **not run** remotely |
 
 ## Content that still needs the owner
@@ -250,7 +250,7 @@ src/lib/                    scenes, content-schemas, content-parse, content-load
 src/hooks/                  useScene, useMediaQuery, useParallaxScale, useContactModal
 src/components/
   layout/                   Navbar, Footer, Container
-  scenes/                   Scene, ParallaxLayer, SceneBackdrop, SceneControls, HeroGeometry
+  scenes/                   Scene, ParallaxLayer, SceneBackdrop, SceneControls, HeroSystem
   sections/                 Hero, About, Expertise, Work, Experience, Architecture, CICDShowcase, Recognition, Faq, Contact
   projects/                 CaseStudyScene, ProjectCard, ProjectDetail, StatusChip
   diagrams/                 ArchitectureDiagram, PipelineDiagram, YamlCode

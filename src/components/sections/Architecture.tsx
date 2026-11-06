@@ -9,6 +9,7 @@ export function Architecture() {
   return (
     <Scene id="architecture" tone="dark" backdrop={<SceneBackdrop tone="dark" variant="b" />}>
       <SectionHeading
+        layout="split"
         index="07"
         eyebrow="Architecture"
         id="architecture-title"

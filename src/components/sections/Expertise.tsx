@@ -5,7 +5,6 @@ import { SceneBackdrop } from '../scenes/SceneBackdrop'
 import { Reveal } from '../ui/Reveal'
 import { SectionHeading } from '../ui/SectionHeading'
 import { SkillTag } from '../ui/SkillTag'
-import { Tag } from '../ui/Tag'
 import { useScene } from '../../hooks/useScene'
 import { profile, skills } from '../../lib/content-loader'
 import { getIcon } from '../../lib/icons'
@@ -20,6 +19,7 @@ export function Expertise() {
   return (
     <Scene id="expertise" tone="soft" backdrop={<SceneBackdrop tone="soft" />}>
       <SectionHeading
+        layout="split"
         index="02"
         eyebrow={capabilities.eyebrow}
         id="expertise-title"
@@ -27,23 +27,32 @@ export function Expertise() {
         intro={capabilities.intro}
       />
 
-      <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* On phones the cards become a swipeable row, so eight cards do not stack into several screens. */}
+      <ul
+        tabIndex={0}
+        aria-label="Capabilities"
+        data-testid="capability-list"
+        className="-mx-[var(--gutter)] flex snap-x snap-mandatory scroll-px-[var(--gutter)] gap-4 overflow-x-auto px-[var(--gutter)] pb-3 outline-offset-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-4"
+      >
         {capabilities.items.map((c, i) => (
-          <Reveal as="li" key={c.id} delay={(i % 4) * 0.07}>
+          <Reveal as="li" key={c.id} delay={(i % 4) * 0.07} className="w-[82%] shrink-0 snap-start sm:w-auto">
             <article
               data-testid="capability-card"
-              className="group flex h-full flex-col rounded-[20px] border border-line bg-ivory p-6 transition-colors duration-300 hover:border-burgundy"
+              className="group flex h-full flex-col rounded-[20px] border border-line bg-ivory p-5 transition-colors xl:p-6 duration-300 hover:border-burgundy"
             >
               <p className="t-eyebrow tabular-nums text-burgundy">{String(i + 1).padStart(2, '0')}</p>
               <h3 className="t-heading-s mt-2">{c.title}</h3>
               <p className="mt-2 text-ink-soft">{c.text}</p>
               {c.technologies.length > 0 ? (
-                <ul className="mt-4 flex flex-wrap gap-1.5" aria-label={`${c.title} technologies`}>
-                  {c.technologies.map((t) => (
+                // A compact mono line instead of pills: the skills explorer below holds the full tag lists.
+                <ul
+                  className="mt-4 flex flex-wrap gap-x-2 gap-y-1 border-t border-line pt-3 font-mono text-[0.72rem] tracking-[0.02em] text-burgundy"
+                  aria-label={`${c.title} technologies`}
+                >
+                  {c.technologies.map((t, ti) => (
                     <li key={t}>
-                      <Tag variant="outline" className="normal-case tracking-normal">
-                        {t}
-                      </Tag>
+                      {t}
+                      {ti < c.technologies.length - 1 ? <span aria-hidden className="ml-2 text-ink-mute">/</span> : null}
                     </li>
                   ))}
                 </ul>
@@ -65,7 +74,7 @@ export function Expertise() {
         ))}
       </ul>
 
-      <div className="mt-16">
+      <div className="mt-12">
         <Reveal>
           <h3 className="t-heading-m">Skills explorer</h3>
           <p className="mt-3 max-w-2xl text-ink-soft">{skills.intro}</p>

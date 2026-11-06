@@ -9,8 +9,8 @@ const NODE_W = 150
 const NODE_H = 92
 const GAP_H = 40
 const V_W = 340
-const V_NODE_H = 76
-const V_GAP = 36
+const V_NODE_H = 58
+const V_GAP = 18
 
 function wrap(name: string, max: number): string[] {
   const words = name.split(' ')
@@ -111,7 +111,7 @@ export function PipelineDiagram({ platform, legend }: { platform: CicdPlatform; 
               />
               <text
                 x={x + 18}
-                y={y + 26}
+                y={horizontal ? y + 26 : y + nodeH / 2 + 4}
                 fontSize={11}
                 letterSpacing="0.14em"
                 fill={selected ? '#3D1426' : '#F5C6AD'}
@@ -122,8 +122,8 @@ export function PipelineDiagram({ platform, legend }: { platform: CicdPlatform; 
               {lines.map((line, li) => (
                 <text
                   key={line}
-                  x={x + 18}
-                  y={y + 52 + li * 20}
+                  x={horizontal ? x + 18 : x + 52}
+                  y={horizontal ? y + 52 + li * 20 : y + nodeH / 2 + 6}
                   fontSize={17}
                   fill={selected ? '#3D1426' : '#FFF8F2'}
                   fontFamily="Space Grotesk, system-ui, sans-serif"
@@ -131,7 +131,7 @@ export function PipelineDiagram({ platform, legend }: { platform: CicdPlatform; 
                   {line}
                 </text>
               ))}
-              <g transform={`translate(${x + nodeW - 34}, ${y + 12})`}>
+              <g transform={`translate(${x + nodeW - 34}, ${horizontal ? y + 12 : y + nodeH / 2 - 11})`}>
                 <circle cx={11} cy={11} r={11} fill={selected ? '#581C35' : '#F5C6AD'} />
                 <motion.path
                   d="M6 11.5l3.2 3.2L16 7.8"

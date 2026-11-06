@@ -24,11 +24,24 @@ describe('Experience timeline', () => {
     expect(container.textContent).not.toMatch(/to be added|placeholder|\[/i)
   })
 
-  it('shows an expand control only for roles that have details', () => {
+  it('shows an expand control only for roles with more than the visible preview', () => {
     renderWithApp(<Experience />)
     expect(screen.getAllByRole('button', { name: /details for/i })).toHaveLength(
-      experience.groups.flatMap((g) => g.roles).filter((r) => r.responsibilities.length || r.achievements.length || r.technologies.length).length,
+      experience.groups.flatMap((g) => g.roles).filter((r) => r.responsibilities.length > 4 || r.achievements.length || r.technologies.length).length,
     )
+  })
+
+  it('shows the first contributions without a click', () => {
+    renderWithApp(<Experience />)
+    expect(screen.getAllByTestId('contribution-preview')[0]).toHaveTextContent(/Initiated migration from older frameworks/)
+    expect(screen.queryByText(/Wrote PHPUnit unit tests/)).not.toBeInTheDocument()
+  })
+
+  it('lays out roles without published details compactly', () => {
+    renderWithApp(<Experience />)
+    const leaptel = screen.getAllByTestId('company').find((c) => within(c).queryByRole('heading', { name: 'Leaptel' }))!
+    expect(within(leaptel).getByTestId('compact-roles')).toHaveTextContent('Solutions Architect')
+    expect(within(leaptel).queryByRole('button')).not.toBeInTheDocument()
   })
 
   it('expands Solutions30 contributions using the supported verbs', async () => {

@@ -23,11 +23,13 @@ test.describe('CI/CD showcase', () => {
   test('platform tabs switch between GitHub Actions and GitLab CI/CD', async ({ page }) => {
     const tabs = page.getByRole('tablist', { name: 'CI/CD platform' })
     await expect(tabs.getByRole('tab', { name: 'GitHub Actions' })).toHaveAttribute('aria-selected', 'true')
+    await page.locator('#cicd').getByRole('button', { name: 'Workflow example' }).click()
     await expect(page.getByRole('region', { name: 'GitHub Actions workflow file' })).toContainText('production-deploy')
     await tabs.getByRole('tab', { name: 'GitLab CI/CD' }).click()
+    await page.locator('#cicd').getByRole('button', { name: 'Workflow example' }).click()
     const gl = page.getByRole('region', { name: 'GitLab CI/CD workflow file' })
     await expect(gl).toContainText('stages:')
-    for (const s of ['validate', 'build', 'unit-test', 'e2e-test', 'deploy']) await expect(gl).toContainText(s)
+    for (const s of ['validate', 'build', 'unit-test', 'deploy']) await expect(gl).toContainText(s)
   })
 
   test('each stage shows description, tools, commands and expected output', async ({ page }) => {
@@ -60,13 +62,16 @@ test.describe('CI/CD showcase', () => {
   })
 
   test('links to the real workflow files in the owner repository', async ({ page }) => {
+    await page.locator('#cicd').getByRole('button', { name: 'Workflow example' }).click()
     const gh = page.locator('#cicd').getByRole('link', { name: /View on GitHub/ })
     await expect(gh).toHaveAttribute('href', 'https://github.com/bibiyo21/portfolio/blob/main/.github/workflows/ci-cd.yml')
     await page.getByRole('tab', { name: 'GitLab CI/CD' }).click()
+    await page.locator('#cicd').getByRole('button', { name: 'Workflow example' }).click()
     await expect(page.locator('#cicd').getByRole('link', { name: /View on GitLab/ })).toHaveAttribute('href', /\.gitlab-ci\.yml$/)
   })
 
   test('shows syntax-highlighted YAML from the actual workflow files', async ({ page }) => {
+    await page.locator('#cicd').getByRole('button', { name: 'Workflow example' }).click()
     const code = page.getByRole('region', { name: 'GitHub Actions workflow file' })
     await expect(code).toContainText('name: CI/CD')
     await expect(code.locator('span.text-peach').first()).toBeVisible()

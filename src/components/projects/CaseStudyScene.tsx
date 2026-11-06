@@ -64,7 +64,7 @@ export function CaseStudyScene({ project, tone, number }: { project: ProjectItem
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-sm opacity-80">
+          <p className="mt-4 text-sm">
             Status labels distinguish delivered work from proposed or planned architecture.
           </p>
         </div>
@@ -237,7 +237,7 @@ export function CaseStudyScene({ project, tone, number }: { project: ProjectItem
           ) : null}
 
           <Reveal delay={0.2} className="mt-8">
-            <Accordion items={sections} multiple defaultOpen={['role']} tone={dark ? 'dark' : 'peach'} headingLevel={3} />
+            <Accordion items={sections} multiple defaultOpen={['role', 'approach']} tone={dark ? 'dark' : 'peach'} headingLevel={3} />
             {links}
           </Reveal>
         </div>
