@@ -128,7 +128,11 @@ Setup:
 
 1. Push this project to https://github.com/bibiyo21/portfolio (`main`).
 2. Create the Vercel project and run `npx vercel link` locally. Read `.vercel/project.json` for the org and project IDs.
-3. Add GitHub repository secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+3. Add three **repository** secrets in GitHub (Settings, Secrets and variables, Actions, "New repository secret"). Names must match exactly:
+   - `VERCEL_TOKEN`: create it at vercel.com/account/tokens (scope it to your account, set an expiry you are comfortable with) and paste the value once.
+   - `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`: the `orgId` and `projectId` in `.vercel/project.json` after `npx vercel link`.
+
+   The deploy jobs read the token from the environment and start with a "Check Vercel secrets" step. If a secret is missing the job fails immediately and names the missing secret, instead of the Vercel CLI's `--token is missing a value` error.
 4. Add the Resend variables in the Vercel project settings.
 5. Create GitHub environments `preview` and `production`. Add required reviewers to `production` for manual approval if you want it.
 6. In branch protection for `main`, require the checks `Validate`, `Build`, `Unit Testing` and `Playwright Testing`.
