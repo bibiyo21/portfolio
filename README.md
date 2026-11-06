@@ -43,7 +43,7 @@ The page is twelve near-full-viewport **scenes** on native scrolling with CSS Sc
 | `npm run test:ui` / `test:headed` | Playwright UI mode / headed Chromium |
 | `npm run test:report` | Open the last Playwright HTML report |
 
-First run of Playwright needs browsers: `npx playwright install` (or `npx playwright install chromium` and add `--project=chromium`).
+Playwright is not run in CI for now (it slowed deploys); run `npm run test:e2e` locally before releases. First run needs browsers: `npx playwright install` (or `npx playwright install chromium` and add `--project=chromium`).
 
 ## Editing content (YAML)
 
@@ -187,7 +187,7 @@ reCAPTCHA v3 has no official test keys that exercise scoring, so automated tests
    The deploy jobs read the token from the environment and start with a "Check Vercel secrets" step. If a secret is missing the job fails immediately and names the missing secret, instead of the Vercel CLI's `--token is missing a value` error.
 4. Add the Resend and reCAPTCHA variables in the Vercel project settings (see "Contact form, reCAPTCHA and Resend"), then redeploy.
 5. Create GitHub environments `preview` and `production`. Add required reviewers to `production` for manual approval if you want it.
-6. In branch protection for `main`, require the checks `Validate`, `Build`, `Unit Testing` and `Playwright Testing`.
+6. In branch protection for `main`, require the checks `Validate`, `Build` and `Unit Testing`.
 
 Git: the repository identity should be your personal one (`git config user.name` / `user.email` inside this repo). Nothing in this project changes global Git configuration.
 
@@ -195,10 +195,10 @@ Git: the repository identity should be your personal one (`git config user.name`
 
 | File | Purpose |
 |---|---|
-| `.github/workflows/ci-cd.yml` | Primary pipeline. Jobs: `validate`, `build`, `unit-test`, `e2e-test`, `preview-deploy` (pull requests), `production-deploy` (`main`) |
-| `.gitlab-ci.yml` | Parallel implementation. Stages: `validate`, `build`, `unit-test`, `e2e-test`, `deploy`, with manual production approval |
+| `.github/workflows/ci-cd.yml` | Primary pipeline. Jobs: `validate`, `build`, `unit-test`, `preview-deploy` (pull requests), `production-deploy` (`main`) |
+| `.gitlab-ci.yml` | Parallel implementation. Stages: `validate`, `build`, `unit-test`, `deploy`, with manual production approval |
 
-GitHub: actions are pinned to commit SHAs, permissions default to `contents: read`, concurrency cancels superseded runs (never on `main`), deploy jobs need every earlier job, fork pull requests skip deployment because secrets are unavailable. GitLab: npm cache keyed on `package-lock.json`, artifacts with expiry, JUnit report, the official Playwright image, protected variables `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, deploy jobs only when those exist.
+GitHub: actions are pinned to commit SHAs, permissions default to `contents: read`, concurrency cancels superseded runs (never on `main`), deploy jobs need every earlier job, fork pull requests skip deployment because secrets are unavailable. GitLab: npm cache keyed on `package-lock.json`, artifacts with expiry, JUnit report, protected variables `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, deploy jobs only when those exist.
 
 The CI/CD scene on the site is driven by `cicd.yaml` and shows the real workflow files. It links to them in the repository and is labelled as an illustration.
 
