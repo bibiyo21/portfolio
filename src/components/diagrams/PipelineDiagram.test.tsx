@@ -82,11 +82,23 @@ describe('CICDShowcase', () => {
     expect(existsSync(join(process.cwd(), gitlab.workflow))).toBe(true)
   })
 
+  // Playwright is paused in CI (it slowed deploys) but stays in the showcase. This is the one allowed difference.
+  const PAUSED = ['e2e-test']
+
   it('keeps the CI/CD content consistent with the real workflow files', () => {
     const gh = readFileSync(join(process.cwd(), github.workflow), 'utf8')
-    for (const job of ['validate:', 'build:', 'unit-test:', 'e2e-test:', 'preview-deploy:', 'production-deploy:']) expect(gh).toContain(`  ${job}`)
+    for (const job of ['validate:', 'build:', 'unit-test:', 'preview-deploy:', 'production-deploy:']) expect(gh).toContain(`  ${job}`)
     const gl = readFileSync(join(process.cwd(), gitlab.workflow), 'utf8')
-    for (const stage of ['validate', 'build', 'unit-test', 'e2e-test', 'deploy']) expect(gl).toContain(`  - ${stage}`)
+    for (const stage of ['validate', 'build', 'unit-test', 'deploy']) expect(gl).toContain(`  - ${stage}`)
+  })
+
+  it('only shows jobs missing from the workflow files when they are the known paused ones', () => {
+    const gh = readFileSync(join(process.cwd(), github.workflow), 'utf8')
+    const missing = github.jobs.map((j) => j.name).filter((name) => !gh.includes(`  ${name}:`))
+    expect(missing).toEqual(PAUSED)
+    expect(gh).not.toContain('  e2e-test:')
+    // The Playwright tests themselves are still in the repo and run locally.
+    expect(existsSync(join(process.cwd(), 'tests/playwright.config.ts'))).toBe(true)
   })
 
   it('does not claim a live or successful pipeline', () => {
