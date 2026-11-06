@@ -65,7 +65,8 @@ test.describe('homepage', () => {
     await page.goto('/')
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Solutions Architect/)
     await expect(page.locator('meta[property="og:title"]')).toHaveCount(1)
-    await expect(page.locator('link[rel="icon"]')).toHaveCount(1)
+    await expect(page.locator('link[rel="icon"]')).toHaveCount(4)
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveCount(1)
   })
 
   for (const vp of desktopViewports) {

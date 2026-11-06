@@ -1,6 +1,31 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/fraunces/opsz.css';
+/* Self-hosted WOFF2, Latin subset only, font-display: swap (set by fontsource).
+   Space Grotesk 500/600/700 and JetBrains Mono 400/500 are the only static weights loaded; Inter is one variable file. */
+@import '@fontsource/space-grotesk/latin-500.css';
+@import '@fontsource/space-grotesk/latin-600.css';
+@import '@fontsource/space-grotesk/latin-700.css';
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-500.css';
 @import '@fontsource-variable/inter/index.css';
+
+/* Size-adjusted local fallbacks so the swap to the web fonts does not move the layout.
+   Space Grotesk measures 100.3% of Arial's width on a headline sample; metrics come from the font's hhea table. */
+@font-face {
+  font-family: 'Space Grotesk Fallback';
+  src: local('Arial');
+  size-adjust: 100.3%;
+  ascent-override: 98.1%;
+  descent-override: 29.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.4%;
+  ascent-override: 90.2%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+}
 
 /* Tokens mirror DESIGN.md sections 1-3 and 10. */
 @theme {
@@ -21,8 +46,9 @@
   --color-success: #4f6b4a;
   --color-danger: #b3261e;
 
-  --font-display: 'Fraunces Variable', Georgia, serif;
-  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Space Grotesk Fallback', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter Fallback', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --radius-mark: 4px;
   --radius-input: 12px;
@@ -83,7 +109,7 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   text-wrap: balance;
   margin: 0;
 }
@@ -102,14 +128,14 @@ h1, h2, h3, h4 {
 }
 
 /* Type scale (DESIGN.md section 2) */
-.t-display-xl { font-family: var(--font-display); font-size: clamp(2.15rem, 4.6vw, 4rem); line-height: 0.98; letter-spacing: -0.03em; font-weight: 400; }
-.t-display-l { font-family: var(--font-display); font-size: clamp(2.25rem, 5vw, 4.25rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: 400; }
-.t-heading-m { font-family: var(--font-display); font-size: clamp(1.5rem, 2.8vw, 2.5rem); line-height: 1.1; letter-spacing: -0.015em; font-weight: 400; }
-.t-heading-s { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.01em; font-weight: 450; }
-.t-lede { font-family: var(--font-display); font-style: italic; font-size: clamp(1.2rem, 1.8vw, 1.5rem); line-height: 1.4; letter-spacing: -0.005em; font-weight: 300; }
+.t-display-xl { font-family: var(--font-display); font-size: clamp(2.15rem, 4.6vw, 4rem); line-height: 1; letter-spacing: -0.035em; font-weight: 600; }
+.t-display-l { font-family: var(--font-display); font-size: clamp(2.1rem, 4.6vw, 3.9rem); line-height: 1.04; letter-spacing: -0.03em; font-weight: 600; }
+.t-heading-m { font-family: var(--font-display); font-size: clamp(1.5rem, 2.6vw, 2.3rem); line-height: 1.12; letter-spacing: -0.02em; font-weight: 500; }
+.t-heading-s { font-family: var(--font-display); font-size: 1.375rem; line-height: 1.22; letter-spacing: -0.012em; font-weight: 500; }
+.t-lede { font-family: var(--font-sans); font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.5; letter-spacing: -0.005em; font-weight: 400; }
 .t-body-l { font-size: 1.125rem; line-height: 1.65; }
 .t-caption { font-size: 0.8125rem; line-height: 1.5; letter-spacing: 0.01em; }
-.t-eyebrow { font-size: 0.75rem; line-height: 1.3; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; }
+.t-eyebrow { font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.3; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
 
 /* Link underline draw */
 .link-draw {

@@ -115,7 +115,7 @@ export function PipelineDiagram({ platform, legend }: { platform: CicdPlatform; 
                 fontSize={11}
                 letterSpacing="0.14em"
                 fill={selected ? '#3D1426' : '#F5C6AD'}
-                fontFamily="Inter Variable, sans-serif"
+                fontFamily="JetBrains Mono, ui-monospace, monospace"
               >
                 {String(i + 1).padStart(2, '0')}
               </text>
@@ -126,7 +126,7 @@ export function PipelineDiagram({ platform, legend }: { platform: CicdPlatform; 
                   y={y + 52 + li * 20}
                   fontSize={17}
                   fill={selected ? '#3D1426' : '#FFF8F2'}
-                  fontFamily="Fraunces Variable, Georgia, serif"
+                  fontFamily="Space Grotesk, system-ui, sans-serif"
                 >
                   {line}
                 </text>

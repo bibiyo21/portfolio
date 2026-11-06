@@ -1,6 +1,7 @@
 import { ArrowUp } from 'lucide-react'
 import { useScene } from '../../hooks/useScene'
 import { profile } from '../../lib/content-loader'
+import { Logo } from '../ui/Logo'
 import { Container } from './Container'
 
 export function Footer() {
@@ -9,9 +10,12 @@ export function Footer() {
   return (
     <footer className="on-dark snap-end-footer border-t border-ivory/10 bg-burgundy-deep py-8 text-on-dark-mute">
       <Container className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-        <p className="t-caption">
-          © {year} {profile.name} · {profile.location}
-        </p>
+        <div className="flex flex-col gap-3">
+          <Logo variant="dark" height={48} />
+          <p className="t-caption">
+            © {year} {profile.name} · {profile.location}
+          </p>
+        </div>
         <a
           href="#home"
           onClick={(e) => {

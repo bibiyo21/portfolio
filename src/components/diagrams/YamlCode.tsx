@@ -32,7 +32,7 @@ function renderLine(line: string): ReactNode {
     return (
       <>
         {comment[1]}
-        <span className="italic text-on-dark-mute">{comment[2]}</span>
+        <span className="text-on-dark-mute">{comment[2]}</span>
       </>
     )
   }
@@ -56,7 +56,7 @@ function renderLine(line: string): ReactNode {
         <span className="text-peach">{key}</span>
         <span className="text-on-dark-mute">{colon}</span>
         {scalar(value)}
-        {tail ? <span className="italic text-on-dark-mute">{tail}</span> : null}
+        {tail ? <span className="text-on-dark-mute">{tail}</span> : null}
       </>
     )
   }

@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brand preview: logo, favicon and typography</title>
+<style>
+  @font-face { font-family:'Space Grotesk'; src:url(fonts/space-grotesk-latin-500-normal.woff2) format('woff2'); font-weight:500; font-display:swap; }
+  @font-face { font-family:'Space Grotesk'; src:url(fonts/space-grotesk-latin-600-normal.woff2) format('woff2'); font-weight:600; font-display:swap; }
+  @font-face { font-family:'Space Grotesk'; src:url(fonts/space-grotesk-latin-700-normal.woff2) format('woff2'); font-weight:700; font-display:swap; }
+  @font-face { font-family:'JetBrains Mono'; src:url(fonts/jetbrains-mono-latin-400-normal.woff2) format('woff2'); font-weight:400; font-display:swap; }
+  @font-face { font-family:'JetBrains Mono'; src:url(fonts/jetbrains-mono-latin-500-normal.woff2) format('woff2'); font-weight:500; font-display:swap; }
+  @font-face { font-family:'Inter'; src:url(fonts/inter-latin-wght-normal.woff2) format('woff2'); font-weight:100 900; font-display:swap; }
+  :root { --burgundy:#581c35; --dark:#3d1426; --peach:#f5c6ad; --soft:#fbe5d9; --ivory:#fff8f2; --ink:#252126; --line:#ebd9ce; --mute:#6b6067; --display:'Space Grotesk', system-ui, sans-serif; --sans:'Inter', system-ui, sans-serif; --mono:'JetBrains Mono', ui-monospace, monospace; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ivory); color:var(--ink); font:16px/1.6 var(--sans); }
+  .wrap { max-width:1200px; margin:0 auto; padding:0 clamp(16px,4vw,40px); }
+  header.top { background:var(--dark); color:var(--ivory); padding:28px 0; }
+  h1,h2,h3 { font-family:var(--display); font-weight:600; letter-spacing:-.01em; margin:0; }
+  h1 { font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.1; }
+  h2 { font-size:1.7rem; margin-top:56px; }
+  h3 { font-size:1.25rem; }
+  .eyebrow { font:500 .72rem/1.3 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--peach); }
+  .eyebrow.dark { color:var(--burgundy); }
+  p.lede { max-width:68ch; color:#dcc5ba; margin:8px 0 0; }
+  .recommend { margin-top:28px; padding:20px 24px; border-radius:20px; background:var(--soft); border:1px solid var(--line); }
+  .recommend strong { font-family:var(--display); }
+  .concepts { display:grid; gap:24px; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr)); margin-top:20px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:20px; overflow:hidden; display:flex; flex-direction:column; }
+  .panel { display:flex; align-items:center; justify-content:center; gap:20px; padding:28px 20px; min-height:150px; }
+  .panel.light { background:var(--ivory); } .panel.dark { background:var(--dark); }
+  .panel img { display:block; flex:0 1 auto; min-width:0; max-width:100%; height:auto; }
+  .panel img.sym { flex:0 0 auto; }
+  .body { padding:20px 22px 24px; display:flex; flex-direction:column; gap:10px; }
+  .tag { display:inline-block; font:500 .72rem var(--mono); letter-spacing:.1em; text-transform:uppercase; padding:3px 10px; border-radius:999px; background:var(--soft); color:var(--dark); align-self:flex-start; }
+  .tag.rec { background:var(--burgundy); color:var(--ivory); }
+  ul.plain { margin:0; padding-left:1.1rem; color:var(--mute); font-size:.92rem; }
+  .sizes { display:flex; align-items:flex-end; gap:16px; padding:14px 20px; border-top:1px solid var(--line); background:var(--ivory); }
+  .sizes.dark { background:var(--dark); }
+  .grid2 { display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); margin-top:16px; }
+  .mock { border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  .nav { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 20px; height:72px; }
+  .nav.light { background:rgba(255,248,242,.9); border-bottom:1px solid var(--line); color:var(--ink); }
+  .nav.dark { background:var(--dark); color:var(--ivory); }
+  .nav img.logo { height:34px; width:auto; }
+  .tabs { display:flex; gap:2px; font:500 .875rem var(--display); flex-wrap:wrap; }
+  .tabs span { padding:8px 10px; border-radius:999px; }
+  .tabs .on { background:var(--burgundy); color:var(--ivory); } .dark .tabs .on { background:var(--peach); color:var(--dark); }
+  .phone { width:min(100%,390px); margin:0 auto; }
+  .mhead { display:flex; align-items:center; justify-content:space-between; padding:0 16px; height:60px; }
+  .mhead .right { display:flex; align-items:center; gap:8px; font:500 .875rem var(--display); }
+  .burger { width:44px; height:44px; border-radius:50%; border:1px solid currentColor; display:grid; place-items:center; opacity:.8; }
+  .drawer { width:70%; margin-left:auto; background:var(--dark); color:var(--ivory); padding:14px 16px 22px; min-height:200px; }
+  .tabbar { display:flex; align-items:center; gap:10px; padding:10px 14px 0; background:#dee1e6; }
+  .tabbar.dk { background:#202124; }
+  .tab { display:flex; align-items:center; gap:8px; padding:8px 14px; border-radius:10px 10px 0 0; background:#fff; font:400 .8rem var(--sans); min-width:200px; }
+  .dk .tab { background:#35363a; color:#e8eaed; }
+  .tab img { width:16px; height:16px; image-rendering:auto; }
+  .lab { display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; padding:16px; background:#fff; border:1px solid var(--line); border-radius:16px; }
+  .lab figure { margin:0; text-align:center; font:400 .72rem var(--mono); color:var(--mute); }
+  .lab img { display:block; margin:0 auto 6px; }
+  .zoom { image-rendering:pixelated; }
+  table { border-collapse:collapse; width:100%; font-size:.9rem; }
+  th,td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  code { font:500 .85em var(--mono); background:var(--soft); padding:2px 6px; border-radius:6px; }
+  .spec { background:var(--dark); color:var(--ivory); border-radius:20px; padding:28px; margin-top:16px; }
+  .spec .big { font:600 clamp(2rem,5vw,3.4rem)/1.05 var(--display); letter-spacing:-.02em; }
+  .spec .big em { font-style:normal; color:var(--peach); }
+  .fonts { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); margin-top:16px; }
+  footer { padding:48px 0 64px; color:var(--mute); font-size:.9rem; }
+  a { color:var(--burgundy); }
+  a:focus-visible { outline:2px solid #852338; outline-offset:3px; }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="eyebrow">Brand preview, nothing applied yet</div>
+  <h1>Ibrahem Sotejo: logo, favicon and typography</h1>
+  <p class="lede">Three original SVG concepts, favicon candidates derived from each, and the proposed type system. The live portfolio still uses its current branding until you choose.</p>
+</div></header>
+
+<main class="wrap">
+  <div class="recommend" role="note">
+    <strong>Recommendation: Concept A (IS monogram) with the Space Grotesk wordmark.</strong>
+    It is the most distinctive of the three, stays legible at 16 px as a favicon, and pairs naturally with the type system. Concept C is the safest alternative. Concept B is the weakest: it reads as a generic org chart.
+    <br /><a href="#pick">How to choose</a>
+  </div>
+
+  <h2>1. Concepts</h2>
+  <div class="concepts">
+    <article class="card" aria-labelledby="ca">
+      <div class="panel light"><img class="sym" src="concepts/concept-a-symbol-light.svg" width="96" alt="Concept A symbol on light" /><img src="concepts/concept-a-horizontal-light.svg" width="260" alt="Concept A horizontal logo on light" /></div>
+      <div class="panel dark"><img class="sym" src="concepts/concept-a-symbol-dark.svg" width="96" alt="Concept A symbol on dark" /><img src="concepts/concept-a-horizontal-dark.svg" width="260" alt="Concept A horizontal logo on dark" /></div>
+      <div class="sizes"><img src="concepts/concept-a-symbol-light.svg" width="64" alt="" /><img src="concepts/concept-a-symbol-light.svg" width="40" alt="" /><img src="concepts/concept-a-symbol-light.svg" width="24" alt="" /><img src="concepts/concept-a-symbol-light.svg" width="16" alt="" /></div>
+      <div class="body">
+        <span class="tag rec">A · Recommended</span>
+        <h3 id="ca">IS monogram</h3>
+        <p>A straight <strong>I</strong> and a stepped, round-cornered <strong>S</strong> built on one grid: same cap height, same stroke weight, same gap. The S's bottom bar runs right up to the I's edge, so the two letters nest on a single baseline. The squared structure suggests architecture and precision while the S's rounded corners keep it from reading as a 5.</p>
+        <ul class="plain"><li>Strong at small sizes: the favicon is the same shape.</li><li>One colour per variant, so it prints and embosses cleanly.</li><li>Honest note: overlapping the letters (a true interlock) read as TS, JS, LS or $ in testing, so the letters stay separate and nest instead.</li></ul>
+      </div>
+    </article>
+
+    <article class="card" aria-labelledby="cb">
+      <div class="panel light"><img class="sym" src="concepts/concept-b-symbol-light.svg" width="96" alt="Concept B symbol on light" /><img src="concepts/concept-b-horizontal-light.svg" width="260" alt="Concept B horizontal logo on light" /></div>
+      <div class="panel dark"><img class="sym" src="concepts/concept-b-symbol-dark.svg" width="96" alt="Concept B symbol on dark" /><img src="concepts/concept-b-horizontal-dark.svg" width="260" alt="Concept B horizontal logo on dark" /></div>
+      <div class="sizes"><img src="concepts/concept-b-symbol-light.svg" width="64" alt="" /><img src="concepts/concept-b-symbol-light.svg" width="40" alt="" /><img src="concepts/concept-b-symbol-light.svg" width="24" alt="" /><img src="concepts/concept-b-symbol-light.svg" width="16" alt="" /></div>
+      <div class="body">
+        <span class="tag">B</span>
+        <h3 id="cb">Architecture layers</h3>
+        <p>Three offset plates joined by a thin connector and a peach node: layers of a system and the links between them. It echoes the layered plates in the hero, so the logo and the page tell the same story.</p>
+        <ul class="plain"><li>Directly says "architecture", no letters needed.</li><li>Does not carry the initials, so it is less personal.</li><li>Reads somewhat like a flowchart or Gantt icon, which weakens distinctiveness.</li></ul>
+      </div>
+    </article>
+
+    <article class="card" aria-labelledby="cc">
+      <div class="panel light"><img class="sym" src="concepts/concept-c-symbol-light.svg" width="96" alt="Concept C compact IS on light" /><img src="concepts/concept-c-horizontal-light.svg" width="260" alt="Concept C wordmark on light" /></div>
+      <div class="panel dark"><img class="sym" src="concepts/concept-c-symbol-dark.svg" width="96" alt="Concept C compact IS on dark" /><img src="concepts/concept-c-horizontal-dark.svg" width="260" alt="Concept C wordmark on dark" /></div>
+      <div class="sizes"><img src="concepts/concept-c-symbol-light.svg" width="64" alt="" /><img src="concepts/concept-c-symbol-light.svg" width="40" alt="" /><img src="concepts/concept-c-symbol-light.svg" width="24" alt="" /><img src="concepts/concept-c-symbol-light.svg" width="16" alt="" /></div>
+      <div class="body">
+        <span class="tag">C</span>
+        <h3 id="cc">Typographic wordmark</h3>
+        <p>Tracked Space Grotesk capitals with the two initials picked out in burgundy, a thin rule with a short burgundy lead, and the role in mono. The compact "IS" is plain Space Grotesk Bold with a peach underline.</p>
+        <ul class="plain"><li>Most refined and the quietest, very editorial.</li><li>Depends entirely on the typeface, so there is no ownable shape.</li><li>The long wordmark is too wide for the mobile header; the compact IS would stand in there.</li></ul>
+      </div>
+    </article>
+  </div>
+
+  <h2>2. In context</h2>
+  <p>Each concept in the desktop navigation, mobile header with the live scene label, the right-hand drawer, and the browser tab on light and dark browser themes.</p>
+  <div id="contexts"></div>
+
+  <h2>3. Favicon lab</h2>
+  <p>PNGs are real renders. The SVG favicon swaps to a peach tile on dark browser themes. Tab icons below are drawn at their true 16 px size, then enlarged for inspection.</p>
+  <div id="favlab"></div>
+
+  <h2>4. Typography</h2>
+  <div class="spec">
+    <div class="eyebrow">Hero heading, Space Grotesk 600</div>
+    <div class="big">Architecting Systems. Engineering Experiences. <em>Building Possibilities.</em></div>
+    <p style="max-width:62ch;color:#dcc5ba;margin-top:14px;font-family:var(--sans)">Inter carries body copy, descriptions, forms and UI text so long reading stays calm and neutral next to the geometric display face.</p>
+    <p style="font:500 .8rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--peach);margin:0">SOLUTIONS ARCHITECT · 01 — ARCHITECTURE · REACT · POSTGRESQL</p>
+  </div>
+  <div class="fonts">
+    <div class="card body"><h3>Space Grotesk</h3><p style="font:600 2rem var(--display);margin:0">Aa Gg 123</p><p>Logo wordmark, hero and section headings, navigation. Weights 500, 600, 700. No italic exists, so italic accent words in headings become a colour or weight accent.</p></div>
+    <div class="card body"><h3>Inter</h3><p style="font:400 2rem var(--sans);margin:0">Aa Gg 123</p><p>Body, descriptions, forms and UI text. One variable file (400 to 600 used).</p></div>
+    <div class="card body"><h3>JetBrains Mono</h3><p style="font:500 2rem var(--mono);margin:0">Aa Gg 123</p><p>Technical labels, commands, architecture annotations and small metadata. Weights 400 and 500.</p></div>
+  </div>
+  <h3 style="margin-top:28px">Proposed tokens and classes</h3>
+  <table>
+    <thead><tr><th>Token / class</th><th>Value</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td><code>--font-display</code> / <code>font-display</code></td><td>Space Grotesk, system-ui fallback</td><td>Wordmark, h1 to h4, navigation</td></tr>
+      <tr><td><code>--font-sans</code> / <code>font-sans</code></td><td>Inter, system-ui fallback</td><td>Body, forms, buttons</td></tr>
+      <tr><td><code>--font-mono</code> / <code>font-mono</code></td><td>JetBrains Mono, ui-monospace fallback</td><td>Eyebrows, code, annotations</td></tr>
+      <tr><td><code>.t-display-xl</code> / <code>-l</code> / <code>t-heading-m</code> / <code>-s</code></td><td>Display family, weights 600 / 600 / 500 / 500, tracking -0.03em to -0.01em</td><td>Hero and section headings</td></tr>
+      <tr><td><code>.t-eyebrow</code></td><td>Mono 500, 0.75rem, 0.14em tracking, uppercase</td><td>Section labels and metadata</td></tr>
+    </tbody>
+  </table>
+  <p>Loading plan: self-hosted WOFF2 through <code>@fontsource</code> (SIL Open Font License, allowed for web self-hosting), Latin subset only, <code>font-display: swap</code>, preload the Space Grotesk 600 and Inter files used above the fold, and size-adjusted fallbacks to avoid layout shift. Weights actually loaded: Space Grotesk 500/600/700, JetBrains Mono 400/500, Inter variable.</p>
+  <p><strong>Design consequence to confirm:</strong> the portfolio currently pairs Fraunces (a warm serif with italic accents) with Inter. Moving headings to Space Grotesk makes the site feel more technical and less editorial, and the italic accent in the hero ("Building Possibilities.") would become colour-only. It fits the "technology-oriented" brief, but it is a visible change to the design language.</p>
+
+  <h2 id="pick">5. Choose</h2>
+  <p>Reply with <strong>A</strong>, <strong>B</strong> or <strong>C</strong> (and whether to keep the Fraunces serif or move to Space Grotesk as above). Then I will apply it to the desktop nav, mobile header, drawer, hero, footer, favicon and social image, and update <code>DESIGN.md</code> and the tests.</p>
+  <h3>Files</h3>
+  <table>
+    <tbody>
+      <tr><td><code>concepts/concept-{a,b,c}-symbol-{light,dark}.svg</code></td><td>Compact symbol, light and dark backgrounds</td></tr>
+      <tr><td><code>concepts/concept-{a,b,c}-horizontal-{light,dark}.svg</code></td><td>Primary horizontal logo (wordmarks are outlined, no font needed)</td></tr>
+      <tr><td><code>favicons/favicon-{a,b,c}.svg</code></td><td>Primary SVG favicon with a dark-theme variant; plus <code>-light</code> / <code>-dark</code> fixed versions</td></tr>
+      <tr><td><code>favicons/favicon-{a,b,c}-{16,32,48}.png</code>, <code>.ico</code></td><td>PNG and multi-size ICO</td></tr>
+      <tr><td><code>favicons/apple-touch-icon-{a,b,c}.png</code>, <code>icon-{a,b,c}-{192,512}.png</code></td><td>Apple Touch Icon (180) and app icons</td></tr>
+    </tbody>
+  </table>
+</main>
+<footer><div class="wrap">Regenerate with <code>npm run build:brand</code>. Nothing in <code>public/</code> or <code>src/</code> has been changed.</div></footer>
+
+<script>
+const concepts = [['a','A · IS monogram'],['b','B · Layers'],['c','C · Wordmark']]
+const ctx = document.getElementById('contexts')
+ctx.className = 'grid2'
+concepts.forEach(([k, label]) => {
+  const sym = (v) => `concepts/concept-${k}-symbol-${v}.svg`
+  const hor = (v) => `concepts/concept-${k}-horizontal-${v}.svg`
+  const wrap = document.createElement('div')
+  wrap.className = 'card'
+  wrap.innerHTML = `
+    <div class="body"><span class="tag${k === 'a' ? ' rec' : ''}">${label}</span></div>
+    <div class="mock" style="margin:0 16px 12px"><div class="nav light"><img class="logo" src="${hor('light')}" alt=""><div class="tabs"><span>Home</span><span>About</span><span class="on">Work</span><span>FAQ</span></div></div></div>
+    <div class="mock" style="margin:0 16px 12px"><div class="nav dark"><img class="logo" src="${hor('dark')}" alt=""><div class="tabs"><span>Home</span><span>About</span><span class="on">Work</span><span>FAQ</span></div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px 12px">
+      <div class="mock phone" style="width:100%"><div class="mhead" style="background:#fff8f2;color:#252126"><img src="${k === 'c' ? sym('light') : sym('light')}" height="34" alt=""><div class="right"><span style="color:#581c35">GTI North</span><span class="burger">☰</span></div></div></div>
+      <div class="mock phone" style="width:100%"><div class="mhead" style="background:#3d1426;color:#fff8f2"><img src="${sym('dark')}" height="34" alt=""><div class="right"><span style="color:#f5c6ad">GTI North</span><span class="burger">☰</span></div></div></div>
+    </div>
+    <div class="mock" style="margin:0 16px 12px;background:#6f5560"><div class="drawer"><div style="display:flex;align-items:center;justify-content:space-between"><img src="${hor('dark')}" height="30" alt=""><span class="burger" style="width:36px;height:36px">✕</span></div></div></div>
+    <div style="display:grid;gap:0;padding:0 16px 16px">
+      <div class="tabbar"><div class="tab"><img src="favicons/favicon-${k}-16.png" alt="">Ibrahem Sotejo | Solutions Architect</div></div>
+      <div class="tabbar dk"><div class="tab"><img src="favicons/favicon-${k}-dark-16.png" alt="">Ibrahem Sotejo | Solutions Architect</div></div>
+    </div>`
+  ctx.append(wrap)
+})
+const lab = document.getElementById('favlab')
+lab.className = ''
+concepts.forEach(([k, label]) => {
+  const d = document.createElement('div')
+  d.className = 'lab'
+  d.style.marginBottom = '14px'
+  d.innerHTML = `<strong style="font-family:var(--display);width:100%">${label}</strong>
+    <figure><img src="favicons/favicon-${k}-16.png" width="16" alt="">16 px actual</figure>
+    <figure><img src="favicons/favicon-${k}-32.png" width="32" alt="">32 px actual</figure>
+    <figure><img class="zoom" src="favicons/favicon-${k}-16.png" width="96" alt="">16 px × 6</figure>
+    <figure><img class="zoom" src="favicons/favicon-${k}-32.png" width="128" alt="">32 px × 4</figure>
+    <figure><img src="favicons/favicon-${k}-light.svg" width="64" alt="">SVG, light</figure>
+    <figure><img src="favicons/favicon-${k}-dark.svg" width="64" alt="">SVG, dark</figure>
+    <figure><img src="favicons/apple-touch-icon-${k}.png" width="90" alt="">Apple Touch 180</figure>
+    <figure><img src="favicons/icon-${k}-192.png" width="96" alt="">App icon 192</figure>`
+  lab.append(d)
+})
+</script>
+</body>
+</html>

@@ -8,7 +8,7 @@ export function MaskedLines({
   delay = 0.1,
   as = 'h1',
   id,
-  accentClass = 'italic text-burgundy',
+  accentClass = 'text-burgundy',
 }: {
   lines: string[]
   className?: string

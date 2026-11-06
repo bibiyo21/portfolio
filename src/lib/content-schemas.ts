@@ -3,6 +3,8 @@ import { z } from 'zod'
 const imageRef = z.object({
   src: z.string().min(1),
   alt: z.string(),
+  // Optional responsive candidates, e.g. "/a-720.webp 720w, /a-1440.webp 1440w".
+  srcSet: z.string().optional(),
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
 })
@@ -162,6 +164,16 @@ export const projectsSchema = z.object({
       // Verified results only. Empty hides the section.
       outcome: z.array(nonEmpty).default([]),
       thumbnail: imageRef,
+      // Real screenshots of the live site. When present they replace the illustrative artwork in the case-study scene.
+      preview: z
+        .object({
+          capturedOn: nonEmpty,
+          desktop: imageRef,
+          mobile: imageRef,
+          fullDesktop: imageRef,
+          fullMobile: imageRef,
+        })
+        .optional(),
       liveUrl: url.optional(),
       repoUrl: url.optional(),
     }),

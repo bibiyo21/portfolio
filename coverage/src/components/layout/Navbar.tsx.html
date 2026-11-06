@@ -41,9 +41,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">86.36% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>36/42</span>
+                <span class='fraction'>38/44</span>
             </div>
         
             
@@ -312,12 +312,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">170x</span>
+<span class="cline-any cline-yes">187x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -351,10 +352,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">170x</span>
+<span class="cline-any cline-yes">170x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">153x</span>
-<span class="cline-any cline-yes">153x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -523,6 +523,7 @@ import { profile } from '../../lib/content-loader'
 import { cn } from '../../lib/cn'
 import { ease } from '../../lib/animations'
 import { isDarkTone, scenes, tabs } from '../../lib/scenes'
+import { Logo, LogoMark } from '../ui/Logo'
 import { MobileProgress } from '../scenes/SceneControls'
 import { Container } from './Container'
 &nbsp;
@@ -560,18 +561,16 @@ export function Navbar() {
         &lt;a
           href="#home"
           onClick={nav('home')}
-          className={cn(
-            'inline-flex min-h-11 shrink-0 items-center font-display text-xl tracking-tight transition-colors',
-            dark ? 'text-peach' : 'text-burgundy',
-          )}
+          className="inline-flex min-h-11 shrink-0 items-center"
           aria-label={`${profile.wordmark}, back to the start`}
         &gt;
-          {profile.wordmark}
+          &lt;Logo variant={dark ? 'dark' : 'light'} height={46} alt="" className="hidden min-[1080px]:block" /&gt;
+          &lt;LogoMark variant={dark ? 'dark' : 'light'} size={40} className="min-[1080px]:hidden" /&gt;
         &lt;/a&gt;
 &nbsp;
         {/* Desktop tabs */}
         &lt;nav aria-label="Primary" className="hidden min-[1080px]:block"&gt;
-          &lt;ul className="flex items-center gap-1"&gt;
+          &lt;ul className="flex items-center gap-0.5 min-[1280px]:gap-1"&gt;
             {tabs.map((t) =&gt; {
               const isActive = active.tab === t.id
               return (
@@ -581,7 +580,7 @@ export function Navbar() {
                     onClick={nav(t.target)}
                     aria-current={isActive ? 'location' : undefined}
                     className={cn(
-                      'relative inline-flex min-h-11 items-center rounded-full px-3.5 text-[0.9375rem] transition-colors duration-200 active:translate-y-px',
+                      'relative inline-flex min-h-11 items-center rounded-full px-2.5 font-display text-sm transition-colors duration-200 active:translate-y-px min-[1280px]:px-3.5 min-[1280px]:text-[0.9375rem]',
                       isActive
                         ? dark
                           ? 'font-medium text-burgundy-dark'
@@ -664,9 +663,7 @@ export function Navbar() {
                       &lt;Dialog.Title className="sr-only"&gt;Navigation menu&lt;/Dialog.Title&gt;
                       &lt;Dialog.Description className="sr-only"&gt;Jump to a section of the portfolio.&lt;/Dialog.Description&gt;
                       &lt;div className="flex min-h-11 items-center justify-between pl-5"&gt;
-                        &lt;p className="t-eyebrow text-peach"&gt;
-                          Now &lt;span className="sr-only"&gt;viewing&lt;/span&gt;: {active.label}
-                        &lt;/p&gt;
+                        &lt;Logo variant="dark" height={44} alt="" /&gt;
                         &lt;Dialog.Close
                           aria-label="Close navigation menu"
                           className="grid size-11 shrink-0 place-items-center rounded-full border border-ivory/30 hover:bg-ivory/10"
@@ -674,7 +671,10 @@ export function Navbar() {
                           &lt;X className="size-5" aria-hidden /&gt;
                         &lt;/Dialog.Close&gt;
                       &lt;/div&gt;
-                      &lt;nav aria-label="Mobile" className="mt-4 min-h-0 flex-1 overflow-y-auto overscroll-contain pl-3"&gt;
+                      &lt;p className="t-eyebrow pl-5 pt-3 text-peach"&gt;
+                        Now &lt;span className="sr-only"&gt;viewing&lt;/span&gt;: {active.label}
+                      &lt;/p&gt;
+                      &lt;nav aria-label="Mobile" className="mt-3 min-h-0 flex-1 overflow-y-auto overscroll-contain pl-3"&gt;
                         &lt;ol className="space-y-1"&gt;
                           {scenes.map((s, i) =&gt; {
                             const isActive = s.id === activeId
@@ -741,7 +741,7 @@ export function Navbar() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-06T00:55:27.068Z
+                at 2026-11-06T01:52:22.234Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -1,0 +1,77 @@
+{
+  "capturedAt": "2026-11-06T01:28:41.091Z",
+  "viewports": [
+    {
+      "key": "desktop",
+      "width": 1440,
+      "height": 900,
+      "mobile": false
+    },
+    {
+      "key": "mobile",
+      "width": 390,
+      "height": 844,
+      "mobile": true
+    }
+  ],
+  "results": [
+    {
+      "key": "main",
+      "name": "GTI Main",
+      "url": "https://goalietraininginstitute.ca/",
+      "files": [
+        "docs/gti-site-previews/main/desktop-viewport.png",
+        "docs/gti-site-previews/main/desktop-newsletter-popup.png",
+        "docs/gti-site-previews/main/desktop-full-page.png",
+        "docs/gti-site-previews/main/mobile-viewport.png",
+        "docs/gti-site-previews/main/mobile-newsletter-popup.png",
+        "docs/gti-site-previews/main/mobile-full-page.png",
+        "docs/gti-site-previews/main/mobile-navigation.png"
+      ],
+      "notes": [
+        "desktop: network never fully idle; captured after load.",
+        "desktop: a timed newsletter popup appeared and was closed with its own close button before the full-page and menu captures.",
+        "mobile: network never fully idle; captured after load.",
+        "mobile: a timed newsletter popup appeared and was closed with its own close button before the full-page and menu captures.",
+        "Mobile menu opened by tapping .mobile_menu_bar"
+      ],
+      "status": 200,
+      "finalUrl": "https://goalietraininginstitute.ca/",
+      "title": "Goalie Training Institute | Development Done Right",
+      "embedHeaders": {
+        "xFrameOptions": null,
+        "contentSecurityPolicy": null,
+        "iframeBlocked": false
+      }
+    },
+    {
+      "key": "north",
+      "name": "GTI North",
+      "url": "https://north.goalietraininginstitute.ca/",
+      "files": [
+        "docs/gti-site-previews/north/desktop-viewport.png",
+        "docs/gti-site-previews/north/desktop-newsletter-popup.png",
+        "docs/gti-site-previews/north/desktop-full-page.png",
+        "docs/gti-site-previews/north/mobile-viewport.png",
+        "docs/gti-site-previews/north/mobile-newsletter-popup.png",
+        "docs/gti-site-previews/north/mobile-full-page.png",
+        "docs/gti-site-previews/north/mobile-navigation.png"
+      ],
+      "notes": [
+        "desktop: network never fully idle; captured after load.",
+        "desktop: a timed newsletter popup appeared and was closed with its own close button before the full-page and menu captures.",
+        "mobile: network never fully idle; captured after load.",
+        "mobile: a timed newsletter popup appeared and was closed with its own close button before the full-page and menu captures.",
+        "Mobile menu opened by tapping .mobile_menu_bar"
+      ],
+      "status": 200,
+      "finalUrl": "https://north.goalietraininginstitute.ca/",
+      "title": "Goalie Training Institute - North | Development Done Right",
+      "embedHeaders": {
+        "xFrameOptions": null,
+        "contentSecurityPolicy": null,
+        "iframeBlocked": false
+      }
+    }
+  ]
+}

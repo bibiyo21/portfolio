@@ -1,7 +1,8 @@
 # Featured work. Only supplied projects are listed. Add more by appending to `items`.
 # Statuses: implemented | in-progress | proposed | planned. They describe the architecture/approach items only.
 # Architecture details below are kept as `proposed` (designed) until the owner confirms what was delivered.
-# `outcome` is shown only when the owner supplies verified results. Add `liveUrl` only for verified public URLs.
+# `outcome` is shown only when the owner supplies verified results. `liveUrl` is shown only for URLs the owner supplied.
+# `preview` holds real screenshots of the live site (see `npm run capture:gti` and `node scripts/optimize-gti-images.mjs`).
 family:
   eyebrow: "Featured work"
   title: "GTI Digital Platform — Main & North"
@@ -44,10 +45,35 @@ items:
         text: "Extending WordPress and WooCommerce without making future updates harder."
     outcome: []
     thumbnail:
-      src: "/images/projects/gti-main.svg"
-      alt: "Illustrative artwork for GTI Main: a burgundy and peach web interface motif. Not a real screenshot."
-      width: 1200
-      height: 900
+      src: "/images/projects/gti-main-desktop-720.webp"
+      alt: "Screenshot of the GTI Main homepage on desktop: a coach in a navy GTI cap in front of a goal net behind the headline Become the trusted goaltender that every team wants, with a blue Book Now button and Find Your Program and Be a GTInsider buttons."
+      width: 720
+      height: 450
+    preview:
+      capturedOn: "2026-11-06"
+      desktop:
+        src: "/images/projects/gti-main-desktop.webp"
+        srcSet: "/images/projects/gti-main-desktop-720.webp 720w, /images/projects/gti-main-desktop.webp 1440w"
+        alt: "Screenshot of the GTI Main homepage on desktop: a coach in a navy GTI cap in front of a goal net behind the headline Become the trusted goaltender that every team wants, with a blue Book Now button and Find Your Program and Be a GTInsider buttons."
+        width: 1440
+        height: 900
+      mobile:
+        src: "/images/projects/gti-main-mobile.webp"
+        alt: "Screenshot of the GTI Main homepage on a phone: logo, blue Book Now button and menu icon above the same headline and two full-width buttons, then a blue statistics band."
+        width: 390
+        height: 844
+      fullDesktop:
+        src: "/images/projects/gti-main-desktop-full.webp"
+        alt: "Full-page screenshot of the GTI Main homepage on desktop, from the hero and statistics band through ongoing programs, team development packages, testimonials, newsletter and shop tiles to the footer."
+        width: 1200
+        height: 3915
+      fullMobile:
+        src: "/images/projects/gti-main-mobile-full.webp"
+        alt: "Full-page screenshot of the GTI Main homepage on a phone, with the hero, statistics, program carousels, testimonials, newsletter and shop tiles stacked in one column above the footer."
+        width: 390
+        height: 5321
+    liveUrl: "https://goalietraininginstitute.ca/"
+
   - id: gti-north
     scene: "gti-north"
     theme: north
@@ -88,7 +114,31 @@ items:
         text: "Keeping location-specific rules from leaking into shared code."
     outcome: []
     thumbnail:
-      src: "/images/projects/gti-north.svg"
-      alt: "Illustrative artwork for GTI North: map contour lines in peach and burgundy. Not a real screenshot."
-      width: 1200
-      height: 900
+      src: "/images/projects/gti-north-desktop-720.webp"
+      alt: "Screenshot of the GTI North homepage on desktop: a coach in a navy GTI cap in front of a goal net behind the headline Become the trusted goaltender that every team wants, with a teal Book Now button and Find Your Program and Be a GTInsider buttons."
+      width: 720
+      height: 450
+    preview:
+      capturedOn: "2026-11-06"
+      desktop:
+        src: "/images/projects/gti-north-desktop.webp"
+        srcSet: "/images/projects/gti-north-desktop-720.webp 720w, /images/projects/gti-north-desktop.webp 1440w"
+        alt: "Screenshot of the GTI North homepage on desktop: a coach in a navy GTI cap in front of a goal net behind the headline Become the trusted goaltender that every team wants, with a teal Book Now button and Find Your Program and Be a GTInsider buttons."
+        width: 1440
+        height: 900
+      mobile:
+        src: "/images/projects/gti-north-mobile.webp"
+        alt: "Screenshot of the GTI North homepage on a phone: North logo, teal Book Now button and menu icon above the same headline and two full-width buttons, then a teal statistics band."
+        width: 390
+        height: 844
+      fullDesktop:
+        src: "/images/projects/gti-north-desktop-full.webp"
+        alt: "Full-page screenshot of the GTI North homepage on desktop, from the hero and statistics band through ongoing programs, team development packages, testimonials, newsletter and shop tiles to the footer."
+        width: 1200
+        height: 4071
+      fullMobile:
+        src: "/images/projects/gti-north-mobile-full.webp"
+        alt: "Full-page screenshot of the GTI North homepage on a phone, with the hero, statistics, program carousels, testimonials, newsletter and shop tiles stacked in one column above the footer."
+        width: 390
+        height: 5265
+    liveUrl: "https://north.goalietraininginstitute.ca/"

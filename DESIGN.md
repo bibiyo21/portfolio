@@ -2,13 +2,13 @@
 
 Single source of truth for the visual identity. Every React component reads its colours, type, spacing, radii, motion, and behaviour from this file (implemented as tokens in `src/styles/globals.css` and `src/lib/animations.ts`). If a value is not defined here, add it here first, then use it.
 
-**Identity:** a cinematic, scene-by-scene personal presentation for a Solutions Architect. Burgundy ink on warm ivory paper, peach as the warm highlight. Serif-led type, generous whitespace, slow eased motion. Premium and editorial, grounded and credible, never agency-generic.
+**Identity:** a cinematic, scene-by-scene personal presentation for a Solutions Architect. Burgundy ink on warm ivory paper, peach as the warm highlight. A precise geometric grotesque for headings and the logo, a neutral sans for reading, a mono for technical labels, generous whitespace, slow eased motion. Premium and technical, grounded and credible, never agency-generic.
 
 **Experience model:** the page is a sequence of near-full-viewport *scenes* on native scroll with CSS Scroll Snap, plus a sticky tab navigation. Visitors either scroll through the scenes or jump directly. Both use the same native anchor navigation and the same active-scene state. Nothing hijacks the wheel or touch.
 
 **Reference and sources reviewed**
 - Visual/interaction reference `ssaway.com/website-design`: only the page text was inspectable in this environment (no CSS, images or script). Observed patterns taken as inspiration only: small eyebrow labels above headings, numbered items, a closing FAQ followed by a strong CTA, a prominent primary CTA, work shown with real screens. No code, layout, copy, brand or assets are copied.
-- Installed `awesome-design-md` references `claude` and `notion` (warm paper canvas, serif/sans split, whisper hairlines, tracking that tightens with size) adapted into an original system.
+- Installed `awesome-design-md` references `claude` and `notion` (warm paper canvas, display/text type split, whisper hairlines, tracking that tightens with size) adapted into an original system. Their serif headline faces were replaced by Space Grotesk for the technical identity.
 
 ## 1. Color Tokens
 
@@ -49,30 +49,43 @@ Single source of truth for the visual identity. Every React component reads its 
 
 ## 2. Typography
 
-| Role | Family | Fallback |
+| Role | Family | Fallback | Used for |
+|---|---|---|---|
+| Display | **Space Grotesk** (500, 600, 700) | `Space Grotesk Fallback` (size-adjusted Arial), `system-ui` | Logo wordmark, hero and section headings, card titles, navigation |
+| Text / UI | **Inter** (variable) | `Inter Fallback` (size-adjusted Arial), `system-ui` | Body copy, descriptions, ledes, forms, buttons |
+| Technical | **JetBrains Mono** (400, 500) | `ui-monospace`, `SF Mono`, `Menlo` | Eyebrow labels, indexes, code and commands, diagram annotations, small metadata |
+
+Self-hosted WOFF2 via `@fontsource` (all three are SIL Open Font License, which allows self-hosting), Latin subset only, `font-display: swap`. Only five font files are requested: Space Grotesk 500 and 600, JetBrains Mono 400 and 500, and Inter's single variable file. Space Grotesk 700 is available for emphasis but is not requested until used. Local fallback faces use `size-adjust`, `ascent-override` and `descent-override` (Space Grotesk measures 100.3% of Arial on a headline sample), and measured layout shift on load is under 0.001.
+
+| Style | Class | Font | Size (fluid) | Weight | Line height | Tracking |
+|---|---|---|---|---|---|---|
+| Display XL (hero) | `.t-display-xl` | Space Grotesk | `clamp(2.15rem, 4.6vw, 4rem)` | 600 | 1 | -0.035em |
+| Display L (section) | `.t-display-l` | Space Grotesk | `clamp(2.1rem, 4.6vw, 3.9rem)` | 600 | 1.04 | -0.03em |
+| Heading M (title) | `.t-heading-m` | Space Grotesk | `clamp(1.5rem, 2.6vw, 2.3rem)` | 500 | 1.12 | -0.02em |
+| Heading S (card) | `.t-heading-s` | Space Grotesk | `1.375rem` | 500 | 1.22 | -0.012em |
+| Lede | `.t-lede` | Inter | `clamp(1.1rem, 1.6vw, 1.35rem)` | 400 | 1.5 | -0.005em |
+| Body L | `.t-body-l` | Inter | `1.125rem` | 400 | 1.65 | 0 |
+| Body | default | Inter | `1rem` | 400 | 1.65 | 0 |
+| Caption | `.t-caption` | Inter | `0.8125rem` | 400 | 1.5 | 0.01em |
+| Eyebrow | `.t-eyebrow` | JetBrains Mono | `0.72rem` | 500 | 1.3 | 0.12em, uppercase |
+
+Tailwind tokens: `font-display`, `font-sans`, `font-mono`. Principles: Space Grotesk leads and Inter serves; the mono is for labels only, never for sentences. Space Grotesk has no italic, so emphasis is colour or weight, never italics (the hero's last line is peach, not slanted). Numerals in dates and counters are tabular. Reading measure stays 62 to 68ch.
+
+## 2b. Logo, favicon and brand marks
+
+The identity is the **IS monogram**: a straight I and a stepped, round-cornered S on one grid, with the same cap height, stroke weight and gap. The rounded corners keep the S from reading as a 5, and the letters stay separate because overlapping versions read as TS, JS, LS or $.
+
+| Asset | Files (`public/`) | Use |
 |---|---|---|
-| Display / Headings | **Fraunces** (variable, `opsz`) | `Georgia, serif` |
-| UI / Body | **Inter** (variable) | `system-ui, sans-serif` |
-| Labels / Index | Inter, uppercase, tracked (no third family) | n/a |
+| Horizontal logo | `images/brand/logo-horizontal-{light,dark}.svg` | Desktop header (46px tall), drawer (44px), footer (48px). Mark plus "Ibrahem Sotejo" in Space Grotesk 600 plus "SOLUTIONS ARCHITECT" in JetBrains Mono 500. Wordmarks are outlined, so no font is needed |
+| Symbol | `images/brand/logo-symbol-{light,dark}.svg` | Mobile and tablet header (40px), hero mark (48px) |
+| Favicon | `favicon.svg`, `favicon.ico` (16, 32, 48), `favicon-16x16.png`, `favicon-32x32.png` | Burgundy tile with a peach monogram. The SVG switches to a peach tile with a deep-burgundy monogram on dark browser themes |
+| App icons | `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png`, `site.webmanifest` | Home screen and install |
+| Social | `images/illustrations/og-image.png` (1200 x 630) | Open Graph and Twitter card |
 
-Fonts are self-hosted through `@fontsource-variable/*`, `font-display: swap`.
+Light variants (`light`) are for ivory and peach backgrounds: burgundy mark, charcoal name. Dark variants (`dark`) are for burgundy backgrounds: peach mark, ivory name. The header picks the variant from the active scene tone. Clear space around the logo is at least the width of the I bar. Do not recolour, stretch, outline, add effects, or use the horizontal logo below 150px wide (use the symbol). The favicon never uses the letter P.
 
-| Style | Font | Size (fluid) | Weight | Line height | Tracking |
-|---|---|---|---|---|---|
-| Display XL (hero) | Fraunces | `clamp(2.15rem, 4.6vw, 4rem)` | 400 | 0.98 | -0.03em |
-| Display L (section title) | Fraunces | `clamp(2.25rem, 5vw, 4.25rem)` | 400 | 1.05 | -0.02em |
-| Heading M (project/role) | Fraunces | `clamp(1.5rem, 2.8vw, 2.5rem)` | 400 | 1.1 | -0.015em |
-| Heading S (card) | Fraunces | `1.5rem` | 450 | 1.2 | -0.01em |
-| Lede | Fraunces italic | `clamp(1.2rem, 1.8vw, 1.5rem)` | 300 | 1.4 | -0.005em |
-| Body L | Inter | `1.125rem` | 400 | 1.65 | 0 |
-| Body | Inter | `1rem` | 400 | 1.65 | 0 |
-| UI (buttons, nav) | Inter | `0.9375rem` | 500 | 1.2 | 0.005em |
-| Caption | Inter | `0.8125rem` | 400 | 1.5 | 0.01em |
-| Eyebrow | Inter uppercase | `0.75rem` | 500 | 1.3 | 0.14em |
-
-Principles: serif speaks, sans serves. Headlines stay at 400-450 weight. Emphasis uses italic, burgundy colour, or a peach marker underline, at most one accent per headline. Reading measure 62-68ch. Tabular numerals for dates and counters. `text-wrap: balance` on headings.
-
----
+Regenerate with `npm run build:brand` and `node scripts/build-og-image.mjs`. The concept comparison lives in `docs/brand-preview/`.
 
 ## 3. Spacing
 
@@ -127,7 +140,7 @@ Scene rhythm alternates light and dark so each scene reads as its own room. Scen
 
 ### Navigation (desktop tabs, 1080px and wider)
 - Fixed header, `--nav-h` tall. Surface follows the active scene tone: on light scenes `ivory @ 88%` with blur and a hairline, on dark scenes `burgundy-dark @ 82%` with blur and ivory text. The colour transition takes 300ms so the active tab is always legible.
-- Left: wordmark in Fraunces. Right: tabs Home, About, Expertise, Work, Experience, Architecture, CI/CD, Recognition, FAQ, Contact, in the same order as the scenes, so the active pill only ever moves forward as you scroll down. Below 1080px (tablets, portrait and landscape, and phones) the header uses the compact burger pattern instead, because ten tab labels do not fit comfortably; the choice is by available width, never by device.
+- Left: the logo (horizontal on desktop). Right: tabs Home, About, Expertise, Work, Experience, Architecture, CI/CD, Recognition, FAQ, Contact, in the same order as the scenes, so the active pill only ever moves forward as you scroll down. Below 1080px (tablets, portrait and landscape, and phones) the header uses the compact burger pattern instead, because ten tab labels do not fit comfortably; the choice is by available width, never by device.
 - Active tab: a sliding pill (Framer `layoutId`, 350ms) plus `aria-current="location"`. The pill is not the only signal: the active label is also heavier (500 vs 400 weight) and has an underline dot.
 - States: default, hover (colour shift), focus-visible (2px ring), active, pressed (`translateY(1px)`).
 - Tabs are real links to scene ids. A tab group stays active across its scenes (Work covers GTI Main and GTI North).
@@ -206,7 +219,7 @@ Shape and size: radius 999px, min-height 48px, padding `14px 28px`, trailing ico
 ### Case-study treatments
 - **GTI Main:** `burgundy-dark` scene, ivory text, peach accents, large framed hero visual with a burgundy/peach interface motif, wide editorial layout (visual left, content right).
 - **GTI North:** `peach` scene with `burgundy-dark` text, ivory cards, a cool-leaning geometric motif (contour lines suggesting a map), mirrored layout (content left, visual right). Shares the family header and a "Main to North" relationship strip so the two read as related but distinct.
-- Both end with the same section order: Overview, Context, Role and contribution, Architecture and approach (with status chips), Technology, Challenges and decisions, Outcome (only when the owner supplies verified results), Links (only verified public URLs). Images are labelled illustrative until real screenshots are supplied.
+- Both end with the same section order: Overview, Context, Role and contribution, Architecture and approach (with status chips), Technology, Challenges and decisions, Outcome (only when the owner supplies verified results), Links (only verified public URLs). Each scene shows real screenshots of the live homepage: a desktop browser frame (with the site host) overlapped by a phone frame, a caption with the capture date, and a "View full homepage" dialog with Desktop and Mobile tabs that lazy-loads the full-page captures. A project without screenshots falls back to labelled illustrative artwork.
 
 ## 8. Modal Styles
 
@@ -229,7 +242,7 @@ Used for Contact ("Let's Start a Conversation") and Project detail. Built on Rad
 - Portrait (only when the owner supplies an approved photo): 4:5, radius 28px, an offset `peach` block behind. Until then the hero uses original SVG architectural geometry and no person image or silhouette.
 - Project media: 4:3 or 3:2. Hover scale 1.04. Screenshots sit on a `peach-soft` backdrop with 20px inner padding when shown contained.
 - Stock and architectural imagery: desaturate 10-15%, overlay `linear-gradient(to top, rgba(61,20,38,.55), transparent)` when text sits on it.
-- Logos: 48px tile, radius 12px, `peach-soft` fill, `object-contain` with 8px padding. Missing logos use a monogram tile (Fraunces initial on `peach`).
+- Logos: 48px tile, radius 12px, `peach-soft` fill, `object-contain` with 8px padding. Missing logos use a monogram tile (Space Grotesk initial on `peach`).
 - Delivery: WebP or AVIF for raster, SVG for illustrations. `loading="lazy"`, `decoding="async"`, explicit `width`/`height`, `srcset`/`sizes` where multiple widths exist. Above-the-fold hero image is eager with `fetchpriority="high"`.
 - Alt text is required for meaningful images. Decorative visuals use `alt=""`.
 - Illustrative visuals (no real screenshots yet) are original SVG, are described as illustrative in alt text, and live in YAML-configurable paths so real screenshots can replace them without touching components.
@@ -287,7 +300,7 @@ Rules: no horizontal overflow from 320px up. Touch targets at least 44x44px. Inp
 
 ## 12. Do's and Don'ts
 
-**Do:** keep burgundy for brand and the primary action. Let Fraunces carry headlines at regular weight. Use scenes with real content density and let tall content grow the scene. Keep every claim traceable to the supplied source. Label illustrative visuals. Use careful verbs (contributed, initiated, designed, supported).
+**Do:** keep burgundy for brand and the primary action. Let Space Grotesk carry headlines at 500 to 600. Use scenes with real content density and let tall content grow the scene. Keep every claim traceable to the supplied source. Label illustrative visuals. Use careful verbs (contributed, initiated, designed, supported).
 
 **Don't:** add metrics, years of experience, client names, URLs, or outcomes that were not supplied. Show unresolved placeholders publicly. Show a fake portrait. Use percentage skill bars, stars, or "expert" labels. Publish a residential address. Hijack scroll. Hide content behind animation. Use hover-only interactions without a touch equivalent. Claim a pipeline is live or has passed until it has actually run.
 

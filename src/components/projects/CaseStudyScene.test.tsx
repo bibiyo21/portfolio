@@ -38,10 +38,12 @@ describe('CaseStudyScene', () => {
     expect(await screen.findAllByText('Proposed / designed')).toHaveLength(main.approach.length)
   })
 
-  it('omits the outcome section and links when none are supplied', () => {
+  it('omits the outcome section when no verified outcome is supplied, and links only to the supplied URL', () => {
     renderWithApp(<CaseStudyScene project={main} tone="dark" number="04" />)
     expect(screen.queryByRole('button', { name: 'Outcome' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /live site/i })).not.toBeInTheDocument()
+    const link = screen.getByRole('link', { name: /Visit the live site/ })
+    expect(link).toHaveAttribute('href', 'https://goalietraininginstitute.ca/')
+    expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'))
   })
 
   it('shows outcome and links only when verified values exist', () => {
@@ -51,9 +53,18 @@ describe('CaseStudyScene', () => {
     expect(screen.getByRole('link', { name: /Visit the live site/ })).toHaveAttribute('href', 'https://example.com')
   })
 
-  it('labels the visual as illustrative, not a real screenshot', () => {
+  it('shows real screenshots with a capture date instead of illustrative artwork', () => {
     renderWithApp(<CaseStudyScene project={main} tone="dark" number="04" />)
+    expect(screen.getByText(/Screenshots of the live site, captured 6 November 2026/)).toBeInTheDocument()
+    expect(screen.queryByText(/Illustrative artwork/)).not.toBeInTheDocument()
+    expect(screen.getByTestId('desktop-preview')).toBeInTheDocument()
+    expect(screen.getByTestId('mobile-preview')).toBeInTheDocument()
+  })
+
+  it('falls back to a labelled illustration when a project has no real screenshots', () => {
+    const noPreview: ProjectItem = { ...main, preview: undefined }
+    renderWithApp(<CaseStudyScene project={noPreview} tone="dark" number="04" />)
     expect(screen.getByText(/Illustrative artwork/)).toBeInTheDocument()
-    expect(screen.getByAltText(/Not a real screenshot/)).toBeInTheDocument()
+    expect(screen.queryByTestId('desktop-preview')).not.toBeInTheDocument()
   })
 })

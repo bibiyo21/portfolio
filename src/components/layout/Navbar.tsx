@@ -7,6 +7,7 @@ import { profile } from '../../lib/content-loader'
 import { cn } from '../../lib/cn'
 import { ease } from '../../lib/animations'
 import { isDarkTone, scenes, tabs } from '../../lib/scenes'
+import { Logo, LogoMark } from '../ui/Logo'
 import { MobileProgress } from '../scenes/SceneControls'
 import { Container } from './Container'
 
@@ -44,13 +45,11 @@ export function Navbar() {
         <a
           href="#home"
           onClick={nav('home')}
-          className={cn(
-            'inline-flex min-h-11 shrink-0 items-center font-display text-xl tracking-tight transition-colors',
-            dark ? 'text-peach' : 'text-burgundy',
-          )}
+          className="inline-flex min-h-11 shrink-0 items-center"
           aria-label={`${profile.wordmark}, back to the start`}
         >
-          {profile.wordmark}
+          <Logo variant={dark ? 'dark' : 'light'} height={46} alt="" className="hidden min-[1080px]:block" />
+          <LogoMark variant={dark ? 'dark' : 'light'} size={40} className="min-[1080px]:hidden" />
         </a>
 
         {/* Desktop tabs */}
@@ -65,7 +64,7 @@ export function Navbar() {
                     onClick={nav(t.target)}
                     aria-current={isActive ? 'location' : undefined}
                     className={cn(
-                      'relative inline-flex min-h-11 items-center rounded-full px-2.5 text-sm transition-colors duration-200 active:translate-y-px min-[1280px]:px-3.5 min-[1280px]:text-[0.9375rem]',
+                      'relative inline-flex min-h-11 items-center rounded-full px-2.5 font-display text-sm transition-colors duration-200 active:translate-y-px min-[1280px]:px-3.5 min-[1280px]:text-[0.9375rem]',
                       isActive
                         ? dark
                           ? 'font-medium text-burgundy-dark'
@@ -148,9 +147,7 @@ export function Navbar() {
                       <Dialog.Title className="sr-only">Navigation menu</Dialog.Title>
                       <Dialog.Description className="sr-only">Jump to a section of the portfolio.</Dialog.Description>
                       <div className="flex min-h-11 items-center justify-between pl-5">
-                        <p className="t-eyebrow text-peach">
-                          Now <span className="sr-only">viewing</span>: {active.label}
-                        </p>
+                        <Logo variant="dark" height={44} alt="" />
                         <Dialog.Close
                           aria-label="Close navigation menu"
                           className="grid size-11 shrink-0 place-items-center rounded-full border border-ivory/30 hover:bg-ivory/10"
@@ -158,7 +155,10 @@ export function Navbar() {
                           <X className="size-5" aria-hidden />
                         </Dialog.Close>
                       </div>
-                      <nav aria-label="Mobile" className="mt-4 min-h-0 flex-1 overflow-y-auto overscroll-contain pl-3">
+                      <p className="t-eyebrow pl-5 pt-3 text-peach">
+                        Now <span className="sr-only">viewing</span>: {active.label}
+                      </p>
+                      <nav aria-label="Mobile" className="mt-3 min-h-0 flex-1 overflow-y-auto overscroll-contain pl-3">
                         <ol className="space-y-1">
                           {scenes.map((s, i) => {
                             const isActive = s.id === activeId

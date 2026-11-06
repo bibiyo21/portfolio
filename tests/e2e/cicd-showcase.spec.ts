@@ -70,7 +70,7 @@ test.describe('CI/CD showcase', () => {
     const code = page.getByRole('region', { name: 'GitHub Actions workflow file' })
     await expect(code).toContainText('name: CI/CD')
     await expect(code.locator('span.text-peach').first()).toBeVisible()
-    await expect(code.locator('span.italic').first()).toBeVisible()
+    await expect(code.locator('span.text-on-dark-mute').first()).toBeVisible()
     await expect(code).toHaveAttribute('tabindex', '0')
   })
 })

@@ -159,13 +159,13 @@ export function ArchitectureDiagram() {
                   y={b.y + b.h / 2 - ((lines.length - 1) * 19) / 2 + li * 19 + 5}
                   fontSize={horizontal ? 16 : 17}
                   fill={selected ? '#3D1426' : '#FFF8F2'}
-                  fontFamily="Fraunces Variable, Georgia, serif"
+                  fontFamily="Space Grotesk, system-ui, sans-serif"
                 >
                   {line}
                 </text>
               ))}
               {n.lane === 'ai' ? (
-                <text x={b.x + b.w - 14} y={b.y + 20} textAnchor="end" fontSize={10} letterSpacing="0.1em" fill={selected ? '#581C35' : '#F5C6AD'} fontFamily="Inter Variable, sans-serif">
+                <text x={b.x + b.w - 14} y={b.y + 20} textAnchor="end" fontSize={10} letterSpacing="0.1em" fill={selected ? '#581C35' : '#F5C6AD'} fontFamily="JetBrains Mono, ui-monospace, monospace">
                   OPTIONAL
                 </text>
               ) : null}

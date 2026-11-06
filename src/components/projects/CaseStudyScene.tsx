@@ -9,6 +9,7 @@ import { Img } from '../ui/Img'
 import { ImageReveal } from '../ui/ImageReveal'
 import { Reveal } from '../ui/Reveal'
 import { Tag } from '../ui/Tag'
+import { SitePreview } from './SitePreview'
 import { StatusChip } from './StatusChip'
 import { useScene } from '../../hooks/useScene'
 import { projects } from '../../lib/content-loader'
@@ -135,32 +136,36 @@ export function CaseStudyScene({ project, tone, number }: { project: ProjectItem
       <div className={cn('grid gap-10 lg:grid-cols-12 lg:gap-14', mirrored && 'lg:[&>*:first-child]:order-2')}>
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:col-span-5 lg:self-start">
           <ParallaxLayer depth={26}>
-            <ImageReveal>
-              <figure className="relative">
-              <div
-                className={cn(
-                  'overflow-hidden rounded-[28px] border',
-                  dark ? 'border-ivory/15 bg-burgundy' : 'border-burgundy/20 bg-ivory',
-                )}
-              >
-                <div className={cn('flex items-center gap-1.5 px-4 py-3', dark ? 'bg-burgundy-deep/60' : 'bg-peach-soft')} aria-hidden>
-                  <span className="size-2 rounded-full bg-peach" />
-                  <span className="size-2 rounded-full bg-peach/60" />
-                  <span className="size-2 rounded-full bg-peach/30" />
+            {project.preview ? (
+              <SitePreview project={project} dark={dark} />
+            ) : (
+              <ImageReveal>
+                <figure className="relative">
+                <div
+                  className={cn(
+                    'overflow-hidden rounded-[28px] border',
+                    dark ? 'border-ivory/15 bg-burgundy' : 'border-burgundy/20 bg-ivory',
+                  )}
+                >
+                  <div className={cn('flex items-center gap-1.5 px-4 py-3', dark ? 'bg-burgundy-deep/60' : 'bg-peach-soft')} aria-hidden>
+                    <span className="size-2 rounded-full bg-peach" />
+                    <span className="size-2 rounded-full bg-peach/60" />
+                    <span className="size-2 rounded-full bg-peach/30" />
+                  </div>
+                  <Img
+                    src={project.thumbnail.src}
+                    alt={project.thumbnail.alt}
+                    width={project.thumbnail.width}
+                    height={project.thumbnail.height}
+                    className="aspect-[4/3] w-full object-cover"
+                  />
                 </div>
-                <Img
-                  src={project.thumbnail.src}
-                  alt={project.thumbnail.alt}
-                  width={project.thumbnail.width}
-                  height={project.thumbnail.height}
-                  className="aspect-[4/3] w-full object-cover"
-                />
-              </div>
-              <figcaption className={cn('mt-3 text-xs', dark ? 'text-on-dark-mute' : 'text-burgundy-dark/70')}>
-                Illustrative artwork. Real screenshots will replace it once cleared for publication.
-              </figcaption>
-            </figure>
-            </ImageReveal>
+                <figcaption className={cn('mt-3 text-xs', dark ? 'text-on-dark-mute' : 'text-burgundy-dark/70')}>
+                  Illustrative artwork. Real screenshots will replace it once cleared for publication.
+                </figcaption>
+              </figure>
+              </ImageReveal>
+            )}
           </ParallaxLayer>
         </div>
 
