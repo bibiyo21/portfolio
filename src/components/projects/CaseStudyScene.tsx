@@ -1,4 +1,3 @@
-import { motion, useReducedMotion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Scene } from '../scenes/Scene'
@@ -7,6 +6,7 @@ import { ParallaxLayer } from '../scenes/ParallaxLayer'
 import { Accordion, type AccordionItem } from '../ui/Accordion'
 import { ButtonLink } from '../ui/Button'
 import { Img } from '../ui/Img'
+import { ImageReveal } from '../ui/ImageReveal'
 import { Reveal } from '../ui/Reveal'
 import { Tag } from '../ui/Tag'
 import { StatusChip } from './StatusChip'
@@ -16,14 +16,12 @@ import type { ProjectItem } from '../../lib/content-schemas'
 import { GithubIcon } from '../../lib/icons'
 import type { SceneTone } from '../../lib/scenes'
 import { cn } from '../../lib/cn'
-import { ease } from '../../lib/animations'
 
 /**
  * Dedicated case-study scene. `theme` changes the whole treatment (colour, layout direction,
  * motif) so related case studies stay clearly distinct. Sections render only when content exists.
  */
 export function CaseStudyScene({ project, tone, number }: { project: ProjectItem; tone: SceneTone; number: string }) {
-  const reduce = useReducedMotion()
   const { goTo } = useScene()
   const dark = tone === 'dark'
   const mirrored = project.theme === 'north'
@@ -135,15 +133,10 @@ export function CaseStudyScene({ project, tone, number }: { project: ProjectItem
       backdrop={<SceneBackdrop tone={tone} variant={mirrored ? 'b' : 'a'} />}
     >
       <div className={cn('grid gap-10 lg:grid-cols-12 lg:gap-14', mirrored && 'lg:[&>*:first-child]:order-2')}>
-        <div className="lg:col-span-5">
+        <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:col-span-5 lg:self-start">
           <ParallaxLayer depth={26}>
-            <motion.figure
-              className="relative"
-              initial={reduce ? { opacity: 0 } : { clipPath: 'inset(0 0 100% 0)' }}
-              whileInView={reduce ? { opacity: 1 } : { clipPath: 'inset(0 0 0% 0)' }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: reduce ? 0.2 : 1, ease: ease.out }}
-            >
+            <ImageReveal>
+              <figure className="relative">
               <div
                 className={cn(
                   'overflow-hidden rounded-[28px] border',
@@ -166,7 +159,8 @@ export function CaseStudyScene({ project, tone, number }: { project: ProjectItem
               <figcaption className={cn('mt-3 text-xs', dark ? 'text-on-dark-mute' : 'text-burgundy-dark/70')}>
                 Illustrative artwork. Real screenshots will replace it once cleared for publication.
               </figcaption>
-            </motion.figure>
+            </figure>
+            </ImageReveal>
           </ParallaxLayer>
         </div>
 
@@ -195,7 +189,7 @@ export function CaseStudyScene({ project, tone, number }: { project: ProjectItem
 
           {siblings.length > 1 ? (
             <Reveal delay={0.12}>
-              <nav aria-label="GTI case studies" className="mt-6 flex flex-wrap items-center gap-2 text-sm">
+              <nav aria-label={`GTI case studies, ${project.name} open`} className="mt-6 flex flex-wrap items-center gap-2 text-sm">
                 {siblings.map((s, i) => (
                   <span key={s.id} className="inline-flex items-center gap-2">
                     {i > 0 ? (

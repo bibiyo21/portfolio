@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MotionConfig } from 'framer-motion'
@@ -45,8 +47,20 @@ describe('PipelineDiagram', () => {
 describe('CICDShowcase', () => {
   it('uses the YAML title and description', () => {
     wrap(<CICDShowcase />)
-    expect(screen.getByRole('heading', { name: cicd.title })).toBeInTheDocument()
-    expect(screen.getByText(/I design and improve CI\/CD pipelines/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'From Code Commit to Production Deployment' })).toBeInTheDocument()
+    expect(screen.getByText(/I value delivery practices that make software changes easier to validate/)).toBeInTheDocument()
+  })
+
+  it('shows the six stages named in the brief', () => {
+    wrap(<CICDShowcase />)
+    const names = screen.getAllByRole('button', { name: /^Stage \d+ of 6/ }).map((b) => b.getAttribute('aria-label'))
+    expect(names).toHaveLength(6)
+    expect(names[0]).toMatch(/Source Control/)
+    expect(names[1]).toMatch(/Install and Validate/)
+    expect(names[2]).toMatch(/Build/)
+    expect(names[3]).toMatch(/Automated Tests/)
+    expect(names[4]).toMatch(/Quality Gates/)
+    expect(names[5]).toMatch(/Deployment/)
   })
 
   it('switches between GitHub Actions and GitLab CI/CD', async () => {
@@ -60,10 +74,24 @@ describe('CICDShowcase', () => {
     expect(screen.getAllByRole('button', { name: /^Stage/ })).toHaveLength(gitlab.stages.length)
   })
 
-  it('does not invent repository links while repositoryUrl is empty', () => {
+  it('only links to workflow files that exist in this repository', () => {
     wrap(<CICDShowcase />)
-    expect(cicd.repositoryUrl).toBe('')
-    expect(screen.queryByRole('link', { name: /view on github/i })).not.toBeInTheDocument()
-    expect(screen.getByText(/repositoryUrl is set/i)).toBeInTheDocument()
+    const link = screen.getByRole('link', { name: /View on GitHub/ })
+    expect(link).toHaveAttribute('href', 'https://github.com/bibiyo21/portfolio/blob/main/.github/workflows/ci-cd.yml')
+    expect(existsSync(join(process.cwd(), github.workflow))).toBe(true)
+    expect(existsSync(join(process.cwd(), gitlab.workflow))).toBe(true)
+  })
+
+  it('keeps the CI/CD content consistent with the real workflow files', () => {
+    const gh = readFileSync(join(process.cwd(), github.workflow), 'utf8')
+    for (const job of ['validate:', 'build:', 'unit-test:', 'e2e-test:', 'preview-deploy:', 'production-deploy:']) expect(gh).toContain(`  ${job}`)
+    const gl = readFileSync(join(process.cwd(), gitlab.workflow), 'utf8')
+    for (const stage of ['validate', 'build', 'unit-test', 'e2e-test', 'deploy']) expect(gl).toContain(`  - ${stage}`)
+  })
+
+  it('does not claim a live or successful pipeline', () => {
+    wrap(<CICDShowcase />)
+    expect(screen.getByText(/Illustrative passing run/)).toBeInTheDocument()
+    expect(screen.getByText(/not a live build status/)).toBeInTheDocument()
   })
 })

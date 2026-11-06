@@ -43,7 +43,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
@@ -144,11 +144,10 @@
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -156,32 +155,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -193,8 +166,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -222,34 +193,42 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Section } from '../layout/Section'
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Scene } from '../scenes/Scene'
+import { SceneBackdrop } from '../scenes/SceneBackdrop'
+import { ParallaxLayer } from '../scenes/ParallaxLayer'
 import { Img } from '../ui/Img'
 import { Reveal } from '../ui/Reveal'
 import { SectionHeading } from '../ui/SectionHeading'
+import { Tag } from '../ui/Tag'
 import { profile } from '../../lib/content-loader'
 &nbsp;
 export function <span class="fstat-no" title="function not covered" >About() {</span>
   const { about } = <span class="cstat-no" title="statement not covered" >profile</span>
 <span class="cstat-no" title="statement not covered" >  return (</span>
-    &lt;Section id="about" labelledBy="about-title"&gt;
-      &lt;SectionHeading index="01" eyebrow="About" id="about-title" title="Engineering with the business in mind" /&gt;
+    &lt;Scene id="about" tone="ivory" backdrop={&lt;SceneBackdrop tone="ivory" variant="b" /&gt;}&gt;
+      &lt;SectionHeading index="01" eyebrow={about.eyebrow} id="about-title" title={about.title} /&gt;
       &lt;div className="grid gap-12 lg:grid-cols-12 lg:gap-16"&gt;
-        &lt;div className="lg:col-span-5"&gt;
-          &lt;Reveal&gt;
-            &lt;div className="relative mx-auto max-w-sm lg:max-w-none"&gt;
-              &lt;div aria-hidden className="absolute -left-5 -top-5 size-full rounded-[28px] bg-peach-soft" /&gt;
-              &lt;div className="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-burgundy-dark"&gt;
-                &lt;Img
-                  src={about.portrait.src}
-                  alt={about.portrait.alt}
-                  width={about.portrait.width}
-                  height={about.portrait.height}
-                  className="size-full object-cover"
-                /&gt;
-              &lt;/div&gt;
-            &lt;/div&gt;
-          &lt;/Reveal&gt;
-        &lt;/div&gt;
         &lt;div className="lg:col-span-7"&gt;
           &lt;Reveal&gt;
             &lt;p className="t-lede text-burgundy"&gt;{about.lede}&lt;/p&gt;
@@ -261,39 +240,48 @@ export function <span class="fstat-no" title="function not covered" >About() {</
               &lt;/Reveal&gt;
             ))}
           &lt;/div&gt;
-&nbsp;
-          {about.stats.length &gt; 0 ? (
+          {about.attributes.length &gt; 0 ? (
             &lt;Reveal&gt;
-              &lt;dl className="mt-10 grid grid-cols-2 gap-6 border-t border-line pt-8 sm:grid-cols-3"&gt;
-                {about.stats.<span class="fstat-no" title="function not covered" >map((s</span>) =&gt; (
-<span class="cstat-no" title="statement not covered" >                  &lt;div key={s.label}&gt;</span>
-                    &lt;dd className="t-heading-m text-burgundy"&gt;{s.value}&lt;/dd&gt;
-                    &lt;dt className="t-caption text-ink-mute"&gt;{s.label}&lt;/dt&gt;
-                  &lt;/div&gt;
+              &lt;ul className="mt-8 flex flex-wrap gap-2" aria-label="Working style"&gt;
+                {about.attributes.<span class="fstat-no" title="function not covered" >map((a</span>) =&gt; (
+<span class="cstat-no" title="statement not covered" >                  &lt;li key={a}&gt;</span>
+                    &lt;Tag&gt;{a}&lt;/Tag&gt;
+                  &lt;/li&gt;
                 ))}
-              &lt;/dl&gt;
+              &lt;/ul&gt;
             &lt;/Reveal&gt;
           ) : null}
-&nbsp;
-          &lt;ul className="mt-12 grid gap-4 sm:grid-cols-2"&gt;
-            {about.highlights.<span class="fstat-no" title="function not covered" >map((h</span>, i) =&gt; (
-<span class="cstat-no" title="statement not covered" >              &lt;Reveal as="li" key={h.title} delay={i * 0.06}&gt;</span>
-                &lt;div className="h-full rounded-[20px] border border-line bg-peach-soft p-6"&gt;
-                  &lt;h3 className="t-heading-s"&gt;{h.title}&lt;/h3&gt;
-                  &lt;p className="mt-2 text-ink-soft"&gt;{h.text}&lt;/p&gt;
-                &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div className="lg:col-span-5"&gt;
+          {profile.portrait ? (
+            &lt;Reveal className="mb-6"&gt;
+              &lt;div className="aspect-[4/5] max-w-sm overflow-hidden rounded-[28px] bg-burgundy-dark"&gt;
+                &lt;Img
+                  src={profile.portrait.src}
+                  alt={profile.portrait.alt}
+                  width={profile.portrait.width}
+                  height={profile.portrait.height}
+                  className="size-full object-cover"
+                /&gt;
+              &lt;/div&gt;
+            &lt;/Reveal&gt;
+          ) : null}
+          &lt;ol className="space-y-4"&gt;
+            {about.strengths.<span class="fstat-no" title="function not covered" >map((s</span>, i) =&gt; (
+<span class="cstat-no" title="statement not covered" >              &lt;Reveal as="li" key={s.title} delay={i * 0.08}&gt;</span>
+                &lt;ParallaxLayer depth={i % 2 ? 10 : 18}&gt;
+                  &lt;div className="rounded-[20px] border border-line bg-peach-soft p-6"&gt;
+                    &lt;p className="t-eyebrow tabular-nums text-burgundy"&gt;{String(i + 1).padStart(2, '0')}&lt;/p&gt;
+                    &lt;h3 className="t-heading-s mt-2"&gt;{s.title}&lt;/h3&gt;
+                    &lt;p className="mt-2 text-ink-soft"&gt;{s.text}&lt;/p&gt;
+                  &lt;/div&gt;
+                &lt;/ParallaxLayer&gt;
               &lt;/Reveal&gt;
             ))}
-          &lt;/ul&gt;
-&nbsp;
-          &lt;Reveal&gt;
-            &lt;blockquote className="mt-12 border-l-2 border-burgundy pl-6"&gt;
-              &lt;p className="t-heading-m italic text-burgundy-dark"&gt;{about.philosophy}&lt;/p&gt;
-            &lt;/blockquote&gt;
-          &lt;/Reveal&gt;
+          &lt;/ol&gt;
         &lt;/div&gt;
       &lt;/div&gt;
-    &lt;/Section&gt;
+    &lt;/Scene&gt;
   )
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -303,7 +291,7 @@ export function <span class="fstat-no" title="function not covered" >About() {</
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-05T10:59:33.101Z
+                at 2026-11-06T00:55:27.030Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

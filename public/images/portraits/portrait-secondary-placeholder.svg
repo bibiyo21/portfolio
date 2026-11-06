@@ -1,5 +1,0 @@
-<svg width="800" height="1000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3D1426"/><stop offset="1" stop-color="#3D1426"/></linearGradient></defs>
-<rect width="800" height="1000" fill="url(#g)"/>
-<circle cx="400" cy="360" r="130" fill="#FBE5D9" opacity=".9"/>
-<path d="M130 1000c0-230 120-360 270-360s270 130 270 360z" fill="#FBE5D9" opacity=".9"/>
-<text x="400" y="900" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="34" fill="#FFF8F2" opacity=".85">Replace with your portrait</text></svg>

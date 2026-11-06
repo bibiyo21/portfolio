@@ -19,15 +19,15 @@ export function SceneBackdrop({ tone, variant = 'a' }: { tone: SceneTone; varian
       <ParallaxLayer
         depth={60}
         rotate={6}
-        className={`absolute ${flip ? 'left-[6%]' : 'right-[6%]'} bottom-[8%] size-72 max-md:hidden`}
+        className={`absolute ${flip ? '-left-16' : '-right-16'} -bottom-20 size-72 max-md:hidden`}
       >
         <div className={`size-full rounded-full border ${ring}`} />
         <div className={`absolute inset-10 rounded-full border ${ring}`} />
       </ParallaxLayer>
-      <ParallaxLayer depth={90} rotate={8} className={`absolute ${flip ? 'right-[12%]' : 'left-[10%]'} top-[22%] max-md:hidden`}>
+      <ParallaxLayer depth={90} rotate={8} className={`absolute ${flip ? 'right-[5%]' : 'left-[1.5%]'} top-[30%] max-lg:hidden`}>
         <div className={`size-3 rotate-45 ${obj} opacity-70`} />
       </ParallaxLayer>
-      <ParallaxLayer depth={70} rotate={-5} className={`absolute ${flip ? 'left-[22%]' : 'right-[24%]'} bottom-[18%] max-md:hidden`}>
+      <ParallaxLayer depth={70} rotate={-5} className={`absolute ${flip ? 'left-[1.5%]' : 'right-[5%]'} bottom-[24%] max-lg:hidden`}>
         <div className={`size-2 rounded-full ${obj} opacity-60`} />
       </ParallaxLayer>
     </>

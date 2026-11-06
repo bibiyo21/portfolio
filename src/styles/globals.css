@@ -64,6 +64,10 @@ html {
   padding-bottom: clamp(3rem, 7vw, 6rem);
 }
 .snap-end-footer { scroll-snap-align: end; }
+/* Short screens (small phones, landscape): give content the room back. */
+@media (max-height: 700px) {
+  .scene { padding-top: calc(var(--nav-h) + 1rem); }
+}
 
 body {
   margin: 0;
@@ -98,7 +102,7 @@ h1, h2, h3, h4 {
 }
 
 /* Type scale (DESIGN.md section 2) */
-.t-display-xl { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4.25rem); line-height: 0.98; letter-spacing: -0.03em; font-weight: 400; }
+.t-display-xl { font-family: var(--font-display); font-size: clamp(2.15rem, 4.6vw, 4rem); line-height: 0.98; letter-spacing: -0.03em; font-weight: 400; }
 .t-display-l { font-family: var(--font-display); font-size: clamp(2.25rem, 5vw, 4.25rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: 400; }
 .t-heading-m { font-family: var(--font-display); font-size: clamp(1.5rem, 2.8vw, 2.5rem); line-height: 1.1; letter-spacing: -0.015em; font-weight: 400; }
 .t-heading-s { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.01em; font-weight: 450; }

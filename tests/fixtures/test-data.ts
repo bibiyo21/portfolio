@@ -6,34 +6,52 @@ export const desktopViewports = [
   { name: '1366x768', width: 1366, height: 768 },
   { name: '1280x800', width: 1280, height: 800 },
 ]
-
-export const mobileViewports = [
-  { name: 'iPhone SE', width: 375, height: 667 },
-  { name: 'iPhone 13/14', width: 390, height: 844 },
-  { name: 'iPhone 15 Pro Max', width: 430, height: 932 },
-  { name: 'Android small', width: 360, height: 800 },
-  { name: 'Android standard', width: 393, height: 873 },
-]
-
 export const tabletViewports = [
-  { name: 'iPad Mini', width: 768, height: 1024 },
-  { name: 'iPad', width: 820, height: 1180 },
-  { name: 'Tablet landscape', width: 1024, height: 768 },
+  { name: 'iPad Mini 768x1024', width: 768, height: 1024 },
+  { name: 'iPad 820x1180', width: 820, height: 1180 },
+  { name: 'Tablet landscape 1024x768', width: 1024, height: 768 },
+]
+export const mobileViewports = [
+  { name: 'Android 360x800', width: 360, height: 800 },
+  { name: 'iPhone SE 375x667', width: 375, height: 667 },
+  { name: 'iPhone 14 390x844', width: 390, height: 844 },
+  { name: 'iPhone Pro Max 430x932', width: 430, height: 932 },
 ]
 
-export const sectionIds = [
+/** Header switches from burger to tabs at this width (see DESIGN.md section 5). */
+export const TAB_BREAKPOINT = 1080
+
+export const sceneIds = [
   'home',
   'about',
-  'experience',
-  'affiliations',
-  'projects',
   'expertise',
-  'philosophy',
+  'work',
+  'gti-main',
+  'gti-north',
+  'experience',
+  'architecture',
+  'cicd',
+  'recognition',
+  'faq',
   'contact',
 ] as const
 
-export const skillCategoryCount = 11
-export const projectCount = 4
+export const sceneLabels: Record<(typeof sceneIds)[number], string> = {
+  home: 'Home',
+  about: 'About',
+  expertise: 'Expertise',
+  work: 'Work',
+  'gti-main': 'GTI Main',
+  'gti-north': 'GTI North',
+  experience: 'Experience',
+  architecture: 'Architecture',
+  cicd: 'CI/CD',
+  recognition: 'Recognition',
+  faq: 'FAQ',
+  contact: 'Contact',
+}
+
+export const tabLabels = ['Home', 'About', 'Expertise', 'Work', 'Experience', 'Architecture', 'CI/CD', 'FAQ', 'Contact']
 
 export const validForm = {
   name: 'Test Visitor',
@@ -53,35 +71,29 @@ export function trackErrors(page: Page): string[] {
 }
 
 export async function expectNoHorizontalOverflow(page: Page) {
-  const overflow = await page.evaluate(() => ({
+  const o = await page.evaluate(() => ({
     scroll: document.documentElement.scrollWidth,
     client: document.documentElement.clientWidth,
+    body: document.body.scrollWidth,
   }))
-  expect(overflow.scroll, `scrollWidth ${overflow.scroll} > clientWidth ${overflow.client}`).toBeLessThanOrEqual(
-    overflow.client,
-  )
+  expect(o.scroll, `scrollWidth ${o.scroll} > clientWidth ${o.client}`).toBeLessThanOrEqual(o.client)
+  expect(o.body).toBeLessThanOrEqual(o.client)
 }
 
-/** Scroll through the whole page so lazy images and whileInView reveals run. */
-export async function scrollThrough(page: Page) {
-  await page.evaluate(async () => {
-    const step = Math.max(300, Math.floor(window.innerHeight * 0.7))
-    for (let y = 0; y < document.body.scrollHeight; y += step) {
-      window.scrollTo(0, y)
-      await new Promise((r) => setTimeout(r, 80))
-    }
-    window.scrollTo(0, 0)
-  })
+/** Jump straight to a scene without animation. */
+export async function jumpToScene(page: Page, id: string) {
+  await page.evaluate((i) => document.getElementById(i)!.scrollIntoView({ behavior: 'instant', block: 'start' }), id)
+  await page.waitForTimeout(250)
 }
 
-export async function openContactFromNav(page: Page) {
-  const viewport = page.viewportSize()
-  if (viewport && viewport.width < 768) {
-    await page.getByRole('button', { name: 'Open menu' }).click()
-    await page.getByRole('dialog', { name: 'Site navigation' }).getByRole('button', { name: /^Let.s Connect$/ }).click()
-  } else {
-    await page.getByRole('navigation', { name: 'Primary' }).getByRole('button', { name: 'Contact' }).click()
-  }
+/** Distance of a scene's top edge from the viewport top. */
+export const sceneTop = (page: Page, id: string) =>
+  page.evaluate((i) => Math.round(document.getElementById(i)!.getBoundingClientRect().top), id)
+
+/** Walk every scene so lazy images load and reveals fire. */
+export async function visitAllScenes(page: Page) {
+  for (const id of sceneIds) await jumpToScene(page, id)
+  await jumpToScene(page, 'home')
 }
 
 /** Force lazy images to load, then wait until every image has decoded. */
@@ -91,4 +103,17 @@ export async function waitForImages(page: Page) {
     imgs.forEach((img) => (img.loading = 'eager'))
     await Promise.all(imgs.map((img) => img.decode().catch(() => undefined)))
   })
+}
+
+export const activeTab = (page: Page) =>
+  page.locator('nav[aria-label="Primary"] a[aria-current="location"]')
+
+export const activeLabel = (page: Page) => page.getByTestId('active-label')
+
+export async function openDrawer(page: Page) {
+  await page.getByRole('button', { name: 'Open navigation menu' }).click()
+  const drawer = page.getByRole('dialog')
+  await drawer.waitFor()
+  await page.waitForTimeout(600)
+  return drawer
 }

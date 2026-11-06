@@ -36,21 +36,21 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/22</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
@@ -177,19 +177,10 @@
 <a name='L101'></a><a href='#L101'>101</a>
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a>
-<a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a>
-<a name='L108'></a><a href='#L108'>108</a>
-<a name='L109'></a><a href='#L109'>109</a>
-<a name='L110'></a><a href='#L110'>110</a>
-<a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L104'></a><a href='#L104'>104</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,8 +195,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -257,6 +248,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -287,136 +280,107 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
-import { Container } from '../layout/Container'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { MapPin } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Button, ButtonLink } from '../ui/Button'
 import { Img } from '../ui/Img'
 import { MaskedLines } from '../ui/MaskedLines'
+import { HeroGeometry } from '../scenes/HeroGeometry'
+import { Scene } from '../scenes/Scene'
+import { SceneBackdrop } from '../scenes/SceneBackdrop'
 import { useContactModal } from '../../hooks/useContactModal'
+import { useScene } from '../../hooks/useScene'
 import { profile } from '../../lib/content-loader'
 import { ease } from '../../lib/animations'
 &nbsp;
 export function <span class="fstat-no" title="function not covered" >Hero() {</span>
   const { openModal } = <span class="cstat-no" title="statement not covered" >useContactModal()</span>
+  const { goTo } = <span class="cstat-no" title="statement not covered" >useScene()</span>
   const reduce = <span class="cstat-no" title="statement not covered" >useReducedMotion()</span>
-  const ref = <span class="cstat-no" title="statement not covered" >useRef&lt;HTMLElement&gt;(null)</span>
-  const { scrollYProgress } = <span class="cstat-no" title="statement not covered" >useScroll({ target: ref, offset: ['start start', 'end start'] })</span>
-  const imgY = <span class="cstat-no" title="statement not covered" >useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, 32])</span>
-  const bgY = <span class="cstat-no" title="statement not covered" >useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, 60])</span>
-  const { available, label } = profile.availability
-&nbsp;
+  const <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >fade = (d</span>elay: number) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
+    initial: reduce ? false : { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.8, ease: ease.out, delay },
+  })
 <span class="cstat-no" title="statement not covered" >  return (</span>
-    &lt;section
+    &lt;Scene
       id="home"
-      ref={ref}
-      aria-labelledby="hero-title"
-      className="relative overflow-hidden bg-ivory pb-20 pt-28 md:pb-28 md:pt-36"
+      tone="dark"
+      titleId="hero-title"
+      center
+      backdrop={&lt;SceneBackdrop tone="dark" /&gt;}
     &gt;
-      &lt;motion.div
-        aria-hidden
-        style={{ y: bgY }}
-        className="pointer-events-none absolute -right-40 top-0 h-[900px] w-[900px] opacity-80 [mask-image:radial-gradient(closest-side,black,transparent)]"
-      &gt;
-        &lt;Img src="/images/illustrations/hero-architecture.svg" alt="" className="size-full" priority /&gt;
-      &lt;/motion.div&gt;
-      &lt;div
-        aria-hidden
-        className="pointer-events-none absolute -left-32 top-1/3 size-[30rem] rounded-full bg-peach-soft opacity-55 blur-3xl"
-      /&gt;
-&nbsp;
-      &lt;Container className="relative grid items-center gap-12 lg:grid-cols-12 lg:gap-8"&gt;
-        &lt;div className="lg:col-span-7"&gt;
+      &lt;div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8"&gt;
+        &lt;div className="lg:col-span-7 xl:col-span-8"&gt;
           &lt;motion.p
-            className="mb-8 inline-flex items-center gap-3 rounded-full border border-line bg-ivory/70 px-4 py-2 text-sm text-ink-soft"
-            initial={reduce ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: ease.out }}
+            {...fade(0)}
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-ivory/20 px-4 py-2 text-sm text-on-dark-soft sm:mb-6"
           &gt;
-            &lt;span className="relative flex size-2.5" aria-hidden&gt;
-              {available ? (
-                &lt;span className="absolute inset-0 rounded-full bg-burgundy [animation:ping-soft_2.4s_ease-out_infinite]" /&gt;
-              ) : null}
-              &lt;span className={`relative size-2.5 rounded-full ${available ? 'bg-burgundy' : 'bg-ink-mute'}`} /&gt;
-            &lt;/span&gt;
-            &lt;span data-testid="availability"&gt;{label}&lt;/span&gt;
+            &lt;MapPin className="size-4 text-peach" aria-hidden /&gt;
+            {profile.location}
+            {profile.availability ? (
+              &lt;&gt;
+                &lt;span aria-hidden className="mx-1 text-ivory/30"&gt;
+                  |
+                &lt;/span&gt;
+                &lt;span data-testid="availability"&gt;{profile.availability}&lt;/span&gt;
+              &lt;/&gt;
+            ) : null}
           &lt;/motion.p&gt;
 &nbsp;
           &lt;MaskedLines
             lines={profile.headline}
             accentLast
+            accentClass="italic text-peach"
             className="t-display-xl"
             id="hero-title"
           /&gt;
 &nbsp;
           &lt;motion.p
-            className="mt-6 text-sm font-medium uppercase tracking-[0.14em] text-burgundy"
-            initial={reduce ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: ease.out, delay: 0.7 }}
+            {...fade(0.7)}
+            className="mt-4 text-sm font-medium uppercase tracking-[0.14em] text-peach sm:mt-6"
           &gt;
-            {profile.title}
+            {profile.supportingLine}
           &lt;/motion.p&gt;
-          &lt;motion.p
-            className="t-lede mt-6 max-w-xl text-ink-soft"
-            initial={reduce ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: ease.out, delay: 0.8 }}
-          &gt;
+          &lt;motion.p {...fade(0.8)} className="t-lede mt-4 max-w-xl text-on-dark-soft sm:mt-6"&gt;
             {profile.intro}
           &lt;/motion.p&gt;
-          &lt;motion.div
-            className="mt-10 flex flex-wrap gap-4"
-            initial={reduce ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: ease.out, delay: 0.95 }}
-          &gt;
-            &lt;ButtonLink href="#projects" arrow&gt;
+          &lt;motion.div {...fade(0.95)} className="mt-7 flex flex-wrap gap-3 sm:mt-10 sm:gap-4"&gt;
+            &lt;ButtonLink
+              variant="onDark"
+              href="#work"
+              arrow
+<span class="fstat-no" title="function not covered" >              onClick={(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                e.preventDefault()</span>
+<span class="cstat-no" title="statement not covered" >                goTo('work')</span>
+              }}
+            &gt;
               Explore My Work
             &lt;/ButtonLink&gt;
-            &lt;Button variant="secondary" onClick={openModal} aria-haspopup="dialog"&gt;
+            &lt;Button variant="onDarkOutline" onClick={openModal} aria-haspopup="dialog"&gt;
               Let&amp;apos;s Connect
             &lt;/Button&gt;
           &lt;/motion.div&gt;
         &lt;/div&gt;
 &nbsp;
-        &lt;motion.div
-          className="relative mx-auto w-full max-w-[22rem] sm:max-w-md lg:col-span-5 lg:max-w-none"
-          initial={reduce ? { opacity: 0 } : { clipPath: 'inset(0 0 100% 0)' }}
-          animate={reduce ? { opacity: 1 } : { clipPath: 'inset(0 0 0% 0)' }}
-          transition={{ duration: reduce ? 0.2 : 1.1, ease: ease.out, delay: 0.3 }}
-        &gt;
-          &lt;div aria-hidden className="absolute -bottom-6 -right-6 size-full rounded-[28px] bg-peach" /&gt;
-          &lt;motion.div style={{ y: imgY }} className="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-burgundy"&gt;
-            &lt;Img
-              src={profile.heroPortrait.src}
-              alt={profile.heroPortrait.alt}
-              width={profile.heroPortrait.width}
-              height={profile.heroPortrait.height}
-              priority
-              className="size-full object-cover"
-            /&gt;
-          &lt;/motion.div&gt;
-        &lt;/motion.div&gt;
-      &lt;/Container&gt;
-    &lt;/section&gt;
+        &lt;div className="lg:col-span-5 xl:col-span-4"&gt;
+          {profile.portrait ? (
+            &lt;div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[28px] bg-burgundy lg:max-w-none"&gt;
+              &lt;Img
+                src={profile.portrait.src}
+                alt={profile.portrait.alt}
+                width={profile.portrait.width}
+                height={profile.portrait.height}
+                priority
+                className="size-full object-cover"
+              /&gt;
+            &lt;/div&gt;
+          ) : (
+            &lt;HeroGeometry /&gt;
+          )}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/Scene&gt;
   )
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -426,7 +390,7 @@ export function <span class="fstat-no" title="function not covered" >Hero() {</s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-05T10:59:33.101Z
+                at 2026-11-06T00:55:27.030Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

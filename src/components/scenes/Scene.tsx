@@ -45,7 +45,7 @@ export function Scene({
         data-scene={id}
         aria-labelledby={titleId ?? `${id}-title`}
         className={cn(
-          'scene relative overflow-hidden',
+          'scene relative overflow-clip',
           center && 'flex flex-col justify-center',
           tones[tone],
           className,

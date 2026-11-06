@@ -29,10 +29,10 @@ export function Hero() {
       backdrop={<SceneBackdrop tone="dark" />}
     >
       <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-7 xl:col-span-8">
           <motion.p
             {...fade(0)}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-ivory/20 px-4 py-2 text-sm text-on-dark-soft"
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-ivory/20 px-4 py-2 text-sm text-on-dark-soft sm:mb-6"
           >
             <MapPin className="size-4 text-peach" aria-hidden />
             {profile.location}
@@ -56,14 +56,14 @@ export function Hero() {
 
           <motion.p
             {...fade(0.7)}
-            className="mt-6 text-sm font-medium uppercase tracking-[0.14em] text-peach"
+            className="mt-4 text-sm font-medium uppercase tracking-[0.14em] text-peach sm:mt-6"
           >
             {profile.supportingLine}
           </motion.p>
-          <motion.p {...fade(0.8)} className="t-lede mt-6 max-w-xl text-on-dark-soft">
+          <motion.p {...fade(0.8)} className="t-lede mt-4 max-w-xl text-on-dark-soft sm:mt-6">
             {profile.intro}
           </motion.p>
-          <motion.div {...fade(0.95)} className="mt-10 flex flex-wrap gap-4">
+          <motion.div {...fade(0.95)} className="mt-7 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
             <ButtonLink
               variant="onDark"
               href="#work"
@@ -81,7 +81,7 @@ export function Hero() {
           </motion.div>
         </div>
 
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-5 xl:col-span-4">
           {profile.portrait ? (
             <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[28px] bg-burgundy lg:max-w-none">
               <Img

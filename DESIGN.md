@@ -59,7 +59,7 @@ Fonts are self-hosted through `@fontsource-variable/*`, `font-display: swap`.
 
 | Style | Font | Size (fluid) | Weight | Line height | Tracking |
 |---|---|---|---|---|---|
-| Display XL (hero) | Fraunces | `clamp(2.5rem, 5vw, 4.25rem)` | 400 | 0.98 | -0.03em |
+| Display XL (hero) | Fraunces | `clamp(2.15rem, 4.6vw, 4rem)` | 400 | 0.98 | -0.03em |
 | Display L (section title) | Fraunces | `clamp(2.25rem, 5vw, 4.25rem)` | 400 | 1.05 | -0.02em |
 | Heading M (project/role) | Fraunces | `clamp(1.5rem, 2.8vw, 2.5rem)` | 400 | 1.1 | -0.015em |
 | Heading S (card) | Fraunces | `1.5rem` | 450 | 1.2 | -0.01em |
@@ -125,14 +125,14 @@ Scene rhythm alternates light and dark so each scene reads as its own room. Scen
 
 ## 5. Components and Navigation
 
-### Navigation (desktop, 768px and wider)
+### Navigation (desktop tabs, 1080px and wider)
 - Fixed header, `--nav-h` tall. Surface follows the active scene tone: on light scenes `ivory @ 88%` with blur and a hairline, on dark scenes `burgundy-dark @ 82%` with blur and ivory text. The colour transition takes 300ms so the active tab is always legible.
-- Left: wordmark in Fraunces. Right: tabs Home, About, Expertise, Work, Experience, Architecture, CI/CD, FAQ, Contact. At 768-1100px labels tighten (smaller gap, 0.875rem) rather than wrap.
+- Left: wordmark in Fraunces. Right: tabs Home, About, Expertise, Work, Experience, Architecture, CI/CD, FAQ, Contact. Below 1080px (tablets, portrait and landscape, and phones) the header uses the compact burger pattern instead, because nine tab labels do not fit comfortably; the choice is by available width, never by device.
 - Active tab: a sliding pill (Framer `layoutId`, 350ms) plus `aria-current="location"`. The pill is not the only signal: the active label is also heavier (500 vs 400 weight) and has an underline dot.
 - States: default, hover (colour shift), focus-visible (2px ring), active, pressed (`translateY(1px)`).
 - Tabs are real links to scene ids. A tab group stays active across its scenes (Work covers GTI Main and GTI North).
 
-### Navigation (mobile, below 768px)
+### Navigation (compact, below 1080px)
 - Compact header. Right edge: burger button (44x44 minimum). Immediately to its left: the live active-scene label (truncates with an ellipsis, never pushes the burger off screen). Wordmark at left.
 - A 2px progress bar sits under the header.
 - Burger opens a **right-side drawer**: `height: 100dvh` (100vh fallback), `width: clamp(260px, 70vw, 420px)`, anchored right, slides in from the right over 450ms `ease-out`. The remaining ~30% on the left is a dimmed backdrop (`burgundy-deep @ 55%`, light blur) through which the live scene stays visible. Safe-area insets are respected on all sides.
@@ -276,10 +276,11 @@ Mobile first. Tailwind v4 default breakpoints.
 
 | Name | Min width | Changes |
 |---|---|---|
-| base | 0 | Single column, gutter 20px, header with label plus burger, right drawer, progress bar, no parallax, snap `proximity`, modals as bottom sheets |
+| base | 0 | Single column, gutter 20px, compact header with live label plus right-aligned burger, right drawer, progress bar, no parallax, snap `proximity`, modals as bottom sheets |
 | `sm` | 640px | Larger type, 2-up chips |
-| `md` | 768px | Desktop tab bar replaces burger, two-column compositions, light parallax, modals centre |
-| `lg` | 1024px | Full asymmetric scenes, progress rail and prev/next, snap `mandatory` on fine pointers, full parallax, diagrams horizontal |
+| `md` | 768px | Two-column compositions, half-distance parallax, modals centre. Header stays compact |
+| `min-[1080px]` | 1080px | Desktop tab bar replaces the burger and label, scene header height 72px |
+| `lg` | 1024px | Full asymmetric scenes, progress rail and prev/next (shown from here, so also on 1024px tablets that still use the burger header), snap `mandatory` on fine pointers, full parallax, diagrams horizontal |
 | `xl` | 1280px | Container caps at 1320px |
 
 Rules: no horizontal overflow from 320px up. Touch targets at least 44x44px. Inputs 16px. Visible focus everywhere. Use `dvh` with `vh` fallback and safe-area insets for fixed UI. Choose layout by available width, never user agent. Verified viewports: desktop 1920x1080, 1440x900, 1366x768, 1280x800. Tablet 768x1024, 820x1180, 1024x768. Mobile 360x800, 375x667, 390x844, 430x932.

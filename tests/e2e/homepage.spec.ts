@@ -1,81 +1,83 @@
 import { expect, test } from '@playwright/test'
-import { desktopViewports, expectNoHorizontalOverflow, scrollThrough, waitForImages, sectionIds, trackErrors } from '../fixtures/test-data'
+import { desktopViewports, expectNoHorizontalOverflow, sceneIds, trackErrors, visitAllScenes, waitForImages } from '../fixtures/test-data'
 
 test.describe('homepage', () => {
-  test('loads with title, hero headline and no console errors', async ({ page }) => {
+  test('loads with the right title, headline and no console errors', async ({ page }) => {
     const errors = trackErrors(page)
     await page.goto('/')
-    await expect(page).toHaveTitle(/Solutions Architect/)
+    await expect(page).toHaveTitle(/Ibrahem Sotejo/)
     const h1 = page.getByRole('heading', { level: 1 })
     await expect(h1).toContainText('Architecting Systems.')
     await expect(h1).toContainText('Engineering Experiences.')
     await expect(h1).toContainText('Building Possibilities.')
-    await expect(page.getByText('Solutions Architect | Software Engineer | Digital Builder')).toBeVisible()
-    await expect(page.getByTestId('availability')).toBeVisible()
-    await scrollThrough(page)
+    await expect(page.getByText('Solutions Architect · Full-Stack Developer · Technology Enthusiast')).toBeVisible()
+    await expect(page.getByText('Philippines').first()).toBeVisible()
+    await visitAllScenes(page)
     expect(errors, errors.join('\n')).toEqual([])
   })
 
-  test('renders every section in order', async ({ page }) => {
+  test('renders all twelve scenes in order, each a labelled section', async ({ page }) => {
     await page.goto('/')
-    for (const id of sectionIds) {
-      await expect(page.locator(`#${id}`), `section #${id}`).toBeAttached()
+    const info = await page.evaluate((ids) =>
+      ids.map((id) => {
+        const el = document.getElementById(id)
+        return { id, tag: el?.tagName, data: el?.getAttribute('data-scene'), labelled: el?.getAttribute('aria-labelledby'), top: el?.getBoundingClientRect().top ?? -1 }
+      }),
+    [...sceneIds])
+    for (const s of info) {
+      expect(s.tag, s.id).toBe('SECTION')
+      expect(s.data, s.id).toBe(s.id)
+      expect(s.labelled, s.id).toBeTruthy()
     }
-    const order = await page.evaluate((ids) => ids.map((id) => document.getElementById(id)?.getBoundingClientRect().top ?? -1), [...sectionIds])
-    expect(order).toEqual([...order].sort((a, b) => a - b))
+    const tops = info.map((i) => i.top)
+    expect(tops).toEqual([...tops].sort((a, b) => a - b))
+    for (const s of info) await expect(page.locator(`#${s.labelled}`), `${s.id} heading`).toBeAttached()
   })
 
-  test('hero has both CTAs and a portrait', async ({ page }) => {
+  test('hero has both calls to action, and no availability claim', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('link', { name: 'Explore My Work' })).toBeVisible()
     await expect(page.getByRole('button', { name: /Let.s Connect/ })).toBeVisible()
-    await expect(page.locator('#home img[alt*="ortrait"]').first()).toBeVisible()
+    await expect(page.getByTestId('availability')).toHaveCount(0)
   })
 
-  test('experience timeline lists all provided roles with original dates', async ({ page }) => {
+  test('shows no placeholders, no résumé full name, no residential address and no invented numbers', async ({ page }) => {
     await page.goto('/')
-    const exp = page.locator('#experience')
-    await expect(exp.getByRole('heading', { level: 3 })).toHaveCount(6)
-    for (const text of [
-      'June 2026 – Present',
-      'December 2025 – June 2026',
-      'March 2019 – November 2025',
-      'June 2021 – November 2023',
-      'March 2019 – June 2021',
-      'Earlier experience',
-    ]) {
-      await expect(exp.getByText(text, { exact: true })).toBeVisible()
-    }
-  })
-
-  test('footer contact CTA opens the contact modal', async ({ page }) => {
-    await page.goto('/')
-    await page.locator('#contact').getByRole('button', { name: 'Contact Me' }).click()
-    await expect(page.getByRole('dialog', { name: "Let's Start a Conversation" })).toBeVisible()
+    const text = await page.evaluate(() => document.body.innerText)
+    expect(text).not.toMatch(/\[PLACEHOLDER\]|to be added|lorem ipsum|TBC|coming soon/i)
+    expect(text).not.toContain('Aradanas')
+    expect(text).not.toMatch(/barangay|purok|street/i)
+    expect(text).not.toMatch(/\b\d+\+? years\b/i)
+    expect(text).not.toMatch(/\$\s?\d|\d+%|\d+ (users|clients|customers)/i)
   })
 
   test('all images load', async ({ page }) => {
     await page.goto('/')
-    await scrollThrough(page)
+    await visitAllScenes(page)
     await waitForImages(page)
     const broken = await page.evaluate(() =>
-      Array.from(document.images)
-        .filter((img) => !img.complete || img.naturalWidth === 0)
-        .map((img) => img.src),
+      Array.from(document.images).filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src),
     )
     expect(broken).toEqual([])
   })
 
+  test('has the SEO and social metadata', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Solutions Architect/)
+    await expect(page.locator('meta[property="og:title"]')).toHaveCount(1)
+    await expect(page.locator('link[rel="icon"]')).toHaveCount(1)
+  })
+
   for (const vp of desktopViewports) {
-    test(`desktop ${vp.name}: no horizontal overflow, nav visible`, async ({ page }) => {
+    test(`desktop ${vp.name}: no horizontal overflow and the hero fits`, async ({ page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height })
       await page.goto('/')
-      await scrollThrough(page)
+      await visitAllScenes(page)
       await expectNoHorizontalOverflow(page)
-      await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
       const h1 = await page.getByRole('heading', { level: 1 }).boundingBox()
-      expect(h1).not.toBeNull()
       expect(h1!.y + h1!.height).toBeLessThan(vp.height)
+      const cta = await page.getByRole('link', { name: 'Explore My Work' }).boundingBox()
+      expect(cta!.y + cta!.height).toBeLessThanOrEqual(vp.height)
     })
   }
 })

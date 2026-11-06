@@ -29,10 +29,8 @@ seo:
   description: "Ibrahem Sotejo is a Solutions Architect and full-stack developer from the Philippines. Architecting systems, engineering experiences, building possibilities."
 # Availability is not asserted. Set `availability` to a short label only when the owner confirms it, e.g. "Open to project inquiries".
 availability: ""
-# Hero visual. Original SVG artwork. Add `portrait` (an approved real photo) to show a portrait in the hero and About scenes.
-heroVisual:
-  src: "/images/illustrations/hero-architecture.svg"
-  alt: ""
+# Portrait. Add an approved real photo to show a portrait in the hero and About scenes. No portrait means none is shown
+# (the hero uses original SVG geometry instead).
 # portrait:
 #   src: "/images/portraits/ibrahem.webp"
 #   alt: "Portrait of Ibrahem Sotejo"

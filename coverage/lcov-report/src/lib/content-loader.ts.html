@@ -36,7 +36,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -57,7 +57,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -98,11 +98,7 @@
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L25'></a><a href='#L25'>25</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -115,49 +111,41 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type {
-  AffiliationsContent,
-  CicdContent,
-  ExperienceContent,
-  PhilosophyContent,
-  Profile,
-  ProjectsContent,
-  SkillsContent,
-  SocialLinksContent,
-} from './content-schemas'
-import { parseContent } from './content-parse'
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { parseContent } from './content-parse'
 import profileRaw from '../content/profile.yaml?raw'
 import experienceRaw from '../content/experience.yaml?raw'
-import affiliationsRaw from '../content/affiliations.yaml?raw'
-import projectsRaw from '../content/projects.yaml?raw'
+import educationRaw from '../content/education.yaml?raw'
+import certificationsRaw from '../content/certifications.yaml?raw'
+import awardsRaw from '../content/awards.yaml?raw'
 import skillsRaw from '../content/skills.yaml?raw'
-import socialRaw from '../content/social-links.yaml?raw'
+import projectsRaw from '../content/projects.yaml?raw'
+import affiliationsRaw from '../content/affiliations.yaml?raw'
 import philosophyRaw from '../content/philosophy.yaml?raw'
 import cicdRaw from '../content/cicd.yaml?raw'
+import faqRaw from '../content/faq.yaml?raw'
 &nbsp;
-export const profile: Profile = parseContent('profile', profileRaw)
-export const experience: ExperienceContent = parseContent('experience', experienceRaw)
-export const affiliations: AffiliationsContent = parseContent('affiliations', affiliationsRaw)
-export const projects: ProjectsContent = parseContent('projects', projectsRaw)
-export const skills: SkillsContent = parseContent('skills', skillsRaw)
-export const socialLinks: SocialLinksContent = parseContent('social-links', socialRaw)
-export const philosophy: PhilosophyContent = parseContent('philosophy', philosophyRaw)
-export const cicd: CicdContent = parseContent('cicd', cicdRaw).cicd
+export const profile = parseContent('profile', profileRaw)
+export const experience = parseContent('experience', experienceRaw)
+export const education = parseContent('education', educationRaw)
+export const certifications = parseContent('certifications', certificationsRaw)
+export const awards = parseContent('awards', awardsRaw)
+export const skills = parseContent('skills', skillsRaw)
+export const projects = parseContent('projects', projectsRaw)
+export const affiliations = parseContent('affiliations', affiliationsRaw)
+export const philosophy = parseContent('philosophy', philosophyRaw)
+export const cicd = parseContent('cicd', cicdRaw).cicd
+export const faq = parseContent('faq', faqRaw)
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -165,7 +153,7 @@ export const cicd: CicdContent = parseContent('cicd', cicdRaw).cicd
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-05T10:59:33.101Z
+                at 2026-11-06T00:55:27.030Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

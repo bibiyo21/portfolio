@@ -75,6 +75,24 @@ export function SceneProvider({ children }: { children: ReactNode }) {
     return () => observer.disconnect()
   }, [])
 
+  // Direct links (/#faq): the scenes render after the browser's own anchor scroll has already
+  // failed, so scroll to the hash once the content exists.
+  useEffect(() => {
+    const id = window.location.hash.slice(1)
+    if (sceneIndex(id) < 0) return
+    const el = document.getElementById(id)
+    if (!el) return
+    const frame = window.requestAnimationFrame(() => el.scrollIntoView({ behavior: 'instant', block: 'start' }))
+    // Late layout changes (fonts, images) can shift the target, so settle once more shortly after.
+    const settle = window.setTimeout(() => {
+      if (window.location.hash === `#${id}`) el.scrollIntoView({ behavior: 'instant', block: 'start' })
+    }, 400)
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.clearTimeout(settle)
+    }
+  }, [])
+
   useEffect(() => {
     const onHash = () => {
       const id = window.location.hash.slice(1)

@@ -8,8 +8,8 @@ import {
   type ContactFieldErrors,
   type ContactInput,
 } from '../../lib/contact'
-import { Button } from './Button'
-import { Modal } from './Modal'
+import { Button } from '../ui/Button'
+import { Modal } from '../ui/Modal'
 
 type Phase =
   | { name: 'idle' }

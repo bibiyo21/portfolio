@@ -10,27 +10,40 @@ describe('YAML content files', () => {
   it.each(Object.keys(contentSchemas) as ContentName[])('%s.yaml is valid against its schema', (name) => {
     expect(() => parseContent(name, read(name))).not.toThrow()
   })
+
+  it('has a content file for every schema', () => {
+    for (const name of Object.keys(contentSchemas)) expect(() => read(name)).not.toThrow()
+  })
 })
 
 describe('parseContent errors', () => {
   it('reports YAML syntax errors with the file name', () => {
-    expect(() => parseContent('skills', 'intro: "unterminated\n  - [')).toThrow(/YAML syntax error in src\/content\/skills\.yaml/)
+    expect(() => parseContent('faq', 'eyebrow: "unterminated\n  - [')).toThrow(/YAML syntax error in src\/content\/faq\.yaml/)
   })
 
   it('reports missing required fields with their path', () => {
-    const broken = read('profile').replace(/^name:.*$/m, '')
-    expect(() => parseContent('profile', broken)).toThrow(/Invalid content in src\/content\/profile\.yaml[\s\S]*name/)
+    const broken = read('profile').replace(/^email:.*$/m, '')
+    expect(() => parseContent('profile', broken)).toThrow(/Invalid content in src\/content\/profile\.yaml[\s\S]*email/)
+  })
+
+  it('rejects a malformed phone number', () => {
+    const broken = read('profile').replace('phone: "+639174912048"', 'phone: "0917 491 2048"')
+    expect(() => parseContent('profile', broken)).toThrow(/phone/)
+  })
+
+  it('rejects an invalid project status', () => {
+    const broken = read('projects').replace('status: proposed', 'status: finished')
+    expect(() => parseContent('projects', broken)).toThrow(/status/)
   })
 
   it('rejects invalid URLs in optional fields', () => {
     const yaml = `
-categories: ["Web Development"]
+categories: ["Web Platforms"]
 items:
   - id: a
     name: A
-    category: "Web Development"
+    category: "Web Platforms"
     summary: s
-    role: r
     thumbnail: { src: "/x.svg", alt: "x" }
     liveUrl: "not a url"
 `
@@ -42,25 +55,35 @@ describe('optional fields and empty collections', () => {
   it('defaults missing optional experience fields', () => {
     const data = parseContent(
       'experience',
-      'items:\n  - { id: a, company: Acme, position: Dev, period: "2020 – 2021" }\n',
+      'groups:\n  - id: acme\n    company: Acme\n    roles:\n      - { id: a, title: Dev, period: "2020 – 2021" }\n',
     )
-    const item = data.items[0]!
-    expect(item.responsibilities).toEqual([])
-    expect(item.achievements).toEqual([])
-    expect(item.technologies).toEqual([])
-    expect(item.description).toBe('')
+    const role = data.groups[0]!.roles[0]!
+    expect(role.responsibilities).toEqual([])
+    expect(role.achievements).toEqual([])
+    expect(role.technologies).toEqual([])
+    expect(role.summary).toBe('')
   })
 
-  it('accepts an empty project collection', () => {
-    const data = parseContent('projects', 'categories: ["Web Development"]\nitems: []\n')
+  it('accepts an empty project collection and no family', () => {
+    const data = parseContent('projects', 'categories: ["Web Platforms"]\nitems: []\n')
     expect(data.items).toEqual([])
+    expect(data.family).toBeUndefined()
   })
 
-  it('accepts an empty affiliations collection', () => {
+  it('accepts empty affiliations, education, certifications and awards', () => {
     expect(parseContent('affiliations', 'items: []\n').items).toEqual([])
+    expect(parseContent('education', 'items: []\n').items).toEqual([])
+    expect(parseContent('certifications', 'items: []\n').items).toEqual([])
+    expect(parseContent('awards', 'items: []\n').items).toEqual([])
   })
 
-  it('defaults skill status to expertise and keeps interest entries distinct', () => {
+  it('defaults availability to empty and keeps the portrait optional', () => {
+    const profile = parseContent('profile', read('profile'))
+    expect(profile.availability).toBe('')
+    expect(profile.portrait).toBeUndefined()
+  })
+
+  it('defaults skill category kind to confirmed', () => {
     const data = parseContent(
       'skills',
       `
@@ -68,73 +91,126 @@ intro: hi
 categories:
   - id: c
     title: C
-    description: d
     icon: code
+    description: d
+    relation: r
     skills:
       - name: One
-      - { name: Two, status: interest }
 `,
     )
-    expect(data.categories[0]!.skills.map((s) => s.status)).toEqual(['expertise', 'interest'])
-    expect(data.categories[0]!.visibleCount).toBe(6)
+    expect(data.categories[0]!.kind).toBe('confirmed')
   })
 })
 
 describe('content can be extended without code changes', () => {
   it('parses an added project', () => {
-    const base = read('projects')
     const added =
-      base +
+      read('projects') +
       `  - id: new-one
     name: "New Project"
-    category: "Automation"
+    category: "Web Platforms"
     summary: "Added from YAML"
-    role: "Lead"
     thumbnail: { src: "/images/projects/x.svg", alt: "alt" }
 `
     const data = parseContent('projects', added)
     expect(data.items.at(-1)?.name).toBe('New Project')
+    expect(data.items.at(-1)?.theme).toBe('default')
   })
 
-  it('parses an added skill category', () => {
-    const base = read('skills')
-    const added =
-      base +
-      `  - id: extra
-    title: "Extra Category"
-    description: "Added"
+  it('parses an added skill category and an added FAQ entry', () => {
+    const skills = parseContent(
+      'skills',
+      read('skills') +
+        `  - id: extra
+    title: "Extra"
     icon: "code"
+    description: "d"
+    relation: "r"
     skills:
       - name: "Thing"
-`
-    const data = parseContent('skills', added)
-    expect(data.categories.at(-1)?.title).toBe('Extra Category')
+`,
+    )
+    expect(skills.categories.at(-1)?.title).toBe('Extra')
+    const faq = parseContent('faq', read('faq') + '  - { id: q, question: "Q?", answer: "A." }\n')
+    expect(faq.items.at(-1)?.id).toBe('q')
   })
 
   it('parses an updated experience entry', () => {
-    const data = parseContent(
-      'experience',
-      read('experience').replace('position: "Solutions Architect"', 'position: "Principal Solutions Architect"'),
-    )
-    expect(data.items[0]?.position).toBe('Principal Solutions Architect')
+    const data = parseContent('experience', read('experience').replace('title: "Solutions Architect"\n        period: "June 2026', 'title: "Principal Solutions Architect"\n        period: "June 2026'))
+    expect(data.groups[0]!.roles[0]!.title).toBe('Principal Solutions Architect')
   })
 })
 
-describe('provided career data', () => {
-  it('keeps all six roles and their overlapping periods as supplied', () => {
-    const { items } = parseContent('experience', read('experience'))
-    expect(items.map((i) => `${i.company}|${i.position}|${i.period}`)).toEqual([
+describe('owner-supplied facts', () => {
+  const roles = () =>
+    parseContent('experience', read('experience')).groups.flatMap((g) => g.roles.map((r) => `${g.company}|${r.title}|${r.period}`))
+
+  it('keeps every role and its period, preserving the overlaps', () => {
+    expect(roles()).toEqual([
       'Leaptel|Solutions Architect|June 2026 – Present',
       'Leaptel|Senior Developer|December 2025 – June 2026',
       'Solutions30 Group SA|Solutions Architect|March 2019 – November 2025',
       'Eastvantage|Technical Lead|June 2021 – November 2023',
       'Eastvantage|PHP Developer|March 2019 – June 2021',
-      'Gameloft|Intermediate Web Developer|Earlier experience',
+      'Gameloft Philippines Inc.|Web Developer (Intermediate)|October 2017 – April 2019',
+      'Gameloft Philippines Inc.|Web Developer (Junior)|June 2016 – October 2017',
     ])
   })
 
-  it('includes all eleven skill categories and the CI/CD project category', () => {
-    expect(parseContent('skills', read('skills')).categories).toHaveLength(11)
-    expect(parseContent('projects', read('projects')).categories).toContain('CI/CD Engineering')
+  it('nests the Innovators Club chairmanship under Gameloft, not as a separate employer', () => {
+    const aff = parseContent('affiliations', read('affiliations')).items[0]!
+    expect(aff.parentCompany).toBe('gameloft')
+    expect(aff.role).toBe('Chairman')
+    expect(aff.period).toBe('November 2016 – April 2019')
+    const ids = parseContent('experience', read('experience')).groups.map((g) => g.id)
+    expect(ids).toContain(aff.parentCompany)
+  })
+
+  it('uses the latest contact details', () => {
+    const p = parseContent('profile', read('profile'))
+    expect(p.email).toBe('ibrahem.sotejo.dev@gmail.com')
+    expect(p.phone).toBe('+639174912048')
+    expect(p.links.whatsapp).toBe('https://wa.me/639174912048')
+    expect(p.links.linkedin).toBe('https://www.linkedin.com/in/ibrahem-sotejo-511789103/')
+    expect(p.links.github).toBe('https://github.com/bibiyo21')
+    expect(p.location).toBe('Philippines')
+  })
+
+  it('lists the three certifications exactly as written and seven award entries', () => {
+    expect(parseContent('certifications', read('certifications')).items.map((c) => c.name)).toEqual([
+      'Certified SAFe 5 Agilist',
+      'Certified SAFe 5 Architect',
+      'Certified Lean Six Sigma White Belt',
+    ])
+    expect(parseContent('awards', read('awards')).items).toHaveLength(7)
+  })
+
+  it('does not publish a residential address or invent outcomes', () => {
+    const all = Object.keys(contentSchemas).map(read).join('\n').toLowerCase()
+    for (const word of ['barangay', 'street', 'purok']) expect(all).not.toContain(word)
+    const projects = parseContent('projects', read('projects'))
+    for (const p of projects.items) expect(p.outcome).toEqual([])
+  })
+
+  it('keeps the exploration category separate from confirmed skills', () => {
+    const { categories } = parseContent('skills', read('skills'))
+    const exploring = categories.filter((c) => c.kind === 'exploration')
+    expect(exploring).toHaveLength(1)
+    expect(exploring[0]!.skills.map((s) => s.name)).toContain('Model Context Protocol (MCP)')
+    const confirmed = categories.filter((c) => c.kind === 'confirmed').flatMap((c) => c.skills.map((s) => s.name))
+    expect(confirmed).not.toContain('Model Context Protocol (MCP)')
+  })
+
+  it('has twelve FAQ entries and a neutral availability answer', () => {
+    const faq = parseContent('faq', read('faq'))
+    expect(faq.items).toHaveLength(12)
+    const availability = faq.items.find((q) => q.id === 'availability')!
+    expect(availability.answer).toBe('For project, consulting, or collaboration inquiries, please get in touch.')
+  })
+
+  it('marks GTI architecture details as proposed, not implemented', () => {
+    const { items } = parseContent('projects', read('projects'))
+    expect(items.map((i) => i.id)).toEqual(['gti-main', 'gti-north'])
+    for (const i of items) for (const a of i.approach) expect(a.status).toBe('proposed')
   })
 })

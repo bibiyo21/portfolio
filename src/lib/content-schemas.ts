@@ -30,7 +30,6 @@ export const profileSchema = z.object({
   seo: z.object({ title: nonEmpty, description: nonEmpty }),
   // Shown only when the owner confirms availability. Empty hides the indicator.
   availability: z.string().default(''),
-  heroVisual: imageRef,
   // Only an approved real photo belongs here. No portrait means none is displayed.
   portrait: imageRef.optional(),
   about: z.object({

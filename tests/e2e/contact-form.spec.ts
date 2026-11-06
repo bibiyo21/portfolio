@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { validForm } from '../fixtures/test-data'
 
+// The API is always mocked: no test ever sends real email.
 async function openAndFill(page: Page, overrides: Partial<typeof validForm> = {}) {
   await page.goto('/')
   await page.getByRole('button', { name: /Let.s Connect/ }).first().click()
@@ -24,21 +25,19 @@ test.describe('contact form', () => {
     await page.getByRole('button', { name: /Let.s Connect/ }).first().click()
     const dialog = page.getByRole('dialog')
     await dialog.getByRole('button', { name: 'Submit Inquiry' }).click()
-    await expect(dialog.getByText('Please enter your full name.')).toBeVisible()
-    await expect(dialog.getByText('Please enter a valid email address.')).toBeVisible()
-    await expect(dialog.getByText('Please add a subject.')).toBeVisible()
-    await expect(dialog.getByText('Please write at least 10 characters.')).toBeVisible()
+    for (const m of ['Please enter your full name.', 'Please enter a valid email address.', 'Please add a subject.', 'Please write at least 10 characters.']) await expect(dialog.getByText(m)).toBeVisible()
     await expect(dialog.getByLabel('Full Name')).toHaveAttribute('aria-invalid', 'true')
     expect(called).toBe(false)
   })
 
-  test('rejects an invalid email address', async ({ page }) => {
-    const dialog = await openAndFill(page, { email: 'not-an-email' })
+  test('rejects an invalid email and an empty message', async ({ page }) => {
+    const dialog = await openAndFill(page, { email: 'not-an-email', message: '' })
     await dialog.getByRole('button', { name: 'Submit Inquiry' }).click()
     await expect(dialog.getByText('Please enter a valid email address.')).toBeVisible()
+    await expect(dialog.getByText('Please write at least 10 characters.')).toBeVisible()
   })
 
-  test('shows loading then success only after the API confirms delivery', async ({ page }) => {
+  test('shows loading, then success only after the API confirms delivery', async ({ page }) => {
     let body: unknown
     await page.route('**/api/contact', async (route) => {
       body = route.request().postDataJSON()
@@ -52,10 +51,8 @@ test.describe('contact form', () => {
     expect(body).toMatchObject({ name: validForm.name, email: validForm.email, subject: validForm.subject, website: '' })
   })
 
-  test('shows an error message when the API fails and never claims success', async ({ page }) => {
-    await page.route('**/api/contact', (route) =>
-      route.fulfill({ status: 502, json: { error: 'Your message could not be delivered. Please try again later.' } }),
-    )
+  test('shows an error and never claims success when the API fails', async ({ page }) => {
+    await page.route('**/api/contact', (route) => route.fulfill({ status: 502, json: { error: 'Your message could not be delivered. Please try again later.' } }))
     const dialog = await openAndFill(page)
     await dialog.getByRole('button', { name: 'Submit Inquiry' }).click()
     await expect(dialog.getByRole('alert')).toContainText('could not be delivered')
@@ -70,34 +67,40 @@ test.describe('contact form', () => {
   })
 
   test('falls back to mailto and says the message was not sent when unconfigured', async ({ page }) => {
-    await page.route('**/api/contact', (route) =>
-      route.fulfill({ status: 503, json: { error: 'Contact service is not configured.', code: 'not_configured' } }),
-    )
+    await page.route('**/api/contact', (route) => route.fulfill({ status: 503, json: { error: 'Contact service is not configured.', code: 'not_configured' } }))
     const dialog = await openAndFill(page)
     await dialog.getByRole('button', { name: 'Submit Inquiry' }).click()
     const alert = dialog.getByRole('alert')
     await expect(alert).toContainText('not')
     await expect(alert).toContainText('sent')
-    await expect(alert.getByRole('link')).toHaveAttribute('href', /^mailto:/)
+    await expect(alert.getByRole('link')).toHaveAttribute('href', /^mailto:ibrahem\.sotejo\.dev@gmail\.com/)
     await expect(dialog.getByText('Inquiry sent.')).toHaveCount(0)
   })
 
-  test('treats an HTML 200 response (no API behind the dev server) as not delivered', async ({ page }) => {
-    await page.route('**/api/contact', (route) =>
-      route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><html></html>' }),
-    )
+  test('treats an HTML 200 response (dev server without the API) as not delivered', async ({ page }) => {
+    await page.route('**/api/contact', (route) => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><html></html>' }))
     const dialog = await openAndFill(page)
     await dialog.getByRole('button', { name: 'Submit Inquiry' }).click()
     await expect(dialog.getByRole('alert')).toBeVisible()
     await expect(dialog.getByText('Inquiry sent.')).toHaveCount(0)
   })
 
-  test('honeypot field is hidden from users and assistive tech', async ({ page }) => {
+  test('the honeypot is hidden from users and assistive tech', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: /Let.s Connect/ }).first().click()
     const honeypot = page.locator('input[name="website"]')
     await expect(honeypot).toHaveAttribute('tabindex', '-1')
+    expect(await honeypot.evaluate((e) => !!e.closest('[aria-hidden="true"]'))).toBe(true)
     const box = await honeypot.boundingBox()
     expect(box === null || box.x < 0).toBe(true)
+  })
+
+  test('the modal fits a small phone with the keyboard-sized viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 420 })
+    const dialog = await openAndFill(page)
+    const box = await dialog.boundingBox()
+    expect(box!.height).toBeLessThanOrEqual(420)
+    await dialog.getByRole('button', { name: 'Submit Inquiry' }).scrollIntoViewIfNeeded()
+    await expect(dialog.getByRole('button', { name: 'Submit Inquiry' })).toBeInViewport()
   })
 })

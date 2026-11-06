@@ -4,7 +4,7 @@ import { Button, ButtonLink } from './Button'
 import { Img } from './Img'
 import { SkillTag } from './SkillTag'
 import { Tag } from './Tag'
-import { YamlCode } from './YamlCode'
+import { YamlCode } from '../diagrams/YamlCode'
 
 describe('Button', () => {
   it('is disabled and busy while loading', () => {
