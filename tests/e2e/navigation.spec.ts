@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../fixtures/recaptcha'
 import { activeLabel, activeTab, jumpToScene, openDrawer, sceneIds, sceneLabels, sceneTop, tabLabels } from '../fixtures/test-data'
 
 test.describe('desktop tabs', () => {

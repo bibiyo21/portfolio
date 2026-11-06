@@ -36,9 +36,9 @@ The page is twelve near-full-viewport **scenes** on native scrolling with CSS Sc
 | `npm run dev` / `build` / `preview` | Vite dev server, production build, preview |
 | `npm run typecheck` | `tsc --noEmit` (strict) |
 | `npm run content:validate` | Parses and validates every `src/content/*.yaml` with Zod. `build` runs it first |
-| `npm run test:unit` | Vitest and React Testing Library (also covers `api/contact.ts`) |
+| `npm run test:unit` | Vitest and React Testing Library (also covers the `api/contact.ts` handler) |
 | `npm run test:coverage` | Unit tests with a coverage report in `coverage/` |
-| `npm run test:e2e` | Playwright. Starts the dev server, or the preview server when `E2E_PREVIEW=1` |
+| `npm run test:e2e` | Playwright. Starts the dev server, or the preview server when `E2E_PREVIEW=1`. `E2E_PORT` picks another port so a dev server you already run is not reused |
 | `npm run test:mobile` | Only the responsive spec on Chromium |
 | `npm run test:ui` / `test:headed` | Playwright UI mode / headed Chromium |
 | `npm run test:report` | Open the last Playwright HTML report |
@@ -64,6 +64,12 @@ All content is in `src/content/`. No component edits are needed. Invalid YAML fa
 Push the change to GitHub and the pipeline redeploys the site.
 
 Rules baked into the model: no proficiency percentages, no availability claim unless `availability` is set, no portrait unless `portrait` is set, case-study `outcome` and links appear only when you provide them, the résumé full name is stored but never shown.
+
+### Project types and the Venue Seat Planner
+
+`projects.yaml` supports `type: client` (default), `technical` or `personal`. Client and technical items appear under the GTI heading; personal items appear in their own "Side projects and proofs of concept" block with a status label (`statusLabel`), extra tags, and a live-link button labelled by `ctaLabel`. Personal projects also support `motivation`, `intendedUsers`, `features`, `decisions`, `limitations`, `learned`, `technologies` and `role`. **Any empty field is hidden**, so only verified details appear.
+
+The **Venue Seat Planner** is included as a "Personal PoC" and hobby project with the demo link `https://venue-seat-planner.vercel.app/`. The live demo opens on an administrator login page, so its details come from the project's local source code and README, and the screenshots come from a local copy run with fictional sample data (no real guest or event data). The card shows a floor-plan screenshot and the detail dialog adds a features list, a grouped technical specification (Next.js 16, React 19, Express 5, SQLite/MongoDB, xlsx, qrcode, signed-cookie auth, Vercel), five captioned screenshots and honest limitations. Screenshots are `public/images/projects/venue-seat-planner-*.webp`; the YAML fields `gallery` and `techSpec` drive them. Motivation, role, what you learned and outcomes stay empty (hidden) until you supply them.
 
 ### Adding a project or case study
 
@@ -103,24 +109,70 @@ Images live in `public/images/` and are referenced from YAML by path. Use WebP o
 
 No stock photography is bundled, and no portrait or likeness was generated.
 
-## Contact form and Resend
+## Contact form, reCAPTCHA and Resend
 
-`POST /api/contact` (`api/contact.ts`) validates input with Zod, rejects a filled honeypot, rate limits per IP, escapes HTML, strips line breaks from the subject, and sends through the Resend REST API. The browser reports success only when the API returns `{ "ok": true }`. If the function is missing or not configured, the modal says the message was **not** sent and offers a prefilled `mailto:` link.
+`POST /api/contact` (`api/contact.ts`) runs these checks in order and stops at the first failure. Resend is only reached after all of them pass:
 
-Setup:
+1. Method is POST, content type is JSON, body is under 20 kB.
+2. Per-IP rate limit (5 requests per 10 minutes).
+3. Field validation with Zod, including the server-checked honeypot.
+4. A reCAPTCHA v3 token is present, then verified with Google using the secret key: Google accepts it (this also rejects expired and already-used tokens), the `action` matches `contact_submit`, the `hostname` is on your allowlist, and the score is at least `RECAPTCHA_MIN_SCORE`.
+5. The email is sent through Resend with escaped HTML and a header-safe subject.
 
-1. Create a Resend account, verify a sending domain, create an API key.
-2. In Vercel, add environment variables (Production and Preview):
+The browser loads Google's script only when the form is opened, asks for a fresh single-use token on every submit, and never submits without one. The floating reCAPTCHA badge is hidden, and the form shows Google's required text notice with links to the Privacy Policy and Terms, which Google permits as the alternative. The secret key never reaches the browser.
 
-   ```env
-   RESEND_API_KEY=re_...
-   CONTACT_TO_EMAIL=ibrahem.sotejo.dev@gmail.com
-   CONTACT_FROM_EMAIL=Portfolio <contact@your-verified-domain>
-   ```
-   **No domain of your own?** Resend only sends from a verified domain you own, and `*.vercel.app` cannot be verified. The no-domain setup is Resend's built-in sender: `CONTACT_FROM_EMAIL=Portfolio <onboarding@resend.dev>` with `CONTACT_TO_EMAIL` set to the email address of your Resend account (Resend rejects any other recipient with a 403). Every inquiry then lands in that one mailbox, with the visitor's address as Reply-To, so you can reply directly. Forward that mailbox to another address in your mail settings if you want it elsewhere.
-3. Recommended: durable rate limiting with Upstash Redis REST (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`). Without it the limiter is best effort per serverless instance.
+The form reports success only when the API returns `{ "ok": true }`. Every failure, including a missing token, a rejected token, a low score, Google being unreachable, or missing configuration, ends with "your message was not sent" and a prefilled `mailto:` link. Rejections return a generic message. The server log records only a short reason code (such as `low_score`), never the message, the token or the secret.
 
-`npm run dev` does not run serverless functions, so the form shows the mailto fallback locally. Use `npx vercel dev` to exercise the API. Automated tests mock the endpoint and never send real email. `.env` is git-ignored, and `.env.example` lists the variables.
+**It fails closed.** If `RECAPTCHA_SECRET_KEY`, `RECAPTCHA_ALLOWED_HOSTNAMES` or `VITE_RECAPTCHA_SITE_KEY` is missing, the form cannot send and shows the mailto fallback. This is deliberate. Until the keys are configured in Vercel, visitors only get the mailto link.
+
+### Environment variables
+
+| Variable | Where | Purpose |
+|---|---|---|
+| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | server | Email delivery (see Resend below) |
+| `VITE_RECAPTCHA_SITE_KEY` | public, built into the bundle | reCAPTCHA v3 site key. It is not a secret |
+| `RECAPTCHA_SECRET_KEY` | **server only** | reCAPTCHA v3 secret key. Never give it a `VITE_` prefix |
+| `RECAPTCHA_MIN_SCORE` | server | Lowest accepted score, default `0.5`. Tune it from real traffic: raise it if spam gets through, lower it if real people are rejected |
+| `RECAPTCHA_EXPECTED_ACTION` | server | Default `contact_submit`. Must match the action the browser sends |
+| `RECAPTCHA_ALLOWED_HOSTNAMES` | server | Exact hostnames allowed to submit, comma separated, no scheme or path. Example: `yourdomain.com,www.yourdomain.com,your-project.vercel.app,localhost` |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | server | Shared rate limiting. Without them the limiter is a best-effort counter per serverless instance, which a determined bot can sidestep |
+
+`.env.example` lists them with empty values. Copy it to `.env` for local use. `.env` is git-ignored and **`.env.example` is committed, so never put real values in it.**
+
+### Set up reCAPTCHA
+
+1. Open the reCAPTCHA admin console (google.com/recaptcha/admin) and create a site.
+2. Choose **reCAPTCHA v3**.
+3. Add your domains: the production domain, your `*.vercel.app` hostname, and `localhost` for local testing.
+4. Copy the **site key** and the **secret key**.
+5. Local: put them in `.env` as `VITE_RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY`, and set `RECAPTCHA_ALLOWED_HOSTNAMES` (include `localhost`).
+6. Vercel: Project, Settings, Environment Variables. Add all the variables above for Production and Preview. The site key is read at build time, so **redeploy** after adding or changing any variable.
+7. Verify: submit the form on the live site and confirm the email arrives (check Resend's Logs tab). Then confirm a bad request is rejected without any Resend log entry, for example from a terminal: `curl -i -X POST https://yourdomain.com/api/contact -H "Content-Type: application/json" -d '{"name":"Test","email":"a@b.co","subject":"Hello","message":"Long enough message.","recaptchaToken":"fake"}'` should return `403` with `captcha_failed`.
+
+reCAPTCHA v3 has no official test keys that exercise scoring, so automated tests mock Google and never contact it.
+
+### Resend
+
+1. Create a Resend account and an API key.
+2. Set `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL` in Vercel (Production and Preview).
+
+   **No domain of your own?** Resend only sends from a verified domain you own, and `*.vercel.app` cannot be verified. The no-domain setup is Resend's built-in sender: `CONTACT_FROM_EMAIL=Portfolio <onboarding@resend.dev>` with `CONTACT_TO_EMAIL` set to the email address of your Resend account (Resend rejects any other recipient with a 403). Every inquiry then lands in that one mailbox, with the visitor's address as Reply-To, so you can reply directly. Forward that mailbox in your mail settings if you want it elsewhere.
+
+`npm run dev` does not run serverless functions, so the form shows the mailto fallback locally. Use `npx vercel dev` to exercise the API with your `.env`. Automated tests mock both Google and Resend and never send real email.
+
+### Troubleshooting
+
+| Symptom | Likely cause |
+|---|---|
+| Form always says "not sent" with a mailto link | A reCAPTCHA or Resend variable is missing, or `VITE_RECAPTCHA_SITE_KEY` was added after the last build. Set it and redeploy |
+| Log shows `wrong_hostname` | The site's hostname is not in `RECAPTCHA_ALLOWED_HOSTNAMES` (check preview URLs and the `www` variant) |
+| Log shows `wrong_action` | `RECAPTCHA_EXPECTED_ACTION` was changed. It must be `contact_submit` unless the code is changed too |
+| Log shows `low_score` for real people | Lower `RECAPTCHA_MIN_SCORE` a little. Real traffic often scores 0.7 to 0.9, bots 0.1 to 0.3 |
+| Log shows `google_rejected:timeout-or-duplicate` | The token expired (about 2 minutes) or was reused. The visitor just retries |
+| Log shows `google_rejected:invalid-input-response` | The token is malformed, or the site key and secret key belong to different reCAPTCHA sites |
+| Log shows `bad_secret` | `RECAPTCHA_SECRET_KEY` is wrong, or is the site key by mistake |
+| Log shows `google_unreachable` | Google could not be reached within 5 seconds. The form fails closed and offers the mailto link |
+| Resend 403 about an unverified domain | `CONTACT_FROM_EMAIL` is a gmail.com or other domain you do not own. Use the built-in sender above or verify a domain |
 
 ## Deployment
 
@@ -133,7 +185,7 @@ Setup:
    - `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`: the `orgId` and `projectId` in `.vercel/project.json` after `npx vercel link`.
 
    The deploy jobs read the token from the environment and start with a "Check Vercel secrets" step. If a secret is missing the job fails immediately and names the missing secret, instead of the Vercel CLI's `--token is missing a value` error.
-4. Add the Resend variables in the Vercel project settings.
+4. Add the Resend and reCAPTCHA variables in the Vercel project settings (see "Contact form, reCAPTCHA and Resend"), then redeploy.
 5. Create GitHub environments `preview` and `production`. Add required reviewers to `production` for manual approval if you want it.
 6. In branch protection for `main`, require the checks `Validate`, `Build`, `Unit Testing` and `Playwright Testing`.
 
@@ -164,9 +216,9 @@ The CI/CD scene on the site is driven by `cicd.yaml` and shows the real workflow
 |---|---|
 | `npm run content:validate` | 11 of 11 files valid |
 | `npm run typecheck` | no errors |
-| `npm run test:unit` | 140 tests passed (coverage: 84% lines, 83% statements, 70% branches, 79% functions) |
-| `npm run build` | succeeded (JS 695 kB, 214 kB gzip) |
-| Playwright, Chromium, against the production preview build | 285 passed, 5 skipped (touch-target checks that only apply below 1024px) |
+| `npm run test:unit` | 199 tests passed (coverage: 86% lines, 85% statements, 72% branches, 81% functions) |
+| `npm run build` | succeeded (JS 713 kB, 218 kB gzip) |
+| Playwright, Chromium, against a production build (built with a fake site key, Google stubbed) | 308 passed, 5 skipped (touch-target checks that only apply below 1024px) |
 | Playwright, Firefox and WebKit | **not run**. Firefox fails to launch and WebKit blocks localhost in the sandbox used for development. The GitHub workflow installs all browsers and runs them |
 | GitHub Actions, GitLab CI/CD | **not run** remotely |
 
@@ -174,6 +226,7 @@ The CI/CD scene on the site is driven by `cicd.yaml` and shows the real workflow
 
 - Approved professional portrait.
 - Real GTI screenshots and permission to publish them, and public GTI URLs if they may be linked.
+- Venue Seat Planner: which name to use publicly (the brief says "Venue Seat Planner", but the app UI is titled "Wedding Seating Planner"), confirmation that the live Vercel URL is built from the repository the details were taken from, whether you are happy to publish the stack and sample-data screenshots, and your motivation, role and lessons learned. The repo's `PROJECT_SUMMARY.md` is out of date (it describes a vanilla JS app) and was not used.
 - Which GTI Main and GTI North architecture details were delivered. They are currently shown as "Proposed / designed", and `outcome` is empty.
 - Leaptel and Eastvantage role details and achievements (the fields exist and stay hidden until filled).
 - Whether to state availability for freelance or consulting work (`availability` in `profile.yaml`).

@@ -6,10 +6,10 @@ import { projects } from '../../lib/content-loader'
 import { Work } from './Work'
 
 describe('Work', () => {
-  it('shows the GTI family heading and one card per project', () => {
+  it('shows the GTI family heading and one card per client project', () => {
     renderWithApp(<Work />)
     expect(screen.getByRole('heading', { level: 2, name: projects.family!.title })).toBeInTheDocument()
-    expect(screen.getAllByTestId('project-card')).toHaveLength(projects.items.length)
+    expect(screen.getAllByTestId('project-card')).toHaveLength(projects.items.filter((p) => p.type !== 'personal').length)
   })
 
   it('links each GTI card to its dedicated scene', () => {
@@ -30,10 +30,20 @@ describe('Work', () => {
     expect(screen.getByText(/North is a location-specific implementation/)).toBeInTheDocument()
   })
 
-  it('does not invent additional projects', () => {
+  it('lists only the supplied projects: two GTI case studies and the personal Venue Seat Planner', () => {
     renderWithApp(<Work />)
     const cards = screen.getAllByTestId('project-card')
     expect(cards.map((c) => within(c).getByRole('heading', { level: 3 }).textContent)).toEqual(['GTI Main', 'GTI North'])
+    const personal = screen.getAllByTestId('personal-card')
+    expect(personal.map((c) => within(c).getByRole('heading', { level: 4 }).textContent)).toEqual(['Venue Seat Planner'])
+  })
+
+  it('keeps the personal project in its own labelled section, separate from the client work', () => {
+    renderWithApp(<Work />)
+    const section = screen.getByTestId('personal-projects')
+    expect(within(section).getByRole('heading', { level: 3, name: 'Side projects and proofs of concept' })).toBeInTheDocument()
+    expect(within(section).getByTestId('personal-card')).toBeInTheDocument()
+    expect(within(section).queryByTestId('project-card')).not.toBeInTheDocument()
   })
 
   it('clicking a card updates the URL hash through scene navigation', async () => {

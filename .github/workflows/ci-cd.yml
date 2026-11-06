@@ -87,7 +87,7 @@ jobs:
   e2e-test:
     name: Playwright Testing
     runs-on: ubuntu-latest
-    needs: build
+    needs: validate
     timeout-minutes: 30
     env:
       CI: "true"
@@ -99,14 +99,10 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
       - run: npm ci
-      - name: Download production build
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        with:
-          name: dist
-          path: dist
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright (desktop, tablet and mobile viewports) against the production build
+      # Playwright builds the production bundle itself with a fake public reCAPTCHA site key and stubs Google's script.
+      - name: Run Playwright (desktop, tablet and mobile viewports) against a production build
         run: npm run test:e2e
       - name: Upload Playwright HTML report
         if: always()

@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { Scene } from '../scenes/Scene'
 import { SceneBackdrop } from '../scenes/SceneBackdrop'
+import { PersonalProjectCard } from '../projects/PersonalProjectCard'
 import { ProjectCard } from '../projects/ProjectCard'
 import { ProjectDetail } from '../projects/ProjectDetail'
 import { Modal } from '../ui/Modal'
@@ -22,13 +23,18 @@ export function Work() {
   const reduce = useReducedMotion()
   const family = projects.family
 
+  // Client and technical work is listed first. Personal side projects get their own block below it.
+  const featured = useMemo(() => projects.items.filter((p) => p.type !== 'personal'), [])
+  const personal = useMemo(() => projects.items.filter((p) => p.type === 'personal'), [])
+  const personalIntro = projects.personal
+
   const categories = useMemo(() => {
-    const used = new Set(projects.items.map((p) => p.category))
+    const used = new Set(featured.map((p) => p.category))
     return [ALL, ...projects.categories.filter((c) => used.has(c))]
-  }, [])
+  }, [featured])
   const visible = useMemo(
-    () => (filter === ALL ? projects.items : projects.items.filter((p) => p.category === filter)),
-    [filter],
+    () => (filter === ALL ? featured : featured.filter((p) => p.category === filter)),
+    [filter, featured],
   )
 
   return (
@@ -106,6 +112,25 @@ export function Work() {
         <p className="text-ink-soft">No projects in this category yet.</p>
       ) : null}
 
+      {personal.length > 0 ? (
+        <section aria-labelledby="personal-projects-title" className="mt-16 md:mt-20" data-testid="personal-projects">
+          <Reveal>
+            <p className="t-eyebrow mb-4 text-burgundy">{personalIntro?.eyebrow ?? 'Personal project'}</p>
+            <h3 id="personal-projects-title" className="t-heading-m max-w-3xl">
+              {personalIntro?.title ?? 'Personal projects'}
+            </h3>
+            {personalIntro?.intro ? <p className="mt-4 max-w-2xl text-ink-soft">{personalIntro.intro}</p> : null}
+          </Reveal>
+          <ul className="mt-8 grid gap-6 lg:grid-cols-2">
+            {personal.map((p) => (
+              <Reveal as="li" key={p.id}>
+                <PersonalProjectCard project={p} onOpen={() => setSelected(p)} />
+              </Reveal>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       <Reveal>
         <p className="mt-10 max-w-2xl text-sm text-ink-mute">
           More projects will be added here as they are cleared for publication.
@@ -118,7 +143,7 @@ export function Work() {
           if (!open) setSelected(null)
         }}
         title={selected?.name ?? ''}
-        description={selected ? `${selected.category} project` : undefined}
+        description={selected ? (selected.type === 'personal' ? 'Personal project · Proof of concept' : `${selected.category} project`) : undefined}
         size="lg"
       >
         {selected ? <ProjectDetail project={selected} /> : null}

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../fixtures/recaptcha'
 import { jumpToScene, openDrawer, trackErrors } from '../fixtures/test-data'
 
 const pngSize = (buf: Buffer) => ({ w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) })

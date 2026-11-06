@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../fixtures/recaptcha'
 import { jumpToScene } from '../fixtures/test-data'
 
 test('a missing image falls back to the neutral placeholder instead of a broken icon', async ({ page }) => {

@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const PORT = 5173
+const PORT = Number(process.env.E2E_PORT ?? 5173)
 
 export default defineConfig({
   testDir: './e2e',
@@ -16,13 +16,16 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   webServer: {
+    // Preview mode builds first so the test site key is baked into the production bundle.
     command: process.env.E2E_PREVIEW
-      ? `npm run preview -- --port ${PORT} --strictPort`
+      ? `npm run build && npm run preview -- --port ${PORT} --strictPort`
       : `npm run dev -- --port ${PORT} --strictPort`,
     cwd: '..',
+    // A fake public key. The Google script is stubbed in every test, so no request reaches Google.
+    env: { VITE_RECAPTCHA_SITE_KEY: 'e2e-test-site-key' },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
+    timeout: 120_000,
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

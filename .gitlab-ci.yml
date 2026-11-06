@@ -77,7 +77,8 @@ unit-test:
 
 e2e-test:
   stage: e2e-test
-  needs: ["build"]
+  # Playwright builds its own production bundle with a fake public reCAPTCHA site key.
+  needs: ["validate:content", "validate:types"]
   image: $PLAYWRIGHT_IMAGE
   variables:
     CI: "true"

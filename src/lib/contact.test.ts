@@ -36,33 +36,49 @@ describe('submitContact', () => {
 
   it('reports success only when the API confirms ok: true', async () => {
     respond(200, { ok: true })
-    expect(await submitContact(valid)).toEqual({ status: 'success' })
+    expect(await submitContact(valid, "tok")).toEqual({ status: 'success' })
   })
 
   it('does not report success for a 200 that is not the API (HTML fallback page)', async () => {
     respond(200, '<!doctype html>', 'text/html')
-    expect((await submitContact(valid)).status).toBe('fallback')
+    expect((await submitContact(valid, "tok")).status).toBe('fallback')
   })
 
   it('falls back to mailto when the service is not configured', async () => {
     respond(503, { code: 'not_configured', error: 'x' })
-    expect((await submitContact(valid)).status).toBe('fallback')
+    expect((await submitContact(valid, "tok")).status).toBe('fallback')
   })
 
   it('falls back when the network fails', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('offline')))
-    expect((await submitContact(valid)).status).toBe('fallback')
+    expect((await submitContact(valid, "tok")).status).toBe('fallback')
   })
 
   it('returns a rate limit message on 429', async () => {
     respond(429, { error: 'x' })
-    const r = await submitContact(valid)
+    const r = await submitContact(valid, "tok")
     expect(r.status).toBe('error')
     expect(r.status === 'error' && r.message).toMatch(/Too many requests/)
   })
 
+  it('sends the reCAPTCHA token with the form and keeps every field', async () => {
+    const f = vi.fn().mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'Content-Type': 'application/json' } }))
+    vi.stubGlobal('fetch', f)
+    await submitContact(valid, 'token-xyz')
+    const sent = JSON.parse((f.mock.calls[0]![1] as RequestInit).body as string)
+    expect(sent).toMatchObject({ ...valid, recaptchaToken: 'token-xyz' })
+  })
+
+  it.each([
+    ['captcha_failed', 403],
+    ['captcha_unavailable', 503],
+  ])('maps %s to a fallback so nothing is reported as sent', async (code, status) => {
+    respond(status, { code })
+    expect((await submitContact(valid, 'tok')).status).toBe('fallback')
+  })
+
   it('surfaces the server error message otherwise', async () => {
     respond(502, { error: 'Could not deliver.' })
-    expect(await submitContact(valid)).toEqual({ status: 'error', message: 'Could not deliver.' })
+    expect(await submitContact(valid, "tok")).toEqual({ status: 'error', message: 'Could not deliver.' })
   })
 })

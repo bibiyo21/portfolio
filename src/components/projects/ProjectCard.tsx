@@ -33,13 +33,15 @@ export function ProjectCard({
   const body = (
     <>
       <div className={cn('relative overflow-hidden', project.preview ? 'aspect-[16/10]' : large ? 'aspect-[3/2]' : 'aspect-[4/3]')}>
-        <Img
-          src={project.thumbnail.src}
-          alt={project.thumbnail.alt}
-          width={project.thumbnail.width}
-          height={project.thumbnail.height}
-          className="size-full object-cover object-top transition-transform duration-[700ms] ease-[var(--ease-out)] group-hover:scale-[1.04]"
-        />
+        {project.thumbnail ? (
+          <Img
+            src={project.thumbnail.src}
+            alt={project.thumbnail.alt}
+            width={project.thumbnail.width}
+            height={project.thumbnail.height}
+            className="size-full object-cover object-top transition-transform duration-[700ms] ease-[var(--ease-out)] group-hover:scale-[1.04]"
+          />
+        ) : null}
         <span className="absolute right-4 top-4 grid size-11 translate-x-1.5 -translate-y-1.5 place-items-center rounded-full bg-ivory text-burgundy opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
           <ArrowUpRight className="size-5" aria-hidden />
         </span>

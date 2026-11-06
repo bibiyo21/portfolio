@@ -216,6 +216,9 @@ Shape and size: radius 999px, min-height 48px, padding `14px 28px`, trailing ico
 
 ---
 
+### Personal project card
+Personal side projects and proofs of concept sit in their own block under the client work, with a heading and intro of their own, so they are never mistaken for client work. The card is `peach-soft` with a **dashed** burgundy border (client cards use solid borders), an explicit status chip (`Personal PoC`, filled burgundy) and outline tags (`Hobby project`). There is no image unless a real, approved screenshot exists: a decorative dot pattern (aria-hidden, hidden on phones) stands in and does not depict the app. Actions: the live link as the primary button (label from YAML, for example "Open Demo", opens in a new tab with `noopener noreferrer`) and "View details" as a secondary button that opens the project dialog. The dialog shows only the fields the YAML fills in (motivation, intended users, confirmed features, decisions, limitations, lessons, stack, outcome), so unconfirmed details never appear.
+
 ### Case-study treatments
 - **GTI Main:** `burgundy-dark` scene, ivory text, peach accents, large framed hero visual with a burgundy/peach interface motif, wide editorial layout (visual left, content right).
 - **GTI North:** `peach` scene with `burgundy-dark` text, ivory cards, a cool-leaning geometric motif (contour lines suggesting a map), mirrored layout (content left, visual right). Shares the family header and a "Main to North" relationship strip so the two read as related but distinct.

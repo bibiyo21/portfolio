@@ -174,3 +174,6 @@ h1, h2, h3, h4 {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Google allows hiding the reCAPTCHA badge when the form shows the equivalent text notice (see ContactModal). */
+.grecaptcha-badge { visibility: hidden; }

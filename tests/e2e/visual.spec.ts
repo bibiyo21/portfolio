@@ -1,4 +1,4 @@
-import { test, type Page, type TestInfo } from '@playwright/test'
+import { test, type Page, type TestInfo } from '../fixtures/recaptcha'
 import { jumpToScene, openDrawer, visitAllScenes, waitForImages } from '../fixtures/test-data'
 
 // Review screenshots attached to the Playwright report (and kept in test-results).
@@ -42,6 +42,15 @@ test.describe('desktop captures', () => {
       await page.waitForTimeout(1300)
       await shot(page, name, testInfo)
     }
+    await jumpToScene(page, 'work')
+    await page.getByTestId('personal-projects').scrollIntoViewIfNeeded()
+    await page.waitForTimeout(900)
+    await shot(page, 'desktop-personal-project', testInfo)
+    await page.getByRole('button', { name: 'View details' }).click()
+    await page.waitForTimeout(800)
+    await shot(page, 'desktop-personal-project-details', testInfo)
+    await page.keyboard.press('Escape')
+    await page.waitForTimeout(500)
     await jumpToScene(page, 'faq')
     await page.getByRole('button', { name: 'Who is Ibrahem Sotejo?' }).click()
     await page.waitForTimeout(700)
@@ -82,6 +91,10 @@ test.describe('mobile captures', () => {
     await jumpToScene(page, 'gti-north')
     await page.waitForTimeout(900)
     await shot(page, 'mobile-gti-north', testInfo)
+    await jumpToScene(page, 'work')
+    await page.getByTestId('personal-projects').scrollIntoViewIfNeeded()
+    await page.waitForTimeout(900)
+    await shot(page, 'mobile-personal-project', testInfo)
     await jumpToScene(page, 'architecture')
     await page.waitForTimeout(900)
     await shot(page, 'mobile-architecture', testInfo)

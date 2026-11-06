@@ -17,13 +17,13 @@ export type ContactResult =
   | { status: 'fallback'; reason: string }
   | { status: 'error'; message: string }
 
-export async function submitContact(input: ContactInput): Promise<ContactResult> {
+export async function submitContact(input: ContactInput, recaptchaToken: string): Promise<ContactResult> {
   let res: Response
   try {
     res = await fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(input),
+      body: JSON.stringify({ ...input, recaptchaToken }),
     })
   } catch {
     return { status: 'fallback', reason: 'The inquiry service could not be reached.' }
@@ -38,6 +38,13 @@ export async function submitContact(input: ContactInput): Promise<ContactResult>
   // Only report success when the API explicitly confirms delivery.
   if (res.ok && body.ok === true) return { status: 'success' }
   if (res.ok) return { status: 'fallback', reason: 'The inquiry service is not available right now.' }
+  // The server could not confirm the visitor is human, or could not reach Google. Nothing was sent.
+  if (body.code === 'captcha_failed') {
+    return { status: 'fallback', reason: 'We could not confirm that this request came from a person.' }
+  }
+  if (body.code === 'captcha_unavailable') {
+    return { status: 'fallback', reason: 'The human check is unavailable right now. Please try again in a moment.' }
+  }
   if (res.status === 404 || res.status === 503 || body.code === 'not_configured') {
     return { status: 'fallback', reason: 'The inquiry service is not available right now.' }
   }

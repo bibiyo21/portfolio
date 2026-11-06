@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../fixtures/recaptcha'
 import { jumpToScene, sceneTop } from '../fixtures/test-data'
 
 test.describe('featured work and GTI case studies', () => {

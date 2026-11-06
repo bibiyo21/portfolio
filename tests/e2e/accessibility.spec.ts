@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright'
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../fixtures/recaptcha'
 import { jumpToScene, openDrawer, sceneIds, visitAllScenes } from '../fixtures/test-data'
 
 const serious = (results: Awaited<ReturnType<AxeBuilder['analyze']>>) =>

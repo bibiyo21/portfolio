@@ -24,7 +24,7 @@ The website must communicate three strengths:
 Do not portray the owner as a generic agency or claim that every technology listed is an expert-level skill. Use grounded, credible language.
 Main conversion goals
 - Let visitors quickly understand who Ibrahem is and what he does.
-- Demonstrate real work through detailed project case studies, especially GTI Main and GTI North.
+- Demonstrate real work through detailed project case studies, including GTI Main / GTI North and the Venue Seat Planner personal proof-of-concept.
 - Make technical breadth understandable through interactive visual storytelling.
 - Encourage prospective clients, collaborators, and employers to make contact.
 - Make the experience memorable without compromising accessibility, performance, or clarity.
@@ -276,8 +276,31 @@ Build visually engaging case-study cards with:
 - Expandable details or a case-study modal.
 - Links only where public URLs are verified.
 For GTI Main and GTI North, use distinct visual treatments so visitors understand their relationship without confusing them as one identical site. Use editable YAML fields for each.
+7.1 Personal side project — Venue Seat Planner
+Feature the following personal project as a side project / hobby project / proof of concept, not as client work or a commercial product:
+- Project name: Venue Seat Planner
+- Live demo: https://venue-seat-planner.vercel.app/
+- Project type: Personal side project, hobby project, proof of concept
+- Public positioning: An independently built experiment exploring venue seating-planning workflows and interactive seat-planning concepts.
+- Portfolio category: Personal Projects / Proof of Concept
+The owner explicitly identifies this as a hobby project and proof of concept. Preserve that framing in the card, project detail view, and YAML content. Do not imply that it is a commissioned client project, production-ready enterprise system, commercially launched SaaS, or actively maintained service unless the owner later confirms those facts.
+
+Use the live demo link as the project CTA, labelled View Live PoC or Open Demo. Open external links safely in a new tab with appropriate rel attributes. Do not claim that the site was successfully inspected if it cannot be reached in the development environment. Before writing a detailed feature list, inspect the live application and verify each visible capability against the actual UI. If inspection is unavailable, keep the public description deliberately high-level and use neutral placeholder fields in the source content rather than inventing features.
+
+Suggested concise portfolio copy (editable by the owner):
+A personal proof of concept exploring how venue seating plans can be organized through an interactive web experience. Built as a hobby project to experiment with product ideas, interface design, and practical application development.
+
+Recommended case-study fields, only populate details that can be verified:
+- Motivation / problem being explored.
+- Intended users and planning scenario.
+- Confirmed features visible in the live demo.
+- Technical stack, architecture, and integrations (owner confirmation required).
+- Design and engineering decisions.
+- Current status and known limitations.
+- What the owner learned or would improve next.
+Use an explicit status label such as Personal PoC or Hobby Project. Do not add fabricated usage statistics, customer adoption, business impact, testimonials, integrations, or technology stack details. Do not expose private data if the live demo contains sample or user-entered venue information.
 Additional project content
-The owner has not yet supplied a complete list of personal projects, public URLs, screenshots, or measurable outcomes. Build the content model so projects can be added later. Do not fabricate project names or client references.
+Build a flexible project content model that supports multiple project types, including client work, internal/technical initiatives, and personal proof-of-concepts. Each project should support a category, status, public URL, summary, approved screenshots, verified technology stack, role, and optional case-study details. Keep unconfirmed fields out of the public UI. Do not fabricate project names, client references, features, or outcomes.
 8. Website structure — single-page experience
 Build a single-page website with smooth anchor navigation. Do not introduce Next.js or a multipage routing framework.
 
@@ -656,7 +679,7 @@ Capture screenshots for:
 - Desktop homepage.
 - Hero.
 - Projects.
-- GTI Main and GTI North case studies.
+- GTI Main and GTI North case studies, plus the Venue Seat Planner personal PoC.
 - FAQ.
 - Contact modal.
 - CI/CD diagram.
@@ -770,7 +793,7 @@ The project is complete only when:
 - The complete single-page portfolio is implemented.
 - The design follows the agreed original burgundy/peach visual identity and reference-inspired interaction quality.
 - FAQ accordion works with keyboard and touch.
-- GTI Main and GTI North appear as distinct, related case studies.
+- GTI Main and GTI North appear as distinct, related case studies; Venue Seat Planner appears separately as a personal proof-of-concept / hobby project.
 - Profile, résumé, skills, education, certifications, awards, and career timeline are content-driven.
 - Contact links work and the contact form reports real delivery status.
 - Architecture and CI/CD diagrams are interactive and responsive.
@@ -1084,3 +1107,87 @@ Final mobile navigation acceptance criteria
 - The close control is positioned for convenient right-hand access.
 - Active scene state stays synchronized across manual scrolling and menu navigation.
 Final intended behavior: a right-aligned burger button opens a full-height, 70%-width navigation drawer that slides in from the right, leaving the current parallax scene visible on the left.
+31. Contact form bot protection — Google reCAPTCHA
+High-priority requirement: Protect the inquiry/contact form from automated bot submissions and spam using Google reCAPTCHA. This section extends and takes precedence over the basic contact-form security requirements in Section 14.
+Preferred implementation
+Use Google reCAPTCHA v3 for a low-friction, invisible user experience. Do not add a visible checkbox unless the v3 score indicates suspicious activity and a deliberate fallback is implemented.
+
+Before implementation:
+- Inspect the existing contact form, API endpoint, deployment configuration, and installed dependencies.
+- Confirm the reCAPTCHA product/version selected in the Google reCAPTCHA admin console.
+- Do not invent site keys or secret keys.
+- If the owner has not created reCAPTCHA keys, implement the integration using environment-variable placeholders and document the exact setup steps.
+Frontend requirements
+- Load the official Google reCAPTCHA v3 script using the configured site key.
+- Execute reCAPTCHA when the user submits the inquiry form, using a specific action such as contact_submit.
+- Obtain a fresh token for each submission; do not reuse expired tokens.
+- Include the token in the POST /api/contact request.
+- Keep the site key in public frontend configuration only; never expose the secret key.
+- Show a clear, accessible error if a token cannot be obtained.
+- Do not submit the inquiry when token generation fails.
+- Keep the form's existing loading, validation, success, and error states.
+- Do not claim that a message was sent until server-side verification and email delivery have both succeeded.
+- Include the Google reCAPTCHA disclosure / badge as required by Google's current terms. Do not hide or remove required attribution without using an approved alternative.
+Backend verification requirements
+The serverless POST /api/contact endpoint must verify the token server-side with Google's official verification endpoint using the secret key.
+
+Validate all of the following:
+- The verification response indicates success.
+- The returned action exactly matches contact_submit.
+- The returned hostname matches the configured production hostname or an explicit allowlist of approved development hosts.
+- The score meets a configurable minimum threshold.
+- The token is present, fresh, and accepted by Google's verification service.
+Use a configurable score threshold, with a documented starting default (for example, 0.5) that can be tuned after observing legitimate traffic. Do not treat the score alone as proof that a request is safe.
+
+Reject missing, invalid, expired, replayed, wrong-action, wrong-hostname, or low-score tokens. Return a generic client-safe error; do not expose secret values, raw verification responses, or sensitive internal details.
+
+Only send email through Resend after all validation, CAPTCHA verification, honeypot, and rate-limit checks pass.
+Environment variables
+Add these to .env.example and deployment documentation:
+# Google reCAPTCHA v3
+VITE_RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET_KEY=
+RECAPTCHA_MIN_SCORE=0.5
+RECAPTCHA_EXPECTED_ACTION=contact_submit
+RECAPTCHA_ALLOWED_HOSTNAMES=
+Notes:
+- VITE_RECAPTCHA_SITE_KEY is public and may be included in the client bundle.
+- RECAPTCHA_SECRET_KEY is server-only and must never use a VITE_ prefix or be exposed to the browser.
+- RECAPTCHA_ALLOWED_HOSTNAMES should contain the exact production hostname and any explicitly approved preview/development hostnames, using a well-defined delimiter.
+- Do not commit real keys to Git or place them in YAML content.
+- Configure production and preview environment variables deliberately in Vercel.
+Layered anti-spam controls
+reCAPTCHA is one layer, not the only defense. Retain and enforce:
+- Server-side schema validation and input length limits.
+- Input normalization and safe email/header handling.
+- Honeypot field checked on the server.
+- Rate limiting using a reliable shared store or deployment-compatible mechanism; do not rely solely on in-memory serverless process state.
+- Request method and content-type checks.
+- Reasonable request body size limits.
+- Safe error responses and server-side security logging without logging message contents or secrets unnecessarily.
+Avoid blocking legitimate users solely because of a transient reCAPTCHA service outage without a deliberate, documented fallback policy. The default secure behavior should be to fail closed for automated submission, show a clear retry message, and provide the existing mailto: fallback.
+Testing requirements
+Add automated tests covering:
+- Valid token with successful verification.
+- Missing token.
+- Invalid token.
+- Expired or duplicate token response.
+- Failed verification service request / timeout.
+- Incorrect action.
+- Incorrect hostname.
+- Score below threshold.
+- Honeypot triggered.
+- Rate limit exceeded.
+- Confirmation that Resend is not called for any rejected request.
+- Successful delivery only after all checks pass.
+Mock Google's verification endpoint and Resend in automated tests. Never call Google or send real email from the test suite.
+Setup and acceptance criteria
+Document how to:
+1. Register the portfolio domain in the Google reCAPTCHA admin console.
+2. Select reCAPTCHA v3 and configure the allowed domain(s).
+3. Obtain the site key and secret key.
+4. Add the public site key and private secret key to local environment configuration.
+5. Add the corresponding environment variables to Vercel for the appropriate environments.
+6. Redeploy after changing environment variables.
+7. Verify a legitimate submission and confirm rejected bot-like submissions do not trigger Resend.
+Definition of done: The contact form obtains a fresh reCAPTCHA token, the server verifies it before sending email, suspicious or invalid submissions are rejected, secrets remain server-side, automated tests cover rejection and success paths, and the README documents setup and troubleshooting.

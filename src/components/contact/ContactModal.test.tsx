@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Button } from '../ui/Button'
 import { useContactModal } from '../../hooks/useContactModal'
 import { renderWithApp } from '../../test/render'
@@ -21,8 +21,20 @@ async function openAndFill(user: ReturnType<typeof userEvent.setup>, overrides: 
   return dialog
 }
 
+const execute = vi.fn()
+
 describe('ContactModal', () => {
-  afterEach(() => vi.unstubAllGlobals())
+  beforeEach(() => {
+    execute.mockReset().mockResolvedValue('tok-1')
+    vi.stubEnv('VITE_RECAPTCHA_SITE_KEY', 'test-site-key')
+    // The Google script is never loaded in tests: a stub stands in for window.grecaptcha.
+    window.grecaptcha = { ready: (cb: () => void) => cb(), execute }
+  })
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
+    delete window.grecaptcha
+  })
 
   it('shows required-field errors and does not call the API on an empty submit', async () => {
     const fetchMock = vi.fn()
@@ -61,7 +73,8 @@ describe('ContactModal', () => {
     expect(await screen.findByText('Inquiry sent.')).toBeInTheDocument()
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit]
     expect(url).toBe('/api/contact')
-    expect(JSON.parse(init.body as string)).toMatchObject({ name: 'Ada Lovelace', email: 'ada@example.com', website: '' })
+    expect(JSON.parse(init.body as string)).toMatchObject({ name: 'Ada Lovelace', email: 'ada@example.com', website: '', recaptchaToken: 'tok-1' })
+    expect(execute).toHaveBeenCalledWith('test-site-key', { action: 'contact_submit' })
   })
 
   it('shows the server error and never claims success', async () => {
@@ -104,5 +117,82 @@ describe('ContactModal', () => {
     const honeypot = dialog.querySelector<HTMLInputElement>('input[name="website"]')!
     expect(honeypot).toHaveAttribute('tabindex', '-1')
     expect(honeypot.closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it('asks Google for a fresh token on every submission', async () => {
+    execute.mockResolvedValueOnce('tok-first').mockResolvedValueOnce('tok-second')
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ code: 'captcha_failed' }), { status: 403 }))
+    vi.stubGlobal('fetch', fetchMock)
+    const user = userEvent.setup()
+    const dialog = await openAndFill(user)
+    await user.click(within(dialog).getByRole('button', { name: 'Submit Inquiry' }))
+    await within(dialog).findByRole('alert')
+    await user.click(within(dialog).getByRole('button', { name: 'Submit Inquiry' }))
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2))
+    const tokens = fetchMock.mock.calls.map((c) => JSON.parse((c[1] as RequestInit).body as string).recaptchaToken)
+    expect(tokens).toEqual(['tok-first', 'tok-second'])
+  })
+
+  it('does not submit when a token cannot be obtained, and says nothing was sent', async () => {
+    execute.mockRejectedValue(new Error('blocked'))
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const user = userEvent.setup()
+    const dialog = await openAndFill(user)
+    await user.click(within(dialog).getByRole('button', { name: 'Submit Inquiry' }))
+    const alert = await within(dialog).findByRole('alert')
+    expect(alert).toHaveTextContent(/could not complete the human check/i)
+    expect(alert).toHaveTextContent(/not\s+sent/i)
+    expect(within(alert).getByRole('link')).toHaveAttribute('href', expect.stringMatching(/^mailto:/))
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(screen.queryByText('Inquiry sent.')).not.toBeInTheDocument()
+  })
+
+  it('does not submit when no site key is configured, and offers the mailto fallback', async () => {
+    vi.stubEnv('VITE_RECAPTCHA_SITE_KEY', '')
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const user = userEvent.setup()
+    const dialog = await openAndFill(user)
+    await user.click(within(dialog).getByRole('button', { name: 'Submit Inquiry' }))
+    const alert = await within(dialog).findByRole('alert')
+    expect(alert).toHaveTextContent(/not\s+sent/i)
+    expect(within(alert).getByRole('link')).toHaveAttribute('href', expect.stringMatching(/^mailto:/))
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['captcha_failed', 403, /could not confirm that this request came from a person/i],
+    ['captcha_unavailable', 503, /human check is unavailable/i],
+  ])('shows a retry message and the mailto fallback for %s', async (code, status, message) => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ code }), { status })))
+    const user = userEvent.setup()
+    const dialog = await openAndFill(user)
+    await user.click(within(dialog).getByRole('button', { name: 'Submit Inquiry' }))
+    const alert = await within(dialog).findByRole('alert')
+    expect(alert).toHaveTextContent(message)
+    expect(alert).toHaveTextContent(/not\s+sent/i)
+    expect(within(alert).getByRole('link')).toHaveAttribute('href', expect.stringMatching(/^mailto:/))
+    expect(screen.queryByText('Inquiry sent.')).not.toBeInTheDocument()
+  })
+
+  it("shows Google's required notice with working policy links in place of the badge", async () => {
+    const user = userEvent.setup()
+    renderWithApp(<Opener />)
+    await user.click(screen.getByRole('button', { name: 'Open contact' }))
+    const notice = await screen.findByTestId('recaptcha-notice')
+    expect(notice).toHaveTextContent('This site is protected by reCAPTCHA')
+    expect(within(notice).getByRole('link', { name: /Privacy Policy/ })).toHaveAttribute('href', 'https://policies.google.com/privacy')
+    expect(within(notice).getByRole('link', { name: /Terms of Service/ })).toHaveAttribute('href', 'https://policies.google.com/terms')
+  })
+
+  it('does not load the Google script until the form is opened', async () => {
+    delete window.grecaptcha
+    const user = userEvent.setup()
+    renderWithApp(<Opener />)
+    expect(document.querySelector('script[src*="recaptcha"]')).toBeNull()
+    await user.click(screen.getByRole('button', { name: 'Open contact' }))
+    await waitFor(() => expect(document.querySelector('script[src*="recaptcha/api.js?render=test-site-key"]')).not.toBeNull())
+    document.querySelectorAll('script[src*="recaptcha"]').forEach((s) => s.remove())
   })
 })

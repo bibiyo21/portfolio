@@ -1,5 +1,5 @@
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
-import { useId, useState, type FormEvent } from 'react'
+import { useEffect, useId, useState, type FormEvent } from 'react'
 import { useContactModal } from '../../hooks/useContactModal'
 import { profile } from '../../lib/content-loader'
 import {
@@ -8,6 +8,7 @@ import {
   type ContactFieldErrors,
   type ContactInput,
 } from '../../lib/contact'
+import { getRecaptchaToken, getSiteKey, loadRecaptcha } from '../../lib/recaptcha'
 import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
 
@@ -58,6 +59,11 @@ export function ContactModal() {
   const [phase, setPhase] = useState<Phase>({ name: 'idle' })
   const base = useId()
 
+  // Load Google's script only once the form is opened, so a visitor who never opens it makes no Google request.
+  useEffect(() => {
+    if (open && getSiteKey()) loadRecaptcha().catch(() => undefined)
+  }, [open])
+
   const set = (key: keyof ContactInput) => (value: string) => setValues((v) => ({ ...v, [key]: value }))
 
   const reset = () => {
@@ -88,7 +94,17 @@ export function ContactModal() {
     }
     setErrors({})
     setPhase({ name: 'sending' })
-    const result = await submitContact(parsed.data)
+    // A fresh single-use token for every submission. Without one the form is never sent.
+    const captcha = await getRecaptchaToken()
+    if (captcha.status === 'not_configured') {
+      setPhase({ name: 'fallback', reason: 'The inquiry service is not available right now.' })
+      return
+    }
+    if (captcha.status === 'failed') {
+      setPhase({ name: 'fallback', reason: `${captcha.message} Please try again.` })
+      return
+    }
+    const result = await submitContact(parsed.data, captcha.token)
     if (result.status === 'success') setPhase({ name: 'success' })
     else if (result.status === 'fallback') setPhase({ name: 'fallback', reason: result.reason })
     else setPhase({ name: 'error', message: result.message })
@@ -207,6 +223,18 @@ export function ContactModal() {
               </p>
             </div>
           ) : null}
+
+          <p className="t-caption text-ink-mute" data-testid="recaptcha-notice">
+            This site is protected by reCAPTCHA and the Google{' '}
+            <a className="underline underline-offset-2" href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+              Privacy Policy<span className="sr-only"> (opens in a new tab)</span>
+            </a>{' '}
+            and{' '}
+            <a className="underline underline-offset-2" href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">
+              Terms of Service<span className="sr-only"> (opens in a new tab)</span>
+            </a>{' '}
+            apply.
+          </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Button type="submit" loading={phase.name === 'sending'} arrow>

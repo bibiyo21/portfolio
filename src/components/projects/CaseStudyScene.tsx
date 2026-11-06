@@ -138,7 +138,7 @@ export function CaseStudyScene({ project, tone, number }: { project: ProjectItem
           <ParallaxLayer depth={26}>
             {project.preview ? (
               <SitePreview project={project} dark={dark} />
-            ) : (
+            ) : project.thumbnail ? (
               <ImageReveal>
                 <figure className="relative">
                 <div
@@ -165,7 +165,7 @@ export function CaseStudyScene({ project, tone, number }: { project: ProjectItem
                 </figcaption>
               </figure>
               </ImageReveal>
-            )}
+            ) : null}
           </ParallaxLayer>
         </div>
 

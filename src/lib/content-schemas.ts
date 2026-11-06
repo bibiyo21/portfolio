@@ -138,16 +138,29 @@ export type AwardsContent = z.infer<typeof awardsSchema>
 export const projectStatus = z.enum(['implemented', 'in-progress', 'proposed', 'planned'])
 export type ProjectStatus = z.infer<typeof projectStatus>
 
+export const projectType = z.enum(['client', 'technical', 'personal'])
+export type ProjectType = z.infer<typeof projectType>
+
 export const projectsSchema = z.object({
   family: z
     .object({ eyebrow: nonEmpty, title: nonEmpty, intro: nonEmpty, relationship: z.string().default('') })
     .optional(),
+  // Heading for personal side projects and proofs of concept, shown separately from client work.
+  personal: z.object({ eyebrow: nonEmpty, title: nonEmpty, intro: nonEmpty }).optional(),
   categories: z.array(nonEmpty).min(1),
   items: z.array(
     z.object({
       id: nonEmpty,
       // id of the dedicated case-study scene, when the project has one.
       scene: z.string().optional(),
+      // client = client work, technical = internal or technical initiative, personal = side project or proof of concept.
+      type: projectType.default('client'),
+      // Honest status label shown on the card and detail view, e.g. "Personal PoC". Empty hides it.
+      statusLabel: z.string().default(''),
+      // Extra framing chips, e.g. "Hobby project".
+      tags: z.array(nonEmpty).default([]),
+      // Label for the live-link button, e.g. "Open Demo".
+      ctaLabel: z.string().default(''),
       theme: z.enum(['main', 'north', 'default']).default('default'),
       name: nonEmpty,
       siteLabel: z.string().default(''),
@@ -155,15 +168,27 @@ export const projectsSchema = z.object({
       summary: nonEmpty,
       overview: z.string().default(''),
       context: z.string().default(''),
+      // Case-study fields for personal projects. Anything empty is hidden, so only verified details ever show.
+      motivation: z.string().default(''),
+      intendedUsers: z.string().default(''),
+      features: z.array(nonEmpty).default([]),
+      decisions: z.array(z.object({ title: nonEmpty, text: nonEmpty })).default([]),
+      limitations: z.array(nonEmpty).default([]),
+      learned: z.array(nonEmpty).default([]),
       role: z.array(nonEmpty).default([]),
       approach: z
         .array(z.object({ title: nonEmpty, text: nonEmpty, status: projectStatus }))
         .default([]),
       technologies: z.array(nonEmpty).default([]),
+      // Grouped technical specification (e.g. Frontend, Backend). Empty hides the section.
+      techSpec: z.array(z.object({ group: nonEmpty, items: z.array(nonEmpty).min(1) })).default([]),
+      // Extra screenshots with captions, shown in the detail dialog.
+      gallery: z.array(imageRef.extend({ caption: z.string().default('') })).default([]),
       challenges: z.array(z.object({ title: nonEmpty, text: nonEmpty })).default([]),
       // Verified results only. Empty hides the section.
       outcome: z.array(nonEmpty).default([]),
-      thumbnail: imageRef,
+      // Approved image. Optional: a project without one is shown as text.
+      thumbnail: imageRef.optional(),
       // Real screenshots of the live site. When present they replace the illustrative artwork in the case-study scene.
       preview: z
         .object({

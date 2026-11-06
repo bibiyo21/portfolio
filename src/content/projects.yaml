@@ -8,8 +8,14 @@ family:
   title: "GTI Digital Platform — Main & North"
   intro: "Two related case studies from work on the Goalie Training Institute (GTI) website and digital platform: the primary platform, and a location-specific implementation."
   relationship: "Main is the primary platform. North is a location-specific implementation that builds on the same approach."
+# Heading for the separate personal-projects block in the Work scene.
+personal:
+  eyebrow: "Personal project"
+  title: "Side projects and proofs of concept"
+  intro: "Independent experiments built outside client work, to explore product ideas, interface design and practical application development."
 categories:
   - "Web Platforms"
+  - "Personal Projects / Proof of Concept"
 items:
   - id: gti-main
     scene: "gti-main"
@@ -142,3 +148,92 @@ items:
         width: 390
         height: 5265
     liveUrl: "https://north.goalietraininginstitute.ca/"
+  # ---------------------------------------------------------------------------------------------------
+  # Personal side project. Framed as a hobby project and proof of concept, never as client work or a product.
+  # Only verified details are filled in. The live demo opens on an administrator login page and no credentials
+  # were supplied, so no feature, stack or screenshot is claimed. Every empty field below is hidden on the site.
+  # To add detail, fill the fields in and confirm them against the live app first.
+  # ---------------------------------------------------------------------------------------------------
+  - id: venue-seat-planner
+    type: personal
+    name: "Venue Seat Planner"
+    siteLabel: "Personal project"
+    statusLabel: "Personal PoC"
+    tags: ["Hobby project"]
+    category: "Personal Projects / Proof of Concept"
+    summary: "A personal proof of concept exploring how venue seating plans can be organized through an interactive web experience. Built as a hobby project to experiment with product ideas, interface design, and practical application development."
+    overview: "An independently built web application for organizing event seating: an administrator imports a guest list, arranges tables on a floor plan, and guests look up their own table on a public page. Built end to end as a personal experiment, using fictional sample data in the screenshots below."
+    ctaLabel: "Open Demo"
+    liveUrl: "https://venue-seat-planner.vercel.app/"
+    thumbnail:
+      src: "/images/projects/venue-seat-planner-floorplan.webp"
+      alt: "Floor plan editor showing a stage, a VIP table, six round tables with seated sample guests and a main door."
+      width: 1440
+      height: 1330
+    gallery:
+      - src: "/images/projects/venue-seat-planner-events.webp"
+        alt: "Administrator dashboard listing one sample event with its table, guest and seat counts."
+        width: 1440
+        height: 900
+        caption: "Administrator dashboard. Sample data."
+      - src: "/images/projects/venue-seat-planner-list.webp"
+        alt: "List view with a tables panel showing seat capacity and a searchable guest list with table badges."
+        width: 1440
+        height: 900
+        caption: "List view with editable seat capacity. Sample data."
+      - src: "/images/projects/venue-seat-planner-floorplan.webp"
+        alt: "Floor plan editor showing a stage, a VIP table, six round tables with seated sample guests and a main door."
+        width: 1440
+        height: 1330
+        caption: "Drag-and-drop floor plan. Sample data."
+      - src: "/images/projects/venue-seat-planner-find-seat.webp"
+        alt: "Public Find Your Seat page showing a guest's table number and walking directions."
+        width: 1440
+        height: 900
+        caption: "Public Find Your Seat result. Sample data."
+      - src: "/images/projects/venue-seat-planner-find-seat-mobile.webp"
+        alt: "Find Your Seat result on a phone-sized screen."
+        width: 390
+        height: 664
+        caption: "The same page on a phone. Sample data."
+    intendedUsers: "Event hosts who manage the guest list and layout, and guests who look up their own table."
+    features:
+      - "Administrator sign-in with a signed, expiring session cookie."
+      - "Multiple events, each with delete confirmation."
+      - "Guest list import from Excel or CSV, with Name, Table and Seat columns detected automatically."
+      - "List view of tables and guests with search, paging and editable seat capacity."
+      - "Floor plan editor: drag round or rectangular tables, a stage and a main door, and drag guests between tables or back to unassigned."
+      - "Manual table creation, zoom and pan on the floor plan."
+      - "Excel export, a printable seating chart, and an event logo upload."
+      - "QR code per event that links to the public Find Your Seat page."
+      - "Public name search that returns the guest's table and text directions."
+    techSpec:
+      - group: "Frontend"
+        items: ["Next.js 16 (pages router)", "React 19"]
+      - group: "Backend API"
+        items: ["Node.js", "Express 5", "multer 2 for uploads"]
+      - group: "Data storage"
+        items: ["SQLite through sql.js for local development", "MongoDB (official driver) when MONGODB_URI is set"]
+      - group: "Import, export, QR"
+        items: ["xlsx for Excel and CSV", "qrcode"]
+      - group: "Authentication"
+        items: ["HMAC-SHA256 signed httpOnly session cookie with expiry and revocation", "Timing-safe credential comparison", "Credentials and secret read from environment variables"]
+      - group: "Testing"
+        items: ["Node.js built-in test runner", "Integration tests for auth, SQLite, MongoDB (optional) and floor plan persistence"]
+      - group: "Hosting"
+        items: ["Vercel, with @vercel/node for the API and @vercel/next for the frontend"]
+    decisions:
+      - title: "Two-process architecture"
+        text: "An Express API owns data and authentication, and the Next.js frontend proxies /api requests to it through rewrites, so the browser talks to a single origin."
+      - title: "Swappable storage"
+        text: "The same API runs on a local SQLite file for development and on MongoDB in production, selected by one environment variable."
+      - title: "Server-side session check"
+        text: "Admin pages verify the signed cookie on the server before rendering, so the login page is the only thing an unauthenticated visitor receives."
+    limitations:
+      - "The live demo opens on an administrator login page, so the screenshots here come from a local copy with fictional sample data."
+      - "The interface is still branded Wedding Seating Planner."
+      - "The walking-direction text on the public page follows a rule written for one venue layout."
+      - "A guest check-in API route exists, but the interface does not use it yet."
+    learned: []
+    outcome: []
+

@@ -103,6 +103,29 @@ categories:
 })
 
 describe('content can be extended without code changes', () => {
+  it('defaults a project to client work and every optional case-study field to empty', () => {
+    const data = parseContent('projects', `
+categories: ["Web Platforms"]
+items:
+  - id: a
+    name: A
+    category: "Web Platforms"
+    summary: s
+`)
+    const p = data.items[0]!
+    expect(p.type).toBe('client')
+    expect(p.statusLabel).toBe('')
+    expect(p.features).toEqual([])
+    expect(p.limitations).toEqual([])
+    expect(p.thumbnail).toBeUndefined()
+  })
+
+  it('supports client, technical and personal project types and rejects any other', () => {
+    const base = (type: string) => `categories: ["X"]\nitems:\n  - { id: a, name: A, category: X, summary: s, type: ${type} }\n`
+    for (const type of ['client', 'technical', 'personal']) expect(parseContent('projects', base(type)).items[0]!.type).toBe(type)
+    expect(() => parseContent('projects', base('commercial'))).toThrow(/type/)
+  })
+
   it('parses an added project', () => {
     const added =
       read('projects') +
@@ -185,6 +208,14 @@ describe('owner-supplied facts', () => {
     expect(parseContent('awards', read('awards')).items).toHaveLength(7)
   })
 
+  it('includes the Venue Seat Planner as a personal proof of concept with the supplied URL', () => {
+    const p = parseContent('projects', read('projects')).items.find((i) => i.id === 'venue-seat-planner')!
+    expect(p.type).toBe('personal')
+    expect(p.liveUrl).toBe('https://venue-seat-planner.vercel.app/')
+    expect(p.statusLabel).toBe('Personal PoC')
+    expect(parseContent('projects', read('projects')).categories).toContain('Personal Projects / Proof of Concept')
+  })
+
   it('does not publish a residential address or invent outcomes', () => {
     const all = Object.keys(contentSchemas).map(read).join('\n').toLowerCase()
     for (const word of ['barangay', 'street', 'purok']) expect(all).not.toContain(word)
@@ -210,7 +241,7 @@ describe('owner-supplied facts', () => {
 
   it('marks GTI architecture details as proposed, not implemented', () => {
     const { items } = parseContent('projects', read('projects'))
-    expect(items.map((i) => i.id)).toEqual(['gti-main', 'gti-north'])
-    for (const i of items) for (const a of i.approach) expect(a.status).toBe('proposed')
+    expect(items.map((i) => i.id)).toEqual(['gti-main', 'gti-north', 'venue-seat-planner'])
+    for (const i of items.filter((x) => x.type === 'client')) for (const a of i.approach) expect(a.status).toBe('proposed')
   })
 })

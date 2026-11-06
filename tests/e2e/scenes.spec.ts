@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../fixtures/recaptcha'
 import { activeTab, jumpToScene, sceneIds, sceneTop } from '../fixtures/test-data'
 
 test.describe('scene presentation (desktop)', () => {

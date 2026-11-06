@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../fixtures/recaptcha'
 import { desktopViewports, expectNoHorizontalOverflow, sceneIds, trackErrors, visitAllScenes, waitForImages } from '../fixtures/test-data'
 
 test.describe('homepage', () => {
