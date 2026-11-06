@@ -4,7 +4,7 @@ import { activeLabel, activeTab, jumpToScene, openDrawer, sceneIds, sceneLabels,
 test.describe('desktop tabs', () => {
   test.use({ viewport: { width: 1440, height: 900 } })
 
-  test('shows the nine tabs and no burger', async ({ page }) => {
+  test('shows the ten tabs in page order and no burger', async ({ page }) => {
     await page.goto('/')
     const nav = page.getByRole('navigation', { name: 'Primary' })
     await expect(nav.getByRole('link')).toHaveText(tabLabels)
@@ -12,10 +12,41 @@ test.describe('desktop tabs', () => {
     await expect(activeTab(page)).toHaveText('Home')
   })
 
+  test('tab order matches scene order, so the active tab only moves forward while scrolling down', async ({ page }) => {
+    await page.goto('/')
+    const order = ['home', 'about', 'expertise', 'work', 'experience', 'architecture', 'cicd', 'recognition', 'faq', 'contact']
+    const hrefs = await page.locator('nav[aria-label="Primary"] a').evaluateAll((els) => els.map((e) => e.getAttribute('href')!.slice(1)))
+    expect(hrefs).toEqual(order)
+    const seen: number[] = []
+    for (const id of sceneIds) {
+      await jumpToScene(page, id)
+      const label = (await activeTab(page).innerText()).trim()
+      seen.push(tabLabels.indexOf(label))
+    }
+    expect(seen.every((n) => n >= 0)).toBe(true)
+    expect(seen).toEqual([...seen].sort((a, b) => a - b))
+  })
+
+  for (const width of [1080, 1280, 1440]) {
+    test(`ten tabs fit beside the wordmark without overlap at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 })
+      await page.goto('/')
+      const mark = await page.getByRole('link', { name: /back to the start/ }).boundingBox()
+      const boxes = await page.locator('nav[aria-label="Primary"] a').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, r: r.right, h: r.height } }))
+      expect(boxes).toHaveLength(10)
+      expect(boxes[0]!.l).toBeGreaterThan(mark!.x + mark!.width)
+      for (let i = 1; i < boxes.length; i++) expect(boxes[i]!.l).toBeGreaterThanOrEqual(boxes[i - 1]!.r - 1)
+      expect(boxes.at(-1)!.r).toBeLessThanOrEqual(width)
+      for (const b of boxes) expect(b.h).toBeLessThan(60)
+      const wrapped = await page.locator('nav[aria-label="Primary"] a').evaluateAll((els) => els.some((e) => e.getBoundingClientRect().height > 50))
+      expect(wrapped).toBe(false)
+    })
+  }
+
   test('every tab reaches its scene and becomes active', async ({ page }) => {
     await page.goto('/')
     const nav = page.getByRole('navigation', { name: 'Primary' })
-    const targets: Record<string, string> = { Home: 'home', About: 'about', Expertise: 'expertise', Work: 'work', Experience: 'experience', Architecture: 'architecture', 'CI/CD': 'cicd', FAQ: 'faq', Contact: 'contact' }
+    const targets: Record<string, string> = { Home: 'home', About: 'about', Expertise: 'expertise', Work: 'work', Experience: 'experience', Architecture: 'architecture', 'CI/CD': 'cicd', Recognition: 'recognition', FAQ: 'faq', Contact: 'contact' }
     for (const label of tabLabels) {
       await nav.getByRole('link', { name: label }).click()
       await expect(activeTab(page)).toHaveText(label)
@@ -48,6 +79,8 @@ test.describe('desktop tabs', () => {
     await jumpToScene(page, 'gti-north')
     await expect(activeTab(page)).toHaveText('Work')
     await jumpToScene(page, 'recognition')
+    await expect(activeTab(page)).toHaveText('Recognition')
+    await jumpToScene(page, 'experience')
     await expect(activeTab(page)).toHaveText('Experience')
   })
 

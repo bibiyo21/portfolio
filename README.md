@@ -175,6 +175,13 @@ The CI/CD scene on the site is driven by `cicd.yaml` and shows the real workflow
 - Confirmation of the display name preference (the résumé full name is stored but not shown).
 - A Viber deep link only if you verify it. For now the number is shown as text and WhatsApp is the click-to-chat link.
 
+## Review previews (not part of the deployed site)
+
+| Command | Opens | What it is |
+|---|---|---|
+| `npm run preview:gti` | http://localhost:4175/ | Gallery of real desktop and mobile screenshots of the live GTI Main and GTI North sites, with a comparison report in `docs/gti-site-previews/REPORT.md`. `npm run capture:gti` re-captures them |
+| `npm run preview:brand` | http://localhost:4176/ | Three logo concepts, favicon candidates, typography proposal and in-context mocks. `npm run build:brand` regenerates the assets in `docs/brand-preview/`. Nothing here is applied to the site until a concept is chosen |
+
 ## Project structure
 
 ```

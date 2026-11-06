@@ -76,6 +76,41 @@ test.describe('CI/CD showcase', () => {
 })
 
 test.describe('CI/CD diagram layout', () => {
+  for (const width of [1080, 1280, 1440, 1920]) {
+    test(`stage cards use one consistent label layout at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto('/')
+      await jumpToScene(page, 'cicd')
+      await page.locator('#cicd svg[role="group"]').scrollIntoViewIfNeeded()
+      await page.waitForTimeout(1500)
+      const cards = await page.locator('#cicd svg g[role="button"]').evaluateAll((els) =>
+        els.map((g) => {
+          const box = g.querySelector('rect')!.getBoundingClientRect()
+          const labels = Array.from(g.querySelectorAll('text')).filter((t) => (t.textContent ?? '').length > 3)
+          const first = labels[0]!.getBoundingClientRect()
+          return {
+            lines: labels.length,
+            maxRight: Math.max(...labels.map((t) => t.getBoundingClientRect().right)) - box.right,
+            left: first.left - box.left,
+            top: first.top - box.top,
+            height: box.height,
+          }
+        }),
+      )
+      expect(cards).toHaveLength(6)
+      // Every label stays inside its card with room to spare.
+      for (const c of cards) expect(c.maxRight).toBeLessThanOrEqual(-12)
+      // Same left inset and the same first-line position on every card, whatever the label length.
+      const lefts = cards.map((c) => Math.round(c.left))
+      const tops = cards.map((c) => Math.round(c.top))
+      expect(Math.max(...lefts) - Math.min(...lefts)).toBeLessThanOrEqual(1)
+      expect(Math.max(...tops) - Math.min(...tops)).toBeLessThanOrEqual(1)
+      // No label needs more than two lines, and all cards are the same height.
+      for (const c of cards) expect(c.lines).toBeLessThanOrEqual(2)
+      expect(new Set(cards.map((c) => Math.round(c.height))).size).toBe(1)
+    })
+  }
+
   test('is a horizontal flow on wide screens', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.goto('/')

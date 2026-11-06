@@ -51,7 +51,7 @@ export const sceneLabels: Record<(typeof sceneIds)[number], string> = {
   contact: 'Contact',
 }
 
-export const tabLabels = ['Home', 'About', 'Expertise', 'Work', 'Experience', 'Architecture', 'CI/CD', 'FAQ', 'Contact']
+export const tabLabels = ['Home', 'About', 'Expertise', 'Work', 'Experience', 'Architecture', 'CI/CD', 'Recognition', 'FAQ', 'Contact']
 
 export const validForm = {
   name: 'Test Visitor',

@@ -55,7 +55,7 @@ export function Navbar() {
 
         {/* Desktop tabs */}
         <nav aria-label="Primary" className="hidden min-[1080px]:block">
-          <ul className="flex items-center gap-1">
+          <ul className="flex items-center gap-0.5 min-[1280px]:gap-1">
             {tabs.map((t) => {
               const isActive = active.tab === t.id
               return (
@@ -65,7 +65,7 @@ export function Navbar() {
                     onClick={nav(t.target)}
                     aria-current={isActive ? 'location' : undefined}
                     className={cn(
-                      'relative inline-flex min-h-11 items-center rounded-full px-3.5 text-[0.9375rem] transition-colors duration-200 active:translate-y-px',
+                      'relative inline-flex min-h-11 items-center rounded-full px-2.5 text-sm transition-colors duration-200 active:translate-y-px min-[1280px]:px-3.5 min-[1280px]:text-[0.9375rem]',
                       isActive
                         ? dark
                           ? 'font-medium text-burgundy-dark'

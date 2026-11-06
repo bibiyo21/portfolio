@@ -81,7 +81,7 @@ export function PipelineDiagram({ platform, legend }: { platform: CicdPlatform; 
         {stages.map((s, i) => {
           const { x, y } = pos(i)
           const selected = s.id === active.id
-          const lines = wrap(s.name, horizontal ? 15 : 28)
+          const lines = wrap(s.name, horizontal ? 12 : 28)
           return (
             <motion.g
               key={s.id}

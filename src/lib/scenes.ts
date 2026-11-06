@@ -21,7 +21,7 @@ export const scenes: readonly SceneDef[] = [
   { id: 'experience', label: 'Experience', tab: 'experience', tone: 'ivory' },
   { id: 'architecture', label: 'Architecture', tab: 'architecture', tone: 'dark' },
   { id: 'cicd', label: 'CI/CD', tab: 'cicd', tone: 'deep' },
-  { id: 'recognition', label: 'Recognition', tab: 'experience', tone: 'soft' },
+  { id: 'recognition', label: 'Recognition', tab: 'recognition', tone: 'soft' },
   { id: 'faq', label: 'FAQ', tab: 'faq', tone: 'ivory' },
   { id: 'contact', label: 'Contact', tab: 'contact', tone: 'dark' },
 ] as const
@@ -40,6 +40,7 @@ const tabLabels: Record<string, string> = {
   work: 'Work',
   experience: 'Experience',
   architecture: 'Architecture',
+  recognition: 'Recognition',
   cicd: 'CI/CD',
   faq: 'FAQ',
   contact: 'Contact',

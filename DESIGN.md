@@ -106,7 +106,7 @@ Each scene is a semantic `<section>` with a stable `id`, `data-scene`, `aria-lab
 | 7 | `experience` | Experience | ivory | Career timeline |
 | 8 | `architecture` | Architecture | dark | Interactive SVG architecture diagram |
 | 9 | `cicd` | CI/CD | deep | Pipeline showcase |
-| 10 | `recognition` | Experience | soft peach | Education, certifications, awards |
+| 10 | `recognition` | Recognition | soft peach | Education, certifications, awards |
 | 11 | `faq` | FAQ | ivory | Accordion |
 | 12 | `contact` | Contact | dark | Closing CTA and contact methods |
 
@@ -127,7 +127,7 @@ Scene rhythm alternates light and dark so each scene reads as its own room. Scen
 
 ### Navigation (desktop tabs, 1080px and wider)
 - Fixed header, `--nav-h` tall. Surface follows the active scene tone: on light scenes `ivory @ 88%` with blur and a hairline, on dark scenes `burgundy-dark @ 82%` with blur and ivory text. The colour transition takes 300ms so the active tab is always legible.
-- Left: wordmark in Fraunces. Right: tabs Home, About, Expertise, Work, Experience, Architecture, CI/CD, FAQ, Contact. Below 1080px (tablets, portrait and landscape, and phones) the header uses the compact burger pattern instead, because nine tab labels do not fit comfortably; the choice is by available width, never by device.
+- Left: wordmark in Fraunces. Right: tabs Home, About, Expertise, Work, Experience, Architecture, CI/CD, Recognition, FAQ, Contact, in the same order as the scenes, so the active pill only ever moves forward as you scroll down. Below 1080px (tablets, portrait and landscape, and phones) the header uses the compact burger pattern instead, because ten tab labels do not fit comfortably; the choice is by available width, never by device.
 - Active tab: a sliding pill (Framer `layoutId`, 350ms) plus `aria-current="location"`. The pill is not the only signal: the active label is also heavier (500 vs 400 weight) and has an underline dot.
 - States: default, hover (colour shift), focus-visible (2px ring), active, pressed (`translateY(1px)`).
 - Tabs are real links to scene ids. A tab group stays active across its scenes (Work covers GTI Main and GTI North).
