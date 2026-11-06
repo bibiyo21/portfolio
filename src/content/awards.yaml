@@ -1,0 +1,28 @@
+# Recognition, most recent first within each source. No logos or certificates are shown.
+items:
+  - id: ev-top-performer
+    title: "EV Top Performer"
+    when: ["Q3 2019", "Q3 2021", "Q3 2022", "Q1 2023"]
+  - id: ev-top-performer-year
+    title: "EV Top Performer of the Year"
+    when: ["2020"]
+  - id: coding-wizards
+    title: "One of Top 20 Coding Wizards"
+    context: "1st Clash of Codes, organized by Multisys"
+    when: ["2018"]
+  - id: game-changer
+    title: "Game Changer of the Year"
+    context: "Gameloft Philippines"
+    when: ["2017"]
+  - id: bluemix
+    title: "2nd Place"
+    context: "Bluemix Hack-a-Superpower Hackathon"
+    when: ["2016"]
+  - id: deltek
+    title: "2nd Runner-Up"
+    context: "Deltek C# Hackathon"
+    when: ["2016"]
+  - id: gdg
+    title: "One of Top 30 Most Innovative Applications"
+    context: "Google Developers Group PH, 1st GDG Hackfair"
+    when: ["2015"]

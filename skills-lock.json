@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "skills": {
+    "awesome-design-md": {
+      "source": "registry:bighardperson/awesome-design-md",
+      "commit_sha": "fe4c4786642244fa5afcc4b843173acaba7ebf82",
+      "digest": "sha256:f1ea81cf8569406c880ed1f661e9603815c311554c6ee0cc71879cb82058d098",
+      "agents": [
+        "claude-code",
+        "github-copilot"
+      ],
+      "mode": {
+        "claude-code": "symlink",
+        "github-copilot": "symlink"
+      }
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
+    }
+  }
+}

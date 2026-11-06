@@ -1,0 +1,56 @@
+# Representative architecture (not any client's actual system). Technologies come from the owner's skills.
+# `examples` stays empty until a project can be named and is supported.
+heading: "How systems fit together"
+intro: "A representative architecture view. Select a layer to see its purpose, typical responsibilities and the technologies I work with there."
+representativeNote: "Representative architecture. This is a general pattern, not the architecture of any specific client system."
+principles:
+  - title: "Clear boundaries"
+    text: "Every layer has one job and a reason to exist."
+  - title: "Practical over fashionable"
+    text: "Choices should fit the business need and the technical environment."
+  - title: "Understandable over time"
+    text: "Documentation and conventions that the next engineer can follow."
+diagram:
+  nodes:
+    - id: users
+      lane: main
+      label: "User Interfaces"
+      purpose: "Where people meet the system: browsers, devices and admin tools."
+      responsibilities: ["Clear, accessible interactions", "Responsive layouts", "Feedback on every action"]
+      technologies: ["JavaScript", "TypeScript"]
+      examples: []
+    - id: frontend
+      lane: main
+      label: "Frontend Applications"
+      purpose: "Applications that render the interface and talk to services."
+      responsibilities: ["State and routing", "Composing micro-frontends", "Build and bundling"]
+      technologies: ["React.js", "Single-SPA", "Webpack", "TurboRepo", "Micro-frontends"]
+      examples: []
+    - id: backend
+      lane: main
+      label: "Backend Services / APIs"
+      purpose: "Services that expose capabilities through well-defined APIs."
+      responsibilities: ["API design and contracts", "Authentication and authorisation", "Queues and real-time channels"]
+      technologies: ["PHP", "Laravel", "Node.js", "Python", "Microservices", "WebSockets"]
+      examples: []
+    - id: logic
+      lane: main
+      label: "Business Logic and Integrations"
+      purpose: "Where business rules live and where other systems are connected."
+      responsibilities: ["Domain rules", "ERP and third-party integrations", "Data transformation"]
+      technologies: ["REST APIs", "XML-RPC", "PHPUnit"]
+      examples: []
+    - id: data
+      lane: main
+      label: "Data Stores / External Systems"
+      purpose: "Persistent storage and the systems the platform depends on."
+      responsibilities: ["Schema and query design", "Caching", "Backups and migrations"]
+      technologies: ["MySQL", "PostgreSQL", "Redis", "AWS"]
+      examples: []
+    - id: ai
+      lane: ai
+      label: "AI Models / AI Services"
+      purpose: "Optional AI capabilities that connect to application services and tools."
+      responsibilities: ["Scoped prompts and context", "Tool access through application services", "Keeping people in the loop"]
+      technologies: ["Generative AI", "Prompt engineering", "GPT", "Gemini", "DeepSeek"]
+      examples: []

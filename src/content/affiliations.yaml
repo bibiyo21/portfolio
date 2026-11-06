@@ -1,0 +1,11 @@
+# Leadership and affiliation items. An item with `parentCompany` is shown nested under that
+# company in the experience timeline (matching `id` in experience.yaml).
+items:
+  - id: gameloft-innovators-club
+    name: "Gameloft Innovators' Club"
+    parentCompany: "gameloft"
+    role: "Chairman"
+    period: "November 2016 – April 2019"
+    description: "Demonstrated volunteerism and team leadership."
+    responsibilities:
+      - "Led a team that engaged Gameloft Philippines employees in pitching ideas to improve the business."

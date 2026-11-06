@@ -1,0 +1,87 @@
+# Career timeline, most recent first. Overlapping periods are preserved exactly as supplied.
+# The newer owner-provided dates take precedence over older résumé ranges.
+# Fields summary / responsibilities / achievements / technologies are optional and shown only when present.
+# internalNote is never displayed.
+groups:
+  - id: leaptel
+    company: "Leaptel"
+    roles:
+      - id: leaptel-sa
+        title: "Solutions Architect"
+        period: "June 2026 – Present"
+        summary: ""
+        responsibilities: []
+        achievements: []
+        technologies: []
+        internalNote: "Role details to be added by the owner."
+      - id: leaptel-sd
+        title: "Senior Developer"
+        period: "December 2025 – June 2026"
+        summary: ""
+        responsibilities: []
+        achievements: []
+        technologies: []
+        internalNote: "Role details to be added by the owner."
+  - id: solutions30
+    company: "Solutions30 Group SA"
+    roles:
+      - id: solutions30-sa
+        title: "Solutions Architect"
+        period: "March 2019 – November 2025"
+        summary: ""
+        responsibilities:
+          - "Initiated migration from older frameworks to more current technology stacks, aiming to improve application security while maintaining business continuity."
+          - "Collaborated with fellow architects on application- and infrastructure-level analysis to establish infrastructure standards and microservice and micro-frontend approaches."
+          - "Produced high-level architecture documents, including sequence diagrams, flowcharts, and project resource analyses."
+          - "Promoted improvements to existing services, including SQL query optimization and queueing-system implementation."
+          - "Guided developers toward a polyglot microservices approach for the Smartfix system."
+          - "Streamlined legacy-system migrations to improve productivity for users and maintainers."
+          - "Served as a frontend developer consultant and subject matter expert for the Smartfix application."
+          - "Developed features and interfaces for a web application supporting a Solutions30 account based in Belgium."
+          - "Contributed to migration from CakePHP 1.3 toward a modern Laravel and React.js stack."
+          - "Designed a micro-frontend approach for practical frontend application management."
+          - "Integrated ERP APIs and XML-RPC calls into web applications to transform data into useful information."
+          - "Conducted code reviews to encourage optimized and readable code."
+          - "Wrote PHPUnit unit tests to help verify integration functionality."
+          - "Analyzed requirements and translated them into digital solutions and proofs of concept."
+          - "Assisted managers with resource planning and delivery expectations for critical tasks."
+        achievements: []
+        technologies: ["Laravel", "React.js", "CakePHP", "PHPUnit", "Micro-frontends", "Microservices"]
+  - id: eastvantage
+    company: "Eastvantage"
+    roles:
+      - id: eastvantage-tl
+        title: "Technical Lead"
+        period: "June 2021 – November 2023"
+        summary: ""
+        responsibilities: []
+        achievements: []
+        technologies: []
+        internalNote: "Overlaps the Solutions30 period as supplied. Eastvantage-specific details to be added by the owner. Do not infer clients or projects."
+      - id: eastvantage-php
+        title: "PHP Developer"
+        period: "March 2019 – June 2021"
+        summary: ""
+        responsibilities: []
+        achievements: []
+        technologies: []
+        internalNote: "Overlaps the Solutions30 period as supplied. Eastvantage-specific details to be added by the owner."
+  - id: gameloft
+    company: "Gameloft Philippines Inc."
+    roles:
+      - id: gameloft-intermediate
+        title: "Web Developer (Intermediate)"
+        period: "October 2017 – April 2019"
+        summary: "Developed, maintained, and refactored Gameloft websites based on client vision and project analysis."
+        responsibilities:
+          - "Applied practical, optimized solutions to deliver websites in a timely and scalable manner."
+        achievements: []
+        technologies: []
+      - id: gameloft-junior
+        title: "Web Developer (Junior)"
+        period: "June 2016 – October 2017"
+        summary: "Developed, maintained, and refactored Gameloft websites based on client vision and project analysis."
+        responsibilities:
+          - "Applied practical, optimized solutions to deliver websites in a timely and scalable manner."
+        achievements: []
+        technologies: []

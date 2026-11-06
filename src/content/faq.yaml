@@ -1,0 +1,46 @@
+# FAQ. Placeholders {email}, {whatsapp}, {viber}, {linkedin}, {github} are filled from profile.yaml.
+# Answers stay grounded in the résumé and owner-supplied details.
+eyebrow: "FAQ"
+title: "Questions, answered"
+intro: "A few things people ask. If yours is not here, get in touch."
+closing:
+  title: "Still have a question?"
+  text: "Send a message and I'll get back to you."
+  label: "Get in touch"
+items:
+  - id: who
+    question: "Who is Ibrahem Sotejo?"
+    answer: "A Solutions Architect and full-stack developer from the Philippines with experience in application architecture, software engineering, modernization, and technical delivery."
+  - id: architect
+    question: "What does Ibrahem do as a Solutions Architect?"
+    answer: "His work has included requirements analysis, architecture documentation, application and infrastructure analysis, modernization, microservice and micro-frontend approaches, and guiding implementation. The mix depends on the engagement; not every activity applies to every project."
+  - id: tech
+    question: "What technologies does Ibrahem work with?"
+    answer: "The skills section groups them: frontend (JavaScript, TypeScript, React.js, micro-frontends), backend (PHP, Laravel, Node.js, Python and others), data (MySQL, PostgreSQL, Redis), infrastructure and delivery (Docker, AWS, Git, CI/CD), CMS and commerce (WordPress, WooCommerce), testing and observability, and generative AI. Familiarity varies across the list."
+  - id: fullstack
+    question: "Does Ibrahem have full-stack development experience?"
+    answer: "Yes. His background includes frontend and backend development with JavaScript, React, PHP frameworks, Node.js, APIs, databases, and web applications."
+  - id: micro
+    question: "Has Ibrahem worked with microservices and micro-frontends?"
+    answer: "Yes. He has collaborated on microservice and micro-frontend approaches, guided developers toward a polyglot microservices approach, and designed a micro-frontend approach for frontend application management."
+  - id: gti
+    question: "What is the GTI Digital Platform project?"
+    answer: "Two related case studies, GTI Main and GTI North, from work on the Goalie Training Institute website and digital platform. GTI Main is the primary platform. GTI North is a location-specific implementation. The case studies label architecture details as proposed or designed unless the delivered status has been confirmed."
+  - id: wp
+    question: "Does Ibrahem work with WordPress and WooCommerce?"
+    answer: "Yes. Both are part of his skills, and the GTI work gives project context for them."
+  - id: cicd
+    question: "Does Ibrahem have CI/CD and testing experience?"
+    answer: "CI/CD, GitHub, GitLab, PHPUnit and Locust load testing are part of his skills. He values delivery practices that make changes easier to validate, review and release. The CI/CD showcase on this site illustrates the idea and is not a claim about a specific client pipeline."
+  - id: ai
+    question: "Does Ibrahem work with AI?"
+    answer: "He has experience with generative AI and prompt engineering using models such as GPT, Gemini and DeepSeek. AI integration, MCP and workflow automation are areas he is exploring."
+  - id: certs
+    question: "What certifications does Ibrahem hold?"
+    answer: "Certified SAFe 5 Agilist, Certified SAFe 5 Architect, and Certified Lean Six Sigma White Belt."
+  - id: availability
+    question: "Is Ibrahem available for freelance or consulting work?"
+    answer: "For project, consulting, or collaboration inquiries, please get in touch."
+  - id: contact
+    question: "How can someone contact Ibrahem?"
+    answer: "Email {email}, WhatsApp or Viber at {phone}, or connect on LinkedIn ({linkedin}) or GitHub ({github})."

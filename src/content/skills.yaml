@@ -1,0 +1,100 @@
+# Skills from the résumé, grouped by theme. There are no proficiency ratings by design.
+# The final category is clearly separate: current interests, not résumé-confirmed delivery experience.
+intro: "Grouped by the kind of problem they solve, with a note on how each group connects to architecture and delivery."
+categories:
+  - id: frontend
+    title: "Frontend engineering"
+    kind: confirmed
+    icon: "code"
+    description: "Interfaces and the front-end architecture around them."
+    relation: "Frontend choices shape how teams ship independently. Micro-frontends and monorepo tooling are architecture decisions as much as engineering ones."
+    skills:
+      - name: "JavaScript / Vanilla JavaScript"
+      - name: "TypeScript"
+      - name: "React.js"
+      - name: "Single-SPA"
+      - name: "Micro-frontends"
+      - name: "Webpack 4 and 5"
+      - name: "TurboRepo"
+  - id: backend
+    title: "Backend and application development"
+    kind: confirmed
+    icon: "server"
+    description: "Services, APIs and application frameworks."
+    relation: "Service boundaries, framework choice and real-time channels decide how a system scales and how safely legacy code can be modernized."
+    skills:
+      - name: "PHP"
+      - name: "Node.js"
+      - name: "Laravel"
+      - name: "CakePHP"
+      - name: "CodeIgniter"
+      - name: "Zend Framework"
+      - name: "Python"
+      - name: "Microservices"
+      - name: "WebSockets"
+  - id: data
+    title: "Data and caching"
+    kind: confirmed
+    icon: "database"
+    description: "Relational stores and caching."
+    relation: "Query design, schema choices and caching are where a lot of real-world performance and reliability is won."
+    skills:
+      - name: "MySQL"
+      - name: "PostgreSQL"
+      - name: "Redis"
+  - id: infra
+    title: "Infrastructure and delivery"
+    kind: confirmed
+    icon: "cloud"
+    description: "Environments, source control and pipelines."
+    relation: "Reproducible environments and automated pipelines make changes safer to validate and release."
+    skills:
+      - name: "Docker"
+      - name: "AWS"
+      - name: "Linux / Ubuntu"
+      - name: "Git"
+      - name: "GitHub"
+      - name: "GitLab"
+      - name: "CI/CD"
+  - id: cms
+    title: "CMS and commerce"
+    kind: confirmed
+    icon: "cart"
+    description: "Content and commerce platforms."
+    relation: "Content and commerce platforms succeed when editors can manage them and developers can extend them cleanly."
+    skills:
+      - name: "WordPress"
+      - name: "WooCommerce"
+  - id: quality
+    title: "Testing, observability, and performance"
+    kind: confirmed
+    icon: "gauge"
+    description: "Verifying behaviour and watching systems run."
+    relation: "Tests, load testing and observability turn confidence in a change into evidence."
+    skills:
+      - name: "PHPUnit"
+      - name: "Locust load testing"
+      - name: "Sentry"
+      - name: "Kibana"
+  - id: ai
+    title: "AI and emerging technology"
+    kind: confirmed
+    icon: "sparkles"
+    description: "Generative AI tools and models."
+    relation: "Practical familiarity with current models helps judge where AI fits into a workflow and where it does not."
+    skills:
+      - name: "Generative AI"
+      - name: "Prompt engineering"
+      - name: "GPT"
+      - name: "Gemini"
+      - name: "DeepSeek"
+  - id: exploring
+    title: "Exploring"
+    kind: exploration
+    icon: "network"
+    description: "Current areas of interest and exploration. Not claimed as production delivery experience."
+    relation: "Interest in how AI services connect to applications through tools and workflows, and in automating routine delivery work."
+    skills:
+      - name: "AI integration"
+      - name: "Model Context Protocol (MCP)"
+      - name: "Workflow automation"

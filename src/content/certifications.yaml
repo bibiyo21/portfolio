@@ -1,0 +1,5 @@
+# Names are exactly as they appear in the résumé. No currency or validity is implied.
+items:
+  - { id: safe-agilist, name: "Certified SAFe 5 Agilist" }
+  - { id: safe-architect, name: "Certified SAFe 5 Architect" }
+  - { id: lss-white, name: "Certified Lean Six Sigma White Belt" }

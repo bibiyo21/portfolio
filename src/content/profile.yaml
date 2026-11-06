@@ -1,0 +1,108 @@
+# Public profile. Source: owner-supplied details (latest contact details supersede the résumé).
+# fullName is retained as source data and is NOT displayed. Display name is `name`.
+# Do not add years of experience, user counts or measurable outcomes unless verified.
+name: "Ibrahem Sotejo"
+fullName: "Ibrahem Aradanas Sotejo"
+wordmark: "Ibrahem Sotejo"
+title: "Solutions Architect"
+descriptors:
+  - "Full-Stack Developer"
+  - "Technology Enthusiast"
+location: "Philippines"
+headline:
+  - "Architecting Systems."
+  - "Engineering Experiences."
+  - "Building Possibilities."
+supportingLine: "Solutions Architect · Full-Stack Developer · Technology Enthusiast"
+intro: "I turn complex requirements into practical digital solutions through thoughtful architecture, full-stack engineering, and a solution-driven mindset."
+email: "ibrahem.sotejo.dev@gmail.com"
+phone: "+639174912048"
+phoneDisplay: "+63 917 491 2048"
+links:
+  linkedin: "https://www.linkedin.com/in/ibrahem-sotejo-511789103/"
+  github: "https://github.com/bibiyo21"
+  whatsapp: "https://wa.me/639174912048"
+# Viber deep-link behaviour is not verified, so the number is shown as text and WhatsApp is the click-to-chat link.
+viber: "+63 917 491 2048"
+seo:
+  title: "Ibrahem Sotejo | Solutions Architect & Full-Stack Developer"
+  description: "Ibrahem Sotejo is a Solutions Architect and full-stack developer from the Philippines. Architecting systems, engineering experiences, building possibilities."
+# Availability is not asserted. Set `availability` to a short label only when the owner confirms it, e.g. "Open to project inquiries".
+availability: ""
+# Hero visual. Original SVG artwork. Add `portrait` (an approved real photo) to show a portrait in the hero and About scenes.
+heroVisual:
+  src: "/images/illustrations/hero-architecture.svg"
+  alt: ""
+# portrait:
+#   src: "/images/portraits/ibrahem.webp"
+#   alt: "Portrait of Ibrahem Sotejo"
+#   width: 800
+#   height: 1000
+
+about:
+  eyebrow: "About"
+  title: "Practical engineering, grounded in the business need"
+  lede: "I'm Ibrahem Sotejo, a Solutions Architect and full-stack developer from the Philippines."
+  paragraphs:
+    - "I enjoy turning complex requirements into practical digital solutions, combining architecture, software engineering, integrations, and a solution-driven mindset to build systems that work for people and businesses."
+    - "My experience spans solution architecture, frontend and backend development, application modernization, microservices, micro-frontends, system integration, and engineering delivery. I have worked with cross-functional teams to analyze requirements, document architecture, improve existing systems, guide implementation, and deliver maintainable web applications."
+    - "I value practical engineering decisions: the right solution should address the business need, fit the technical environment, and remain understandable and maintainable over time."
+  strengths:
+    - title: "Architecture"
+      text: "Translating requirements into practical systems, integration patterns, technical direction, and architecture documentation."
+    - title: "Engineering"
+      text: "Delivering and modernizing applications, APIs, frontend platforms, integrations, and digital products."
+    - title: "Delivery and leadership"
+      text: "Improving engineering quality, guiding developers, reviewing code, and supporting reliable delivery."
+  attributes:
+    - "Solution-driven"
+    - "Curious about technology"
+    - "Business-aware"
+    - "Collaborative"
+
+capabilities:
+  eyebrow: "Expertise"
+  title: "What I bring to a project"
+  intro: "Capabilities, with the technologies they draw on. Detailed tools are grouped in the skills explorer below."
+  items:
+    - id: architecture
+      title: "Solution Architecture"
+      text: "Requirements analysis, architecture documents with sequence diagrams and flowcharts, and application and infrastructure analysis."
+      technologies: ["Microservices", "Micro-frontends", "Docker", "AWS"]
+    - id: fullstack
+      title: "Full-Stack Application Development"
+      text: "Frontend and backend web applications, from interfaces to services and data."
+      technologies: ["React.js", "TypeScript", "PHP", "Node.js", "Laravel"]
+    - id: modernization
+      title: "Application Modernization"
+      text: "Moving legacy applications to current stacks while keeping the business running."
+      technologies: ["CakePHP", "Laravel", "React.js"]
+    - id: micro
+      title: "Microservices and Micro-frontends"
+      text: "Service and frontend decomposition that teams can manage and ship independently."
+      technologies: ["Single-SPA", "Webpack", "TurboRepo", "Microservices"]
+    - id: integration
+      title: "API and Enterprise Integrations"
+      text: "Connecting applications to ERP systems and other services so data becomes useful information."
+      technologies: ["REST APIs", "XML-RPC", "WebSockets"]
+    - id: wordpress
+      title: "WordPress and WooCommerce"
+      text: "Content and commerce platforms, including the GTI digital platform work."
+      technologies: ["WordPress", "WooCommerce", "PHP", "MySQL"]
+      link: { label: "See the GTI case studies", href: "#work" }
+    - id: cicd
+      title: "CI/CD and Engineering Quality"
+      text: "Code review, automated testing and delivery pipelines that make changes easier to validate and release."
+      technologies: ["GitHub", "GitLab", "CI/CD", "PHPUnit", "Locust"]
+      link: { label: "See the CI/CD showcase", href: "#cicd" }
+    - id: ai
+      title: "AI and Generative AI Exploration"
+      text: "Hands-on interest in generative AI and prompt engineering with current models."
+      technologies: ["Generative AI", "Prompt engineering", "GPT", "Gemini", "DeepSeek"]
+
+contact:
+  eyebrow: "Contact"
+  heading: "Let's Build Something Meaningful."
+  text: "Have a project, technical challenge, or collaboration in mind? Let's start a conversation."
+  modalTitle: "Let's Start a Conversation"
+  modalDescription: "Have a project in mind or looking for a technical partner? Let's discuss how we can build something meaningful together."

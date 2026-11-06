@@ -1,0 +1,155 @@
+# CI/CD showcase. Drives the interactive pipeline diagram and documentation.
+# The real pipelines live in .github/workflows/ci-cd.yml and .gitlab-ci.yml and run independently of this content.
+# This is an illustration of a delivery approach. It makes no claim about any client's pipeline.
+cicd:
+  title: "From Code Commit to Production Deployment"
+  description: >-
+    I value delivery practices that make software changes easier to validate,
+    review, and release. This showcase illustrates how automated pipelines can
+    connect source control, validation, testing, quality gates, and deployment.
+  focus: []
+  # Repository supplied by the owner. Links point at the workflow files in this repository and work once it is pushed.
+  # Leave empty to hide the links.
+  repositoryUrl: "https://github.com/bibiyo21/portfolio"
+  legend: "Illustrative passing run. The diagram shows how a healthy pipeline progresses, not a live build status."
+
+  platforms:
+    - id: "github-actions"
+      name: "GitHub Actions"
+      workflow: ".github/workflows/ci-cd.yml"
+      branchPath: "blob/main/.github/workflows/ci-cd.yml"
+      architecture: >-
+        One workflow with six jobs. Validation runs first, then the build. Unit tests and Playwright
+        tests run against the same commit. Preview deployment runs for pull requests and production
+        deployment runs from main, and both require every earlier job to pass.
+      deployment: >-
+        GitHub Actions is the deployment owner. Jobs use the Vercel CLI with credentials stored as GitHub
+        Secrets, and the production job runs in a protected environment. Vercel's own Git auto-deploy is
+        disabled so a commit never deploys twice.
+      jobs:
+        - name: "validate"
+          description: "Installs with npm ci, validates the YAML content and runs the TypeScript checks."
+        - name: "build"
+          description: "Produces the production build and uploads it as an artifact."
+        - name: "unit-test"
+          description: "Runs Vitest with React Testing Library, then publishes the JUnit report and coverage."
+        - name: "e2e-test"
+          description: "Serves the production build and runs Playwright across desktop, tablet and mobile viewports. Uploads the HTML report, plus screenshots and traces on failure."
+        - name: "preview-deploy"
+          description: "Pull requests only. Deploys a Vercel preview after all required jobs pass."
+        - name: "production-deploy"
+          description: "main only, in a protected environment. Deploys to production after all required jobs pass."
+      qualityGates:
+        - "Content YAML validates against its Zod schemas"
+        - "TypeScript has no errors"
+        - "Production build succeeds"
+        - "All unit tests pass"
+        - "All Playwright tests pass on desktop, tablet and mobile"
+        - "Deployment only runs after every required job succeeds"
+      stages:
+        - id: "source"
+          name: "Source Control"
+          description: "A developer pushes a branch and opens a pull request. The push or pull request event triggers the workflow."
+          tools: ["Git", "GitHub"]
+          commands: ["git push origin feature/update-content", "gh pr create --fill"]
+          output: "Workflow run queued for the pull request."
+        - id: "validate"
+          name: "Install and Validate"
+          description: "Installs dependencies exactly as locked, validates every YAML content file, and type-checks the code."
+          tools: ["Node.js", "npm", "Zod", "TypeScript"]
+          commands: ["npm ci", "npm run content:validate", "npm run typecheck"]
+          output: "Content files valid and no type errors."
+        - id: "build"
+          name: "Build"
+          description: "Creates the production bundle that later jobs test and deploy."
+          tools: ["Vite"]
+          commands: ["npm run build"]
+          output: "dist/ built and uploaded as a workflow artifact."
+        - id: "tests"
+          name: "Automated Tests"
+          description: "Unit and component tests run in Vitest. Browser tests run in Playwright against the production build."
+          tools: ["Vitest", "React Testing Library", "Playwright", "axe-core"]
+          commands: ["npm run test:unit", "npm run test:e2e"]
+          output: "All tests pass. JUnit, coverage and HTML reports uploaded."
+        - id: "gates"
+          name: "Quality Gates"
+          description: "Required jobs and branch protection decide whether a change can merge and deploy."
+          tools: ["Required status checks", "Branch protection"]
+          commands: ["needs: [validate, build, unit-test, e2e-test]"]
+          output: "Merge and deploy unlock only when every required check is green."
+        - id: "deploy"
+          name: "Deployment"
+          description: "Pull requests get a preview deployment. main deploys to production after the required checks pass, in a protected environment."
+          tools: ["Vercel CLI", "GitHub Environments"]
+          commands: ["vercel pull --yes", "vercel build --prod", "vercel deploy --prebuilt --prod"]
+          output: "Preview or production URL printed in the job summary."
+
+    - id: "gitlab-ci"
+      name: "GitLab CI/CD"
+      workflow: ".gitlab-ci.yml"
+      branchPath: "-/blob/main/.gitlab-ci.yml"
+      architecture: >-
+        A staged pipeline: validate, build, unit-test, e2e-test and deploy. Each stage waits for the
+        previous one. Merge request pipelines create previews, and the default branch offers a
+        manually approved production deployment.
+      deployment: >-
+        A parallel implementation maintained as a technical showcase. GitHub Actions remains the
+        deployment owner. GitLab deploy jobs use protected CI/CD variables and a manual approval for
+        production, and only run when those variables are configured.
+      jobs:
+        - name: "validate:content"
+          description: "Validates YAML content against the Zod schemas."
+        - name: "validate:types"
+          description: "Runs the TypeScript compiler without emitting."
+        - name: "build"
+          description: "Installs with npm ci and builds the production bundle, kept as an artifact."
+        - name: "unit-test"
+          description: "Runs Vitest and publishes a JUnit report."
+        - name: "e2e-test"
+          description: "Runs Playwright inside the official Playwright container and stores reports, screenshots and traces."
+        - name: "deploy:preview and deploy:production"
+          description: "Preview for merge requests. Production from the default branch with manual approval."
+      qualityGates:
+        - "Content YAML validates"
+        - "TypeScript has no errors"
+        - "Production build succeeds"
+        - "Vitest passes and publishes a JUnit report"
+        - "Playwright passes on desktop, tablet and mobile"
+        - "Production deploy requires a manual approval on the default branch"
+      stages:
+        - id: "source"
+          name: "Source Control"
+          description: "A developer pushes a branch and opens a merge request. The pipeline starts for the merge request."
+          tools: ["Git", "GitLab"]
+          commands: ["git push origin feature/update-content"]
+          output: "Merge request pipeline created."
+        - id: "validate"
+          name: "Install and Validate"
+          description: "Validates content and type-checks the code in the validate stage, using a cached install."
+          tools: ["Node.js", "npm cache", "Zod", "TypeScript"]
+          commands: ["npm ci --prefer-offline", "npm run content:validate", "npm run typecheck"]
+          output: "Content and types are valid."
+        - id: "build"
+          name: "Build"
+          description: "Builds the production artifact and keeps it with an expiry date."
+          tools: ["Vite"]
+          commands: ["npm run build"]
+          output: "dist/ stored as a job artifact."
+        - id: "tests"
+          name: "Automated Tests"
+          description: "Vitest runs in the unit-test stage and Playwright runs in the Playwright container in the e2e-test stage."
+          tools: ["Vitest", "React Testing Library", "Playwright", "JUnit report"]
+          commands: ["npm run test:unit", "npm run test:e2e"]
+          output: "Test report in the merge request. HTML report, screenshots and traces stored as artifacts."
+        - id: "gates"
+          name: "Quality Gates"
+          description: "Each stage must succeed before the next starts. Protected branches and required pipelines gate merging."
+          tools: ["Protected branches", "Merge request pipelines"]
+          commands: ["needs: [build, unit-test, e2e-test]"]
+          output: "The deploy stage only becomes available when all earlier jobs succeed."
+        - id: "deploy"
+          name: "Deployment"
+          description: "Preview for merge requests. A manual approval gates production on the default branch."
+          tools: ["Vercel CLI", "Protected variables", "Manual job"]
+          commands: ["vercel deploy --prebuilt", "vercel deploy --prebuilt --prod"]
+          output: "Preview URL, or production deployment after approval."

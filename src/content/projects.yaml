@@ -1,0 +1,94 @@
+# Featured work. Only supplied projects are listed. Add more by appending to `items`.
+# Statuses: implemented | in-progress | proposed | planned. They describe the architecture/approach items only.
+# Architecture details below are kept as `proposed` (designed) until the owner confirms what was delivered.
+# `outcome` is shown only when the owner supplies verified results. Add `liveUrl` only for verified public URLs.
+family:
+  eyebrow: "Featured work"
+  title: "GTI Digital Platform — Main & North"
+  intro: "Two related case studies from work on the Goalie Training Institute (GTI) website and digital platform: the primary platform, and a location-specific implementation."
+  relationship: "Main is the primary platform. North is a location-specific implementation that builds on the same approach."
+categories:
+  - "Web Platforms"
+items:
+  - id: gti-main
+    scene: "gti-main"
+    theme: main
+    name: "GTI Main"
+    siteLabel: "Primary platform"
+    category: "Web Platforms"
+    summary: "The primary website and digital platform for the Goalie Training Institute, built on WordPress and WooCommerce."
+    overview: "GTI Main is the primary digital platform for the Goalie Training Institute, a sports training organization. The work covers a mobile-first website redesign on WordPress and WooCommerce, with attention to how the team manages content day to day."
+    context: "A sports training organization needs a site that presents its programs clearly, can take registrations and payments, and can be managed without a developer for routine changes."
+    role:
+      - "Worked on the GTI website redesign."
+      - "Worked with WordPress and WooCommerce."
+      - "Contributed to deployment."
+    approach:
+      - title: "Mobile-first redesign"
+        text: "A redesigned, mobile-first interface with CMS editing in mind."
+        status: proposed
+      - title: "Commerce on WooCommerce"
+        text: "Products, catalogue and inventory-related capabilities on WooCommerce."
+        status: proposed
+      - title: "Registration and payment workflow"
+        text: "Considerations for how registrations and payments flow through the platform."
+        status: proposed
+      - title: "Integration and maintainability"
+        text: "Keeping integrations and customisations maintainable as the platform grows."
+        status: proposed
+    technologies: ["WordPress", "WooCommerce", "PHP", "MySQL"]
+    challenges:
+      - title: "Registration and payment flows"
+        text: "Balancing a simple customer journey with the rules a training organization needs around registration and payment."
+      - title: "Maintainable customisation"
+        text: "Extending WordPress and WooCommerce without making future updates harder."
+    outcome: []
+    thumbnail:
+      src: "/images/projects/gti-main.svg"
+      alt: "Illustrative artwork for GTI Main: a burgundy and peach web interface motif. Not a real screenshot."
+      width: 1200
+      height: 900
+  - id: gti-north
+    scene: "gti-north"
+    theme: north
+    name: "GTI North"
+    siteLabel: "Location implementation"
+    category: "Web Platforms"
+    summary: "A location-specific GTI implementation that reuses the shared platform approach."
+    overview: "GTI North is a location-specific implementation of the GTI platform. The work explores how a WordPress multisite setup can serve a location with its own content and rules while reusing a common codebase."
+    context: "A multi-location organization wants each location to feel local while avoiding a separate codebase, plugin set and user base to maintain for every site."
+    role:
+      - "Worked on WordPress multisite architecture."
+      - "Worked on location-sensitive behaviour."
+      - "Contributed to deployment."
+    approach:
+      - title: "WordPress multisite and domain mapping"
+        text: "A multisite network with domain mapping for location sites."
+        status: proposed
+      - title: "Shared codebase and plugins"
+        text: "One common codebase and centrally managed plugins reused across sites."
+        status: proposed
+      - title: "Centralized users"
+        text: "A single user strategy across the network."
+        status: proposed
+      - title: "Site cloning and replication"
+        text: "A repeatable way to create a new location site from an existing one."
+        status: proposed
+      - title: "Location-sensitive rules"
+        text: "Content and behaviour that change by location."
+        status: proposed
+      - title: "Separate site data and deployment"
+        text: "Per-site data kept separate, with deployment and environment considerations."
+        status: proposed
+    technologies: ["WordPress", "WooCommerce", "PHP", "MySQL"]
+    challenges:
+      - title: "Shared code, separate data"
+        text: "Reusing code and plugins across locations while keeping each site's data separate."
+      - title: "Location-sensitive behaviour"
+        text: "Keeping location-specific rules from leaking into shared code."
+    outcome: []
+    thumbnail:
+      src: "/images/projects/gti-north.svg"
+      alt: "Illustrative artwork for GTI North: map contour lines in peach and burgundy. Not a real screenshot."
+      width: 1200
+      height: 900
