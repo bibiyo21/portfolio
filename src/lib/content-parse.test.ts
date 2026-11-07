@@ -227,13 +227,13 @@ describe('owner-supplied facts', () => {
     expect(p.location).toBe('Philippines')
   })
 
-  it('lists the three certifications exactly as written and seven award entries', () => {
+  it('lists the three certifications exactly as written and eight award entries', () => {
     expect(parseContent('certifications', read('certifications')).items.map((c) => c.name)).toEqual([
       'Certified SAFe 5 Agilist',
       'Certified SAFe 5 Architect',
       'Certified Lean Six Sigma White Belt',
     ])
-    expect(parseContent('awards', read('awards')).items).toHaveLength(7)
+    expect(parseContent('awards', read('awards')).items).toHaveLength(8)
   })
 
   it('includes the Venue Seat Planner as a personal proof of concept with the supplied URL', () => {

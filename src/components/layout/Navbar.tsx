@@ -48,8 +48,9 @@ export function Navbar() {
           className="inline-flex min-h-11 shrink-0 items-center"
           aria-label={`${profile.wordmark}, back to the start`}
         >
-          <Logo variant={dark ? 'dark' : 'light'} height={46} alt="" className="hidden min-[1080px]:block" />
-          <LogoMark variant={dark ? 'dark' : 'light'} size={40} className="min-[1080px]:hidden" />
+          {/* The wide logo needs room the eleven tabs take below 1366px, so the compact mark stands in there. */}
+          <Logo variant={dark ? 'dark' : 'light'} height={46} alt="" className="hidden min-[1366px]:block" />
+          <LogoMark variant={dark ? 'dark' : 'light'} size={40} className="min-[1366px]:hidden" />
         </a>
 
         {/* Desktop tabs */}
@@ -64,7 +65,7 @@ export function Navbar() {
                     onClick={nav(t.target)}
                     aria-current={isActive ? 'location' : undefined}
                     className={cn(
-                      'relative inline-flex min-h-11 items-center rounded-full px-2.5 font-display text-sm transition-colors duration-200 active:translate-y-px min-[1280px]:px-3.5 min-[1280px]:text-[0.9375rem]',
+                      'relative inline-flex min-h-11 items-center rounded-full px-2.5 font-display text-sm transition-colors duration-200 active:translate-y-px min-[1280px]:px-3 min-[1280px]:text-[0.9375rem]',
                       isActive
                         ? dark
                           ? 'font-medium text-burgundy-dark'

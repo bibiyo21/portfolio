@@ -4,7 +4,7 @@ import { activeLabel, activeTab, jumpToScene, openDrawer, sceneIds, sceneLabels,
 test.describe('desktop tabs', () => {
   test.use({ viewport: { width: 1440, height: 900 } })
 
-  test('shows the ten tabs in page order and no burger', async ({ page }) => {
+  test('shows the eleven tabs in page order and no burger', async ({ page }) => {
     await page.goto('/')
     const nav = page.getByRole('navigation', { name: 'Primary' })
     await expect(nav.getByRole('link')).toHaveText(tabLabels)
@@ -14,7 +14,7 @@ test.describe('desktop tabs', () => {
 
   test('tab order matches scene order, so the active tab only moves forward while scrolling down', async ({ page }) => {
     await page.goto('/')
-    const order = ['home', 'about', 'expertise', 'work', 'experience', 'architecture', 'cicd', 'recognition', 'faq', 'contact']
+    const order = ['home', 'about', 'expertise', 'work', 'experience', 'architecture', 'cicd', 'recognition', 'affiliations', 'faq', 'contact']
     const hrefs = await page.locator('nav[aria-label="Primary"] a').evaluateAll((els) => els.map((e) => e.getAttribute('href')!.slice(1)))
     expect(hrefs).toEqual(order)
     const seen: number[] = []
@@ -28,12 +28,12 @@ test.describe('desktop tabs', () => {
   })
 
   for (const width of [1080, 1280, 1440]) {
-    test(`ten tabs fit beside the wordmark without overlap at ${width}px`, async ({ page }) => {
+    test(`eleven tabs fit beside the wordmark without overlap at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 800 })
       await page.goto('/')
       const mark = await page.getByRole('link', { name: /back to the start/ }).boundingBox()
       const boxes = await page.locator('nav[aria-label="Primary"] a').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, r: r.right, h: r.height } }))
-      expect(boxes).toHaveLength(10)
+      expect(boxes).toHaveLength(11)
       expect(boxes[0]!.l).toBeGreaterThan(mark!.x + mark!.width)
       for (let i = 1; i < boxes.length; i++) expect(boxes[i]!.l).toBeGreaterThanOrEqual(boxes[i - 1]!.r - 1)
       expect(boxes.at(-1)!.r).toBeLessThanOrEqual(width)
@@ -46,7 +46,7 @@ test.describe('desktop tabs', () => {
   test('every tab reaches its scene and becomes active', async ({ page }) => {
     await page.goto('/')
     const nav = page.getByRole('navigation', { name: 'Primary' })
-    const targets: Record<string, string> = { Home: 'home', About: 'about', Expertise: 'expertise', Work: 'work', Experience: 'experience', Architecture: 'architecture', 'CI/CD': 'cicd', Recognition: 'recognition', FAQ: 'faq', Contact: 'contact' }
+    const targets: Record<string, string> = { Home: 'home', About: 'about', Expertise: 'expertise', Work: 'work', Experience: 'experience', Architecture: 'architecture', 'CI/CD': 'cicd', Recognition: 'recognition', Affiliations: 'affiliations', FAQ: 'faq', Contact: 'contact' }
     for (const label of tabLabels) {
       await nav.getByRole('link', { name: label }).click()
       await expect(activeTab(page)).toHaveText(label)
@@ -209,7 +209,7 @@ test.describe('mobile header and drawer', () => {
     await jumpToScene(page, 'cicd')
     const drawer = await openDrawer(page)
     await expect(drawer.getByText(/Now.*CI\/CD/)).toBeVisible()
-    await expect(drawer.locator('nav[aria-label="Mobile"] ol > li')).toHaveCount(12)
+    await expect(drawer.locator('nav[aria-label="Mobile"] ol > li')).toHaveCount(sceneIds.length)
     await expect(drawer.locator('a[aria-current="location"]')).toContainText('CI/CD')
   })
 

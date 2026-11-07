@@ -1,5 +1,9 @@
 # Recognition, most recent first within each source. No logos or certificates are shown.
 items:
+  - id: leaptel-speak-up-listen-well
+    title: "Speak up. Listen Well"
+    context: "Leaptel"
+    when: ["March 2026"]
   - id: ev-top-performer
     title: "EV Top Performer"
     when: ["Q3 2019", "Q3 2021", "Q3 2022", "Q1 2023"]

@@ -51,7 +51,7 @@ test.describe('experience and recognition', () => {
     await expect(page.locator('#experience').getByRole('heading', { level: 3, name: /Innovators/ })).toHaveCount(0)
   })
 
-  test('recognition shows education, three certifications and seven award entries', async ({ page }) => {
+  test('recognition shows education, three certifications and eight award entries', async ({ page }) => {
     await page.goto('/')
     await jumpToScene(page, 'recognition')
     const scene = page.locator('#recognition')
@@ -59,7 +59,9 @@ test.describe('experience and recognition', () => {
     await expect(scene).toContainText('Polytechnic University of the Philippines — Taguig Branch')
     await expect(scene).toContainText('2011 – 2016')
     for (const c of ['Certified SAFe 5 Agilist', 'Certified SAFe 5 Architect', 'Certified Lean Six Sigma White Belt']) await expect(scene).toContainText(c)
-    await expect(scene.getByTestId('awards').getByRole('listitem')).toHaveCount(7)
+    await expect(scene.getByTestId('awards').getByRole('listitem')).toHaveCount(8)
+    await expect(scene).toContainText('Speak up. Listen Well')
+    await expect(scene).toContainText('March 2026')
     await expect(scene).toContainText('Q3 2019 · Q3 2021 · Q3 2022 · Q1 2023')
     await expect(scene).toContainText('1st GDG Hackfair')
     await expect(scene.locator('img')).toHaveCount(0)

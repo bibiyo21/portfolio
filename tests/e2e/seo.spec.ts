@@ -52,7 +52,12 @@ test.describe('search and share metadata in the initial HTML', () => {
     expect(xml).toContain(`<loc>${canonical}</loc>`)
   })
 
-  test('the unpublished Kora Design Solutions draft is not in the production page', async ({ request }) => {
-    expect(await (await request.get('/')).text()).not.toContain('Kora Design Solutions')
+  test('the prerendered page carries the Kora Design Solutions affiliation for crawlers', async ({ request }) => {
+    const html = await (await request.get('/')).text()
+    expect(html).toContain('id="affiliations"')
+    expect(html).toContain('Kora Design Solutions')
+    expect(html).toContain('href="https://www.facebook.com/koradesignsolutions"')
+    expect(html).toContain('"affiliation":[{"@type":"Organization","name":"Kora Design Solutions"')
+    expect(html).not.toContain('CONFIRM_WITH_OWNER')
   })
 })

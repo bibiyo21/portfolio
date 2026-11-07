@@ -14,7 +14,7 @@ export function Faq() {
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)]">
-            <SectionHeading index="10" eyebrow={faq.eyebrow} id="faq-title" title={faq.title} intro={faq.intro} />
+            <SectionHeading index="11" eyebrow={faq.eyebrow} id="faq-title" title={faq.title} intro={faq.intro} />
             <Reveal>
               <div className="rounded-[20px] bg-peach-soft p-6">
                 <h3 className="t-heading-s">{faq.closing.title}</h3>

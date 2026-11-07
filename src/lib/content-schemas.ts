@@ -126,6 +126,10 @@ export type ExperienceRole = ExperienceGroup['roles'][number]
 const PLACEHOLDER = 'CONFIRM_WITH_OWNER'
 
 export const affiliationsSchema = z.object({
+  // Heading and intro of the Affiliations scene.
+  section: z
+    .object({ eyebrow: nonEmpty, title: nonEmpty, intro: z.string().default('') })
+    .default({ eyebrow: 'Affiliations', title: 'Affiliations', intro: '' }),
   items: z.array(
     z
       .object({
@@ -134,14 +138,21 @@ export const affiliationsSchema = z.object({
         // Matches a group id in experience.yaml to nest the item under that company.
         parentCompany: z.string().optional(),
         role: z.string().default(''),
-        // The owner-confirmed relationship wording, e.g. "Affiliated with". CONFIRM_WITH_OWNER until confirmed.
+        // Optional owner-approved relationship wording, e.g. "Founder". Empty means no relationship is stated.
         relationship: z.string().default(''),
         period: z.string().default(''),
+        // Short line the organisation uses about itself (e.g. the tagline in its own logo).
+        tagline: z.string().default(''),
+        location: z.string().default(''),
         description: z.string().default(''),
         responsibilities: z.array(nonEmpty).default([]),
-        // An official logo file supplied by the owner. Never a redrawn or substitute mark.
+        // Services the organisation itself publishes. Never inferred.
+        services: z.array(nonEmpty).default([]),
+        // The organisation's official logo file, unaltered. Never a redrawn or substitute mark.
         logo: z.string().optional(),
         logoAlt: z.string().optional(),
+        logoWidth: z.number().int().positive().optional(),
+        logoHeight: z.number().int().positive().optional(),
         url: url.optional(),
         links: z.object({ facebook: url.optional(), website: url.optional() }).default({}),
         verificationStatus: z.enum(['confirmed', 'pending-owner-confirmation']).default('confirmed'),
@@ -152,9 +163,9 @@ export const affiliationsSchema = z.object({
         if (!a.published) return
         if (a.verificationStatus !== 'confirmed')
           ctx.addIssue({ code: 'custom', path: ['published'], message: 'Only confirmed affiliations can be published' })
-        if (!a.role && !a.relationship)
-          ctx.addIssue({ code: 'custom', path: ['relationship'], message: 'A published affiliation needs a role or relationship' })
-        if ([a.role, a.relationship, a.description].some((t) => t.includes(PLACEHOLDER)))
+        if (!a.parentCompany && !a.description)
+          ctx.addIssue({ code: 'custom', path: ['description'], message: 'A published affiliation needs a description' })
+        if ([a.role, a.relationship, a.period, a.description].some((t) => t.includes(PLACEHOLDER)))
           ctx.addIssue({ code: 'custom', path: ['relationship'], message: `Replace ${PLACEHOLDER} before publishing` })
         if (a.logo && !a.logoAlt) ctx.addIssue({ code: 'custom', path: ['logoAlt'], message: 'A logo needs alt text' })
       }),

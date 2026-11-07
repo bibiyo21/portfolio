@@ -1,7 +1,14 @@
 # Leadership and affiliation items. An item with `parentCompany` is shown nested under that
 # company in the experience timeline (matching `id` in experience.yaml). Items without one appear in the
-# Affiliations block of the Recognition scene, but only when `published: true`.
-# Publishing requires verificationStatus: confirmed and real relationship wording (the schema enforces it).
+# dedicated Affiliations scene (#affiliations, its own navigation tab), but only when `published: true`.
+# Publishing requires verificationStatus: confirmed and no CONFIRM_WITH_OWNER placeholder (the schema enforces it).
+
+# Heading and intro of the Affiliations scene.
+section:
+  eyebrow: "Beyond enterprise delivery"
+  title: "Affiliations"
+  intro: "Alongside enterprise architecture and delivery work, I am connected with creative and technology-focused businesses that design and build for real customers."
+
 items:
   - id: gameloft-innovators-club
     name: "Gameloft Innovators' Club"
@@ -12,19 +19,36 @@ items:
     responsibilities:
       - "Led a team that engaged Gameloft Philippines employees in pitching ideas to improve the business."
 
-  # Kora Design Solutions. NOT PUBLISHED until the owner confirms the relationship wording, the description
-  # and supplies the official logo. To publish:
-  #   1. Set `relationship` to the owner-approved wording (for example "Affiliated with").
-  #   2. Confirm or edit `description`.
-  #   3. Optional: add the official logo file at public/images/affiliations/kora-design-solutions-logo.png
-  #      (the Facebook profile picture or an original file from the owner), then set `logo` and `logoAlt`.
-  #      Do not redraw, recolour or substitute a similarly named company's logo.
-  #   4. Set verificationStatus: confirmed and published: true.
+  # Kora Design Solutions. Company details below come from its official Facebook page
+  # (https://www.facebook.com/koradesignsolutions, checked 7 November 2026): the Intro text, the page
+  # category "Graphic Designer", a 29 September 2026 post describing its creative service retainer, and the
+  # tagline printed in its profile-picture logo.
+  # The website listed on that page (kora.ph) currently shows a "domain for sale" parking page, so it is not linked.
+  #
+  # Your own connection to Kora is NOT stated anywhere on the site yet. When you decide the wording, fill any of:
+  #   relationship: e.g. "Founder", "Co-founder", "Partner", "Collaborator" (shown above the company name)
+  #   role:         your title at Kora (shown under the company name)
+  #   period:       e.g. "2020 – Present"
+  # Leave them empty to publish the affiliation without a stated role.
   - id: kora-design-solutions
     name: "Kora Design Solutions"
-    relationship: "CONFIRM_WITH_OWNER"
-    description: "A creative and technology-focused design affiliation working across digital experiences, web solutions, and visual communication."
+    relationship: ""
+    role: ""
+    period: ""
+    tagline: "Design and Web Solutions"
+    location: "Philippines"
+    description: "A creative studio based in the Philippines that helps local and foreign brands grow, connect with their ideal customers and stand out from the competition through efficient, high-quality design and web solutions."
+    services:
+      - "Graphic design"
+      - "Web solutions"
+      - "Creative service retainers"
+    # Official profile picture from the Facebook page, stored byte-for-byte as downloaded (718 x 720 JPEG).
+    # Remove `logo` to show the labelled "Logo pending" placeholder instead.
+    logo: "/images/affiliations/kora-design-solutions-logo.jpg"
+    logoAlt: "Kora Design Solutions logo: the word KORA with a flower mark, and the line Design and Web Solutions"
+    logoWidth: 718
+    logoHeight: 720
     links:
       facebook: "https://www.facebook.com/koradesignsolutions"
-    verificationStatus: "pending-owner-confirmation"
-    published: false
+    verificationStatus: "confirmed"
+    published: true

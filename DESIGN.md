@@ -120,8 +120,9 @@ Each scene is a semantic `<section>` with a stable `id`, `data-scene`, `aria-lab
 | 8 | `architecture` | Architecture | dark | Interactive SVG architecture diagram |
 | 9 | `cicd` | CI/CD | deep | Pipeline showcase |
 | 10 | `recognition` | Recognition | soft peach | Education, certifications, awards |
-| 11 | `faq` | FAQ | ivory | Accordion |
-| 12 | `contact` | Contact | dark | Closing CTA and contact methods |
+| 11 | `affiliations` | Affiliations | dark | Affiliation cards (Kora Design Solutions) |
+| 12 | `faq` | FAQ | ivory | Accordion |
+| 13 | `contact` | Contact | dark | Closing CTA and contact methods |
 
 Scene rhythm alternates light and dark so each scene reads as its own room. Scenes may combine related content and must not repeat the same biography.
 
@@ -140,7 +141,7 @@ Scene rhythm alternates light and dark so each scene reads as its own room. Scen
 
 ### Navigation (desktop tabs, 1080px and wider)
 - Fixed header, `--nav-h` tall. Surface follows the active scene tone: on light scenes `ivory @ 88%` with blur and a hairline, on dark scenes `burgundy-dark @ 82%` with blur and ivory text. The colour transition takes 300ms so the active tab is always legible.
-- Left: the logo (horizontal on desktop). Right: tabs Home, About, Expertise, Work, Experience, Architecture, CI/CD, Recognition, FAQ, Contact, in the same order as the scenes, so the active pill only ever moves forward as you scroll down. Below 1080px (tablets, portrait and landscape, and phones) the header uses the compact burger pattern instead, because ten tab labels do not fit comfortably; the choice is by available width, never by device.
+- Left: the logo (horizontal from 1366px; the compact IS mark between 1080px and 1365px, where the eleven tabs need the width). Right: tabs Home, About, Expertise, Work, Experience, Architecture, CI/CD, Recognition, Affiliations, FAQ, Contact, in the same order as the scenes, so the active pill only ever moves forward as you scroll down. Below 1080px (tablets, portrait and landscape, and phones) the header uses the compact burger pattern instead, because eleven tab labels do not fit comfortably; the choice is by available width, never by device.
 - Active tab: a sliding pill (Framer `layoutId`, 350ms) plus `aria-current="location"`. The pill is not the only signal: the active label is also heavier (500 vs 400 weight) and has an underline dot.
 - States: default, hover (colour shift), focus-visible (2px ring), active, pressed (`translateY(1px)`).
 - Tabs are real links to scene ids. A tab group stays active across its scenes (Work covers GTI Main and GTI North).
@@ -210,7 +211,7 @@ Shape and size: radius 999px, min-height 48px, padding `14px 28px`, trailing ico
 
 - **Project plate:** `peach-soft` fill, `1px line`, radius 28px for feature plates and 20px for standard. Media on top (aspect 4:3 or 3:2, clipped), then mono-style index (`01`), title (Heading M), one-line description, tag row. Hover: image scales to 1.04 (700ms), arrow chip appears top-right, title to `burgundy`. No lift, no heavy shadow.
 - **Experience card:** ivory, 20px radius, role plus company plus period always visible, details expandable.
-- **Affiliation card:** logo tile centred on `peach-soft`, name, relationship, hover border `burgundy` and logo tile to `peach`.
+- **Affiliation card:** ivory, radius 28px, on the dark Affiliations scene. Left (top on mobile): logo panel on `peach-soft` with the unaltered logo at up to 256px. Right: relationship eyebrow ("Affiliation" when none is set), name (Heading M), tagline in `burgundy`, location, description, a Services list of outline chips, and a primary pill button to the official page. Hover: border `peach`, logo panel to `peach`, logo scales to 1.03.
 - **Philosophy principle:** on dark, `burgundy-dark` to slightly lighter fill, `1px ivory @ 12%` border, radius 20px.
 - Card shadow (floating UI only): `0 1px 2px rgba(61,20,38,.05), 0 12px 32px rgba(61,20,38,.08)`.
 
@@ -327,4 +328,4 @@ Rules: no horizontal overflow from 320px up. Touch targets at least 44x44px. Inp
 
 ## Affiliations
 
-Standalone affiliations sit in the Recognition scene as a full-width ivory card under education, certifications and awards: name, owner-approved relationship wording, description and a descriptive link. An official logo appears only when supplied, never redrawn. Unpublished entries are absent from production and appear in development only with a dashed border and a "Draft · not published" label.
+Standalone affiliations have their own dark scene between Recognition and FAQ, one full-width affiliation card each (see section 7). Only facts the organisation publishes itself are shown; the owner's relationship, role and dates appear only when filled in. The official logo is used unaltered, never redrawn; without one the card shows a dashed square "Logo pending" placeholder. Unpublished entries are absent from production and appear in development only with a dashed border and a "Draft · not published" label.

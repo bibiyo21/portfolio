@@ -32,6 +32,7 @@ export const sceneIds = [
   'architecture',
   'cicd',
   'recognition',
+  'affiliations',
   'faq',
   'contact',
 ] as const
@@ -47,11 +48,12 @@ export const sceneLabels: Record<(typeof sceneIds)[number], string> = {
   architecture: 'Architecture',
   cicd: 'CI/CD',
   recognition: 'Recognition',
+  affiliations: 'Affiliations',
   faq: 'FAQ',
   contact: 'Contact',
 }
 
-export const tabLabels = ['Home', 'About', 'Expertise', 'Work', 'Experience', 'Architecture', 'CI/CD', 'Recognition', 'FAQ', 'Contact']
+export const tabLabels = ['Home', 'About', 'Expertise', 'Work', 'Experience', 'Architecture', 'CI/CD', 'Recognition', 'Affiliations', 'FAQ', 'Contact']
 
 export const validForm = {
   name: 'Test Visitor',

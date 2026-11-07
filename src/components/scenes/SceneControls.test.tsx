@@ -15,7 +15,7 @@ describe('SceneControls', () => {
     renderWithApp(<SceneControls />)
     const rail = screen.getByRole('navigation', { name: 'Scene progress' })
     expect(within(rail).getAllByRole('link')).toHaveLength(scenes.length)
-    expect(within(rail).getByRole('link', { name: /Scene 1 of 12: Home/ })).toHaveAttribute('aria-current', 'location')
+    expect(within(rail).getByRole('link', { name: /Scene 1 of 13: Home/ })).toHaveAttribute('aria-current', 'location')
   })
 
   it('offers only Next on the first scene', () => {

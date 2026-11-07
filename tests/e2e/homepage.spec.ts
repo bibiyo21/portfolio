@@ -16,7 +16,7 @@ test.describe('homepage', () => {
     expect(errors, errors.join('\n')).toEqual([])
   })
 
-  test('renders all twelve scenes in order, each a labelled section', async ({ page }) => {
+  test('renders all thirteen scenes in order, each a labelled section', async ({ page }) => {
     await page.goto('/')
     const info = await page.evaluate((ids) =>
       ids.map((id) => {

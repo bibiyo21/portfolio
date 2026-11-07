@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { seoOptions } from '../../scripts/vite-content-plugin.ts'
-import { profile, skills } from './content-loader'
+import { affiliations, profile, skills } from './content-loader'
 import { headTags, personJsonLd, robotsTxt, sitemapXml } from './seo'
 
 const content = { profile, skills }
@@ -31,6 +31,22 @@ describe('SEO metadata', () => {
     for (const i of interests) expect(ld.knowsAbout).not.toContain(i)
     expect(ld.knowsAbout).toContain('React.js')
     expect(JSON.stringify(ld)).not.toMatch(/worksFor|award|alumniOf|founder/i)
+  })
+
+  it('names published affiliations as organisations, without implying a role', () => {
+    const ld = personJsonLd({ ...content, affiliations }, prod.siteUrl)
+    expect(ld.affiliation).toEqual([
+      expect.objectContaining({
+        '@type': 'Organization',
+        name: 'Kora Design Solutions',
+        logo: 'https://example.com/images/affiliations/kora-design-solutions-logo.jpg',
+        sameAs: ['https://www.facebook.com/koradesignsolutions'],
+      }),
+    ])
+    // The employer-nested Innovators Club is not a standalone affiliation.
+    expect(JSON.stringify(ld)).not.toContain('Innovators')
+    expect(JSON.stringify(ld)).not.toMatch(/worksFor|founder|owner|employee/i)
+    expect(headTags({ ...content, affiliations }, prod)).toContain('"affiliation":[{"@type":"Organization","name":"Kora Design Solutions"')
   })
 
   it('keeps the JSON-LD from breaking out of its script element', () => {

@@ -5,6 +5,7 @@ import { Navbar } from './components/layout/Navbar'
 import { CaseStudyScene } from './components/projects/CaseStudyScene'
 import { SceneControls } from './components/scenes/SceneControls'
 import { About } from './components/sections/About'
+import { Affiliations } from './components/sections/Affiliations'
 import { Architecture } from './components/sections/Architecture'
 import { CICDShowcase } from './components/sections/CICDShowcase'
 import { Contact } from './components/sections/Contact'
@@ -82,6 +83,7 @@ export default function App() {
             <Architecture />
             <CICDShowcase />
             <Recognition />
+            <Affiliations />
             <Faq />
             <Contact />
           </main>

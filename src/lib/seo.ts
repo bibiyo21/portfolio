@@ -17,10 +17,25 @@ export function absolute(siteUrl: string, path: string): string {
   return new URL(path, siteUrl + '/').toString()
 }
 
-export function personJsonLd(content: Pick<ContentData, 'profile' | 'skills'>, siteUrl: string) {
+type SeoContent = Pick<ContentData, 'profile' | 'skills'> & Partial<Pick<ContentData, 'affiliations'>>
+
+export function personJsonLd(content: SeoContent, siteUrl: string) {
   const { profile, skills } = content
   // Only résumé-confirmed skills, never the "current interests" category.
   const knowsAbout = skills.categories.filter((c) => c.kind === 'confirmed').flatMap((c) => c.skills.map((s) => s.name))
+  // Only published standalone affiliations; no role or relationship is implied beyond "affiliation".
+  const affiliation = (content.affiliations?.items ?? [])
+    .filter((a) => a.published && !a.parentCompany)
+    .map((a) => {
+      const sameAs = [a.links.facebook, a.links.website, a.url].filter((u): u is string => Boolean(u))
+      return {
+        '@type': 'Organization',
+        name: a.name,
+        ...(a.description ? { description: a.description } : {}),
+        ...(a.logo ? { logo: absolute(siteUrl, a.logo) } : {}),
+        ...(sameAs.length ? { sameAs } : {}),
+      }
+    })
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -32,10 +47,11 @@ export function personJsonLd(content: Pick<ContentData, 'profile' | 'skills'>, s
     sameAs: [profile.links.linkedin, profile.links.github],
     homeLocation: { '@type': 'Country', name: profile.location },
     knowsAbout,
+    ...(affiliation.length ? { affiliation } : {}),
   }
 }
 
-export function headTags(content: Pick<ContentData, 'profile' | 'skills'>, opts: SeoOptions): string {
+export function headTags(content: SeoContent, opts: SeoOptions): string {
   const { seo } = content.profile
   const url = opts.siteUrl + '/'
   const image = absolute(opts.siteUrl, seo.ogImage)

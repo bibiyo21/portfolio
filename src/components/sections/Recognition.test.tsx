@@ -18,11 +18,14 @@ describe('Recognition', () => {
     expect(container.textContent?.toLowerCase()).not.toMatch(/active|current(ly)? (valid|certified)/)
   })
 
-  it('lists all seven recognitions with their years', () => {
+  it('lists all eight recognitions with their years, newest first', () => {
     renderWithApp(<Recognition />)
     const items = within(screen.getByTestId('awards')).getAllByRole('listitem')
-    expect(items).toHaveLength(7)
-    expect(items[0]).toHaveTextContent('EV Top Performer')
-    expect(items[0]).toHaveTextContent('Q3 2019 · Q3 2021 · Q3 2022 · Q1 2023')
+    expect(items).toHaveLength(8)
+    expect(items[0]).toHaveTextContent('Speak up. Listen Well')
+    expect(items[0]).toHaveTextContent('Leaptel')
+    expect(items[0]).toHaveTextContent('March 2026')
+    expect(items[1]).toHaveTextContent('EV Top Performer')
+    expect(items[1]).toHaveTextContent('Q3 2019 · Q3 2021 · Q3 2022 · Q1 2023')
   })
 })

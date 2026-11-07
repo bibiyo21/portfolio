@@ -62,8 +62,8 @@ test.describe('scene presentation (desktop)', () => {
   test('the progress rail has a dot per scene and navigates to the right scene', async ({ page }) => {
     await page.goto('/')
     const rail = page.getByRole('navigation', { name: 'Scene progress' })
-    await expect(rail.getByRole('link')).toHaveCount(12)
-    await rail.getByRole('link', { name: /Scene 8 of 12: Architecture/ }).click()
+    await expect(rail.getByRole('link')).toHaveCount(sceneIds.length)
+    await rail.getByRole('link', { name: new RegExp(`Scene 8 of ${sceneIds.length}: Architecture`) }).click()
     await expect.poll(() => sceneTop(page, 'architecture'), { timeout: 6000 }).toBeLessThanOrEqual(2)
     await expect(rail.getByRole('link', { name: /Architecture/ })).toHaveAttribute('aria-current', 'location')
   })

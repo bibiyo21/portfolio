@@ -6,11 +6,11 @@ import { scenes, tabs } from '../../lib/scenes'
 import { Navbar } from './Navbar'
 
 describe('Navbar', () => {
-  it('exposes the ten desktop tabs as real links to scene ids', () => {
+  it('exposes the eleven desktop tabs as real links to scene ids', () => {
     renderWithApp(<Navbar />)
     const nav = screen.getByRole('navigation', { name: 'Primary' })
     expect(within(nav).getAllByRole('link')).toHaveLength(tabs.length)
-    expect(tabs.map((t) => t.label)).toEqual(['Home', 'About', 'Expertise', 'Work', 'Experience', 'Architecture', 'CI/CD', 'Recognition', 'FAQ', 'Contact'])
+    expect(tabs.map((t) => t.label)).toEqual(['Home', 'About', 'Expertise', 'Work', 'Experience', 'Architecture', 'CI/CD', 'Recognition', 'Affiliations', 'FAQ', 'Contact'])
     for (const t of tabs) expect(within(nav).getByRole('link', { name: t.label })).toHaveAttribute('href', `#${t.target}`)
   })
 
