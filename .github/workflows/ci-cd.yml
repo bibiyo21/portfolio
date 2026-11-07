@@ -34,6 +34,8 @@ jobs:
         run: npm run content:validate
       - name: Type check
         run: npm run typecheck
+      - name: Lint
+        run: npm run lint
 
   build:
     name: Build

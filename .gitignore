@@ -15,3 +15,7 @@ npm-debug.log*
 .vscode/
 .vercel
 .env*
+
+# Original personal photos: kept locally, not published. Curated byte-identical copies live in public/images/profile.
+portfolio-photo-originals/
+dist-ssr/

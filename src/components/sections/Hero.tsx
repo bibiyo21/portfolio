@@ -1,7 +1,6 @@
 import { MapPin } from 'lucide-react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Button, ButtonLink } from '../ui/Button'
-import { Img } from '../ui/Img'
 import { MaskedLines } from '../ui/MaskedLines'
 import { HeroSystem } from '../scenes/HeroSystem'
 import { Scene } from '../scenes/Scene'
@@ -15,9 +14,11 @@ export function Hero() {
   const { openModal } = useContactModal()
   const { goTo } = useScene()
   const reduce = useReducedMotion()
+  // Hero copy stays visible from the first paint (it is prerendered into the HTML and is the largest element on
+  // phones); only a small rise plays once the app starts. Opacity is not animated, so nothing waits for JavaScript.
   const fade = (delay: number) => ({
-    initial: reduce ? false : { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
+    initial: reduce ? false : { y: 14 },
+    animate: { y: 0 },
     transition: { duration: 0.55, ease: ease.out, delay },
   })
   return (
@@ -85,21 +86,9 @@ export function Hero() {
           </motion.div>
         </div>
 
-        <div className={profile.portrait ? 'lg:col-span-5 xl:col-span-4' : 'max-md:hidden lg:col-span-5 xl:col-span-4'}>
-          {profile.portrait ? (
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[28px] bg-burgundy lg:max-w-none">
-              <Img
-                src={profile.portrait.src}
-                alt={profile.portrait.alt}
-                width={profile.portrait.width}
-                height={profile.portrait.height}
-                priority
-                className="size-full object-cover"
-              />
-            </div>
-          ) : (
-            <HeroSystem />
-          )}
+        {/* The portrait anchors the About scene; the hero keeps the system visual so its text paints first. */}
+        <div className="max-md:hidden lg:col-span-5 xl:col-span-4">
+          <HeroSystem />
         </div>
       </div>
     </Scene>

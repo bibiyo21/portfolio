@@ -26,16 +26,54 @@ links:
 viber: "+63 917 491 2048"
 seo:
   title: "Ibrahem Sotejo | Solutions Architect & Full-Stack Developer"
-  description: "Ibrahem Sotejo is a Solutions Architect and full-stack developer from the Philippines. Architecting systems, engineering experiences, building possibilities."
+  description: "Ibrahem Sotejo is a Solutions Architect and Full-Stack Developer focused on system architecture, web platforms, engineering delivery, and practical digital solutions."
+  # The canonical address. Keep the current production URL until https://ibrahemsotejo.com is purchased, connected
+  # in Vercel and serving HTTPS; then change it here (or set SITE_URL at build time). Never a preview URL.
+  siteUrl: "https://portfolio-flow-stack-digital.vercel.app"
+  # Branded social preview (1200 x 630). It uses the brand identity only: putting the portrait into it would mean
+  # creating an edited derivative of the original photo, which is not allowed.
+  ogImage: "/images/illustrations/og-image.png"
+  ogImageAlt: "Ibrahem Sotejo, Solutions Architect. Architecting Systems. Engineering Experiences. Building Possibilities."
 # Availability is not asserted. Set `availability` to a short label only when the owner confirms it, e.g. "Open to project inquiries".
 availability: ""
-# Portrait. Add an approved real photo to show a portrait in the hero and About scenes. No portrait means none is shown
-# (the hero uses original SVG geometry instead).
-# portrait:
-#   src: "/images/portraits/ibrahem.webp"
-#   alt: "Portrait of Ibrahem Sotejo"
-#   width: 800
-#   height: 1000
+# Portrait: an owner-supplied original photo, shown exactly as uploaded. The file in public/images/profile is a
+# byte-identical copy of the original (no resizing, recompression, retouching or filters). Only CSS sizes and crops it.
+# `position` is the CSS object-position used when a frame crops the photo, chosen to keep the face in view.
+portrait:
+  src: "/images/profile/ibrahem-professional-portrait.jpg"
+  alt: "Ibrahem Sotejo in a professional portrait against a warm neutral background, adjusting his glasses"
+  width: 1365
+  height: 2048
+  position: "50% 18%"
+
+# "Beyond the build": up to three personal photos with short captions. Captions describe what is in the photo only;
+# they do not add event names, dates or places that were not supplied.
+personalGallery:
+  eyebrow: "Beyond the build"
+  title: "Curiosity does not switch off after work"
+  intro: "A few moments away from the keyboard: technology exhibits, interactive art and the occasional obstacle race."
+  items:
+    - src: "/images/profile/ibrahem-iron-man-exhibit.jpg"
+      alt: "Ibrahem standing beside an Iron Man exhibit, both holding out a hand towards the camera"
+      width: 1536
+      height: 2048
+      category: "Technology interests"
+      caption: "Beside an Iron Man exhibit."
+      position: "50% 40%"
+    - src: "/images/profile/ibrahem-interactive-art-exhibit.jpg"
+      alt: "Ibrahem in a cap and glasses inside a colourful mirrored art installation of painted arches"
+      width: 2048
+      height: 2048
+      category: "Curiosity"
+      caption: "Inside an interactive art installation."
+      position: "55% 55%"
+    - src: "/images/profile/ibrahem-spartan-race.jpg"
+      alt: "Ibrahem in a race headband running between hanging Spartan race obstacle bags"
+      width: 2048
+      height: 1152
+      category: "Personal interests"
+      caption: "Taking part in a Spartan race."
+      position: "53% 35%"
 
 about:
   eyebrow: "About"

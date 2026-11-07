@@ -1191,3 +1191,155 @@ Document how to:
 6. Redeploy after changing environment variables.
 7. Verify a legitimate submission and confirm rejected bot-like submissions do not trigger Resend.
 Definition of done: The contact form obtains a fresh reCAPTCHA token, the server verifies it before sending email, suspicious or invalid submissions are rejected, secrets remain server-side, automated tests cover rejection and success paths, and the README documents setup and troubleshooting.
+32. SEO, search visibility, and share-ready metadata — required
+The portfolio must be discoverable by search engines and render meaningful metadata when shared. Do not treat a client-rendered React page with a generic title as SEO complete.
+32.1 Technical SEO
+- Keep the current React + Vite architecture; do not migrate to Next.js.
+- Implement static pre-rendering / prerendered HTML for the main portfolio route using a Vite-compatible approach. Verify that crawlers receive meaningful page content and metadata in the initial HTML response, not only after client-side JavaScript executes.
+- If prerendering is not feasible with the existing setup, explain the limitation and implement the strongest compatible alternative without breaking the app.
+- Use semantic HTML: one clear <h1>, hierarchical <h2> / <h3>, landmarks, descriptive links, and meaningful section IDs.
+- Provide a unique, descriptive document title and meta description. Suggested starting point:
+  - Title: Ibrahem Sotejo | Solutions Architect & Full-Stack Developer
+  - Description: Ibrahem Sotejo is a Solutions Architect and Full-Stack Developer focused on system architecture, web platforms, engineering delivery, and practical digital solutions.
+- Add canonical URL using https://ibrahemsotejo.com/ once the domain is connected and verified. Do not publish the canonical domain before it is owned and configured; use the current production URL until then.
+- Add Open Graph metadata (og:title, og:description, og:type, og:url, og:image, og:image:alt, og:site_name) and Twitter/X card metadata (summary_large_image). Create a branded social preview image using the approved visual identity and professional portrait where appropriate.
+- Add robots.txt and an XML sitemap. Include only canonical, public pages. For a single-page site, sitemap can contain the root URL.
+- Add a manifest.webmanifest only if a real installable PWA experience is implemented; do not add a fake PWA manifest.
+- Ensure images have descriptive filenames, meaningful alt text, responsive srcset / sizes, explicit dimensions, and modern compressed formats where supported. Lazy-load below-the-fold images; prioritize the hero portrait only if it is visible immediately.
+- Avoid keyword stuffing, hidden text, duplicate metadata, and fake location/service pages.
+- Ensure the site works without relying on a social-media embed to expose important text content.
+32.2 Structured data
+Add valid JSON-LD appropriate to a personal portfolio, preferably Person with name, jobTitle, url, image, sameAs (LinkedIn and GitHub), and knowsAbout based only on verified skills in the portfolio content. Add WebSite only if useful. Do not invent employer relationships, awards, credentials, or business ownership. Validate the rendered JSON-LD and keep it synchronized with YAML content.
+32.3 Content and discoverability
+- Write natural, human-readable copy that clearly identifies Ibrahem as a Solutions Architect and Full-Stack Developer.
+- Give every featured project a descriptive title, concise summary, problem/context, contribution, solution, and verified technology details.
+- Use descriptive anchor text rather than “click here”.
+- Ensure the page has indexable text, not only text embedded in images, animations, or canvas/SVG graphics.
+- Keep project and career facts accurate. No invented client results, metrics, endorsements, or claims of company ownership.
+- Add a useful 404 page only if routing expands beyond the single-page experience.
+32.4 SEO validation
+Before completion:
+- Inspect production build HTML and confirm title, description, canonical, Open Graph, and JSON-LD are present in the initial HTML.
+- Validate robots.txt and sitemap URLs.
+- Test social preview image dimensions and accessibility.
+- Run Lighthouse or equivalent checks for SEO, accessibility, performance, and best practices; report actual scores, do not fabricate them.
+- Check that no staging, preview, or duplicate domain is accidentally declared canonical.
+33. Personal photography and visual storytelling — use the supplied photos
+The owner supplied six personal photographs. Use them selectively to make the portfolio feel human, memorable, and visually rich rather than a plain text-only developer template. The photos are supplied as source assets in the companion portfolio-photo-assets folder. Copy the curated files into public/images/profile/ in the repository and update YAML paths accordingly.
+33.1 Supplied asset inventory and recommended use
+Asset filename	Visual subject	Recommended placement
+ibrahem-professional-portrait.jpg	Professional portrait against a warm neutral background	Primary hero portrait or About section; preferred headshot
+ibrahem-wedding-portrait.jpg	Formal navy-suit portrait	Optional About / personal story image; use only if it suits the tone
+ibrahem-iron-man-exhibit.jpg	Personal photo beside an Iron Man exhibit	Personal interests / technology enthusiasm visual, not the main professional headshot
+ibrahem-interactive-art-exhibit.jpg	Colorful interactive art installation	Personal interests / curiosity visual
+ibrahem-travel-premiere.jpg	Travel photo outside a theatre	Personal interests / travel visual
+ibrahem-spartan-race.jpg	Spartan race participation photo	Hobbies / discipline / personal interests visual; avoid implying athletic credentials
+
+
+33.2 Design direction
+- Use the professional portrait as the primary human anchor in the hero or About scene. Keep the crop natural and recognizable; do not apply AI face changes, synthetic wardrobe changes, or identity-altering retouching.
+- Consider an editorial composition: portrait offset against warm ivory / burgundy surfaces, a subtle framed crop, and a short supporting statement. The design should feel premium and intentional.
+- Use no more than two or three secondary personal photos across the page unless there is a strong narrative reason. Do not turn the portfolio into a travel album.
+- A small “Beyond the Build” or “Outside the Architecture” visual moment may feature one or two hobby photos, with concise captions that communicate curiosity and interests without distracting from professional positioning.
+- Preserve the established burgundy, peach, warm ivory, and charcoal identity. Personal photos should complement the design rather than introduce unrelated theme colors throughout the UI.
+- Avoid placing text over busy photo regions unless contrast is verified. Use intentional image crops and focal positions at desktop and mobile breakpoints.
+33.3 Image implementation and accessibility
+- Use descriptive alt text, e.g. Ibrahem Sotejo in a professional portrait against a warm neutral background.
+- Decorative images should use empty alt text only when they genuinely add no content.
+- Include width and height to prevent layout shift; use responsive CSS sizing. Do not create altered or recompressed image derivatives from the supplied personal photos.
+- Lazy-load non-hero images and use decoding="async" where appropriate. Do not lazy-load the LCP hero image.
+- Respect prefers-reduced-motion; do not make photos move continuously or use parallax that harms readability.
+- Use every supplied personal photograph exactly as provided. Do not enhance, retouch, edit, regenerate, or otherwise alter the photos. This includes AI enhancement, face or body edits, skin smoothing, blemish removal, sharpening, upscaling, denoising, color correction, filters, recoloring, background replacement/removal, synthetic wardrobe changes, or compositing.
+- Preserve the original image files byte-for-byte in the source asset folder. Do not overwrite or replace them with transformed derivatives. The companion ZIP contains the original uploaded photo bytes under descriptive filenames; verify this before implementation.
+- Website presentation may use responsive sizing and CSS layout only. Prefer showing the full image with object-fit: contain; if a cropped frame is essential, use CSS object-fit: cover with a carefully chosen object-position, without modifying the underlying image. Keep the face and important context visible at desktop and mobile breakpoints.
+- Do not generate substitute portraits or use AI-generated versions of the owner. Never fabricate image captions, event details, dates, or locations.
+- Confirm that use of any visible third-party trademarks or venue marks is appropriate for the intended portfolio context.
+33.4 Suggested YAML content
+profile:
+  portrait:
+    src: /images/profile/ibrahem-professional-portrait.jpg
+    alt: Ibrahem Sotejo in a professional portrait against a warm neutral background
+  personalGallery:
+    - src: /images/profile/ibrahem-iron-man-exhibit.jpg
+      alt: Ibrahem posing beside an Iron Man exhibit
+      category: Technology interests
+    - src: /images/profile/ibrahem-spartan-race.jpg
+      alt: Ibrahem taking part in a Spartan race
+      category: Personal interests
+Treat this YAML as an example schema only; adapt it to the existing Zod schema and do not duplicate the profile root if the current content model uses another structure.
+34. Affiliations — Kora Design Solutions
+Add an Affiliations section to the portfolio and include Kora Design Solutions as an affiliation, using the supplied Facebook page as the intended primary reference:
+
+https://www.facebook.com/koradesignsolutions
+34.1 Source-grounded public description
+The Facebook page itself could not be reliably retrieved during preparation of this brief. Search results surfaced a Kora Design Solutions company profile describing a creative-tech startup offering customer-centered graphics and web solutions, with specialties including web design, web development, graphic design, visual branding, social media marketing, and mobile application work. A separate company listing identifies the business as a small ICT/creative business in the Philippines. These third-party listings may refer to the same brand, but the exact relationship to the supplied Facebook URL has not been independently confirmed.
+
+Use this as provisional context only. Before publishing, verify the business description, official logo, website/social links, and the owner's exact affiliation/role with Kora Design Solutions. Do not infer that Ibrahem is the founder, owner, employee, or partner unless the owner explicitly confirms the correct relationship and wording.
+
+Suggested conservative copy pending confirmation:
+Kora Design Solutions — A creative and technology-focused design affiliation working across digital experiences, web solutions, and visual communication.
+
+The affiliation entry must have an owner-confirmed role / relationship field. If the exact relationship is not yet confirmed, use neutral wording such as “Affiliated with” only if the owner approves it; otherwise keep the section unpublished until confirmed.
+34.2 Logo asset — do not recreate or invent
+- The requested logo is expected to be the Facebook Page profile picture for the supplied page.
+- The Facebook page could not be fetched in the research environment, and the supplied six personal photos do not contain a confirmed Kora logo asset. Therefore, no logo has been extracted or verified yet.
+- Do not use a similarly named company's logo or a third-party search-result logo as a substitute.
+- Ask the owner to provide a screenshot/download of the Facebook profile picture or an original logo file. Once supplied, crop/extract the actual mark, preserve its proportions and colors, and save it as public/images/affiliations/kora-design-solutions-logo.png (or SVG only if an original vector is supplied).
+- Do not redraw, vectorize, recolor, or otherwise alter the brand mark without permission. Keep a high-resolution source copy and create an optimized web derivative.
+- Use alt text Kora Design Solutions logo and link to the verified official Facebook page.
+- If permission to display the logo is uncertain, use a text-only affiliation entry with a link instead of the image.
+34.3 Suggested YAML content
+affiliations:
+  - name: Kora Design Solutions
+    relationship: CONFIRM_WITH_OWNER
+    description: A creative and technology-focused design affiliation working across digital experiences, web solutions, and visual communication.
+    logo: /images/affiliations/kora-design-solutions-logo.png
+    logoAlt: Kora Design Solutions logo
+    links:
+      facebook: https://www.facebook.com/koradesignsolutions
+    verificationStatus: pending-owner-confirmation
+    published: false
+Do not publish CONFIRM_WITH_OWNER, verificationStatus, or a placeholder logo path to the public UI. Use schema validation and a published flag to keep unverified affiliation details out of production.
+35. Custom domain — ibrahemsotejo.com on Vercel
+The owner is planning to purchase ibrahemsotejo.com. Prepare the portfolio for this custom domain while keeping the current *.vercel.app URL working as a fallback/preview.
+35.1 Domain and canonical strategy
+- Intended primary domain: https://ibrahemsotejo.com/.
+- Also add https://www.ibrahemsotejo.com/ to the same Vercel project.
+- Choose one canonical host. Recommended: apex https://ibrahemsotejo.com/; redirect www to apex with a permanent redirect configured in Vercel Domains.
+- Once DNS and HTTPS are verified, update the canonical URL, Open Graph URL, sitemap, JSON-LD url, and any absolute internal links to the primary domain.
+- Keep preview deployments non-indexable and ensure preview hostnames are never canonical.
+35.2 Vercel setup steps for the owner
+1. Purchase ibrahemsotejo.com from a registrar of choice. Confirm spelling, renewal pricing, and account access. Domain purchase is separate from connecting it to Vercel.
+2. Open the portfolio project in the Vercel dashboard.
+3. Go to Settings → Domains and add both ibrahemsotejo.com and www.ibrahemsotejo.com.
+4. Vercel will display the exact DNS records required for this project. Add those exact records at the domain registrar / DNS provider. Do not assume generic IP or CNAME values; Vercel's dashboard values are authoritative for the project and may vary.
+5. If the domain is already associated with another Vercel account, complete the ownership verification requested by Vercel before proceeding.
+6. Wait for Vercel to verify DNS and provision HTTPS. Do not announce the custom domain as live until both checks pass.
+7. Configure www to redirect to the apex domain (or the reverse if the owner chooses www as canonical).
+8. Update canonical metadata, Open Graph metadata, sitemap, robots references if any, and JSON-LD to the verified primary domain.
+9. Test both hosts, HTTP-to-HTTPS redirects, canonical redirects, contact form API, and production deployment.
+Official guide: https://vercel.com/docs/domains/set-up-custom-domain
+35.3 DNS safety
+- Do not delete existing DNS records blindly. If the domain will also be used for email, preserve or configure the required MX, SPF, DKIM, and DMARC records with the email provider.
+- Do not change nameservers unless the owner intends to move DNS hosting to Vercel and has copied all required records first.
+- Use Vercel's exact A / CNAME / TXT values shown in the project Domains page. Avoid copying stale generic records from tutorials.
+- DNS propagation can take time. Re-check the domain status in Vercel after changes.
+- Vercel provisions SSL automatically after domain verification; confirm the certificate is active before considering setup complete.
+- Keep the .vercel.app deployment URL available for testing, but avoid duplicate indexing by ensuring the custom domain is canonical and preview domains are not indexed.
+35.4 Optional CLI checks
+Only run these after the domain has been purchased and the Vercel CLI is authenticated and linked to the correct project:
+vercel domains ls
+vercel domains add ibrahemsotejo.com <project-name>
+vercel domains add www.ibrahemsotejo.com <project-name>
+vercel domains inspect ibrahemsotejo.com
+Use the CLI / dashboard output to obtain exact DNS instructions. Do not hardcode DNS records from this Markdown.
+36. Updated implementation and release checklist
+- [ ] Implement technical SEO and verify prerendered initial HTML metadata.
+- [ ] Add JSON-LD, canonical URL handling, Open Graph, Twitter/X metadata, robots.txt, and sitemap.
+- [ ] Add the supplied professional portrait and curate secondary personal photos from the companion asset folder.
+- [ ] Ensure original photos remain unaltered; make their display responsive and accessible, using CSS-only positioning/cropping where necessary.
+- [ ] Add the Affiliations section and Kora Design Solutions entry only after the relationship, description, and logo are verified with the owner.
+- [ ] Obtain the actual Kora Facebook profile picture/logo from the owner or an accessible official source; do not substitute a guessed logo.
+- [ ] Prepare the app for ibrahemsotejo.com and document the Vercel domain connection steps.
+- [ ] Once domain is purchased and connected, set canonical domain and verify redirects, HTTPS, sitemap, and social previews.
+- [ ] Update tests, README, asset inventory, and deployment documentation.

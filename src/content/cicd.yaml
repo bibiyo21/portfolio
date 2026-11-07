@@ -55,10 +55,10 @@ cicd:
           output: "Workflow run queued for the pull request."
         - id: "validate"
           name: "Install and Validate"
-          description: "Installs dependencies exactly as locked, validates every YAML content file, and type-checks the code."
-          tools: ["Node.js", "npm", "Zod", "TypeScript"]
-          commands: ["npm ci", "npm run content:validate", "npm run typecheck"]
-          output: "Content files valid and no type errors."
+          description: "Installs dependencies exactly as locked, validates every YAML content file, type-checks and lints the code."
+          tools: ["Node.js", "npm", "Zod", "TypeScript", "oxlint"]
+          commands: ["npm ci", "npm run content:validate", "npm run typecheck", "npm run lint"]
+          output: "Content files valid, no type errors and no lint errors."
         - id: "build"
           name: "Build"
           description: "Creates the production bundle that later jobs test and deploy."
@@ -127,7 +127,7 @@ cicd:
           name: "Install and Validate"
           description: "Validates content and type-checks the code in the validate stage, using a cached install."
           tools: ["Node.js", "npm cache", "Zod", "TypeScript"]
-          commands: ["npm ci --prefer-offline", "npm run content:validate", "npm run typecheck"]
+          commands: ["npm ci --prefer-offline", "npm run content:validate", "npm run typecheck", "npm run lint"]
           output: "Content and types are valid."
         - id: "build"
           name: "Build"

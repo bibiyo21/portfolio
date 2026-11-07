@@ -60,6 +60,8 @@ async function rateLimited(ip: string): Promise<boolean> {
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] ?? c)
 
+// Control characters are matched on purpose: they are stripped from values used in email headers.
+// oxlint-disable-next-line no-control-regex
 const stripControl = (s: string) => s.replace(/[\r\n\u0000-\u001f]+/g, ' ').trim()
 
 

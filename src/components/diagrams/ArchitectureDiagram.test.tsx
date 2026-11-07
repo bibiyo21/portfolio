@@ -40,12 +40,9 @@ describe('ArchitectureDiagram', () => {
     for (const n of philosophy.diagram.nodes) {
       await user.click(screen.getByRole('button', { name: new RegExp(`^${n.label.replace(/[/]/g, '\\/')}`) }))
       const detail = screen.getByTestId('architecture-detail')
-      if (n.examples.length === 0) {
-        expect(within(detail).queryByText('Where I have worked at this layer')).not.toBeInTheDocument()
-        continue
-      }
-      for (const x of n.examples) {
-        if (typeof x === 'string') continue
+      expect(within(detail).queryAllByText('Where I have worked at this layer')).toHaveLength(n.examples.length > 0 ? 1 : 0)
+      const linked = n.examples.filter((x) => typeof x !== 'string')
+      for (const x of linked) {
         expect(scenes).toContain(x.href)
         expect(within(detail).getByRole('link', { name: x.text })).toHaveAttribute('href', x.href)
       }

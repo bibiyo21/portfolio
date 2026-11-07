@@ -29,11 +29,37 @@ export const profileSchema = z.object({
   phoneDisplay: nonEmpty,
   links: z.object({ linkedin: url, github: url, whatsapp: url }),
   viber: z.string().optional(),
-  seo: z.object({ title: nonEmpty, description: nonEmpty }),
+  seo: z.object({
+    title: nonEmpty,
+    description: nonEmpty,
+    siteUrl: z.string().regex(/^https:\/\/[a-z0-9.-]+$/, 'Use https://host with no trailing slash or path'),
+    ogImage: z.string().startsWith('/'),
+    ogImageAlt: nonEmpty,
+  }),
   // Shown only when the owner confirms availability. Empty hides the indicator.
   availability: z.string().default(''),
   // Only an approved real photo belongs here. No portrait means none is displayed.
-  portrait: imageRef.optional(),
+  portrait: imageRef.extend({ position: z.string().default('50% 50%') }).optional(),
+  // Optional personal photos ("Beyond the build"). Hidden when absent.
+  personalGallery: z
+    .object({
+      eyebrow: nonEmpty,
+      title: nonEmpty,
+      intro: z.string().default(''),
+      items: z
+        .array(
+          imageRef.extend({
+            alt: nonEmpty,
+            width: z.number().int().positive(),
+            height: z.number().int().positive(),
+            category: nonEmpty,
+            caption: nonEmpty,
+            position: z.string().default('50% 50%'),
+          }),
+        )
+        .max(3, 'Keep "Beyond the build" to three photos or fewer'),
+    })
+    .optional(),
   about: z.object({
     eyebrow: nonEmpty,
     title: nonEmpty,
@@ -97,20 +123,41 @@ export type ExperienceContent = z.infer<typeof experienceSchema>
 export type ExperienceGroup = ExperienceContent['groups'][number]
 export type ExperienceRole = ExperienceGroup['roles'][number]
 
+const PLACEHOLDER = 'CONFIRM_WITH_OWNER'
+
 export const affiliationsSchema = z.object({
   items: z.array(
-    z.object({
-      id: nonEmpty,
-      name: nonEmpty,
-      // Matches a group id in experience.yaml to nest the item under that company.
-      parentCompany: z.string().optional(),
-      role: nonEmpty,
-      period: z.string().default(''),
-      description: z.string().default(''),
-      responsibilities: z.array(nonEmpty).default([]),
-      logo: z.string().optional(),
-      url: url.optional(),
-    }),
+    z
+      .object({
+        id: nonEmpty,
+        name: nonEmpty,
+        // Matches a group id in experience.yaml to nest the item under that company.
+        parentCompany: z.string().optional(),
+        role: z.string().default(''),
+        // The owner-confirmed relationship wording, e.g. "Affiliated with". CONFIRM_WITH_OWNER until confirmed.
+        relationship: z.string().default(''),
+        period: z.string().default(''),
+        description: z.string().default(''),
+        responsibilities: z.array(nonEmpty).default([]),
+        // An official logo file supplied by the owner. Never a redrawn or substitute mark.
+        logo: z.string().optional(),
+        logoAlt: z.string().optional(),
+        url: url.optional(),
+        links: z.object({ facebook: url.optional(), website: url.optional() }).default({}),
+        verificationStatus: z.enum(['confirmed', 'pending-owner-confirmation']).default('confirmed'),
+        // Unpublished items never appear on the production site.
+        published: z.boolean().default(true),
+      })
+      .superRefine((a, ctx) => {
+        if (!a.published) return
+        if (a.verificationStatus !== 'confirmed')
+          ctx.addIssue({ code: 'custom', path: ['published'], message: 'Only confirmed affiliations can be published' })
+        if (!a.role && !a.relationship)
+          ctx.addIssue({ code: 'custom', path: ['relationship'], message: 'A published affiliation needs a role or relationship' })
+        if ([a.role, a.relationship, a.description].some((t) => t.includes(PLACEHOLDER)))
+          ctx.addIssue({ code: 'custom', path: ['relationship'], message: `Replace ${PLACEHOLDER} before publishing` })
+        if (a.logo && !a.logoAlt) ctx.addIssue({ code: 'custom', path: ['logoAlt'], message: 'A logo needs alt text' })
+      }),
   ),
 })
 export type AffiliationsContent = z.infer<typeof affiliationsSchema>

@@ -1,5 +1,7 @@
 # Leadership and affiliation items. An item with `parentCompany` is shown nested under that
-# company in the experience timeline (matching `id` in experience.yaml).
+# company in the experience timeline (matching `id` in experience.yaml). Items without one appear in the
+# Affiliations block of the Recognition scene, but only when `published: true`.
+# Publishing requires verificationStatus: confirmed and real relationship wording (the schema enforces it).
 items:
   - id: gameloft-innovators-club
     name: "Gameloft Innovators' Club"
@@ -9,3 +11,20 @@ items:
     description: "Demonstrated volunteerism and team leadership."
     responsibilities:
       - "Led a team that engaged Gameloft Philippines employees in pitching ideas to improve the business."
+
+  # Kora Design Solutions. NOT PUBLISHED until the owner confirms the relationship wording, the description
+  # and supplies the official logo. To publish:
+  #   1. Set `relationship` to the owner-approved wording (for example "Affiliated with").
+  #   2. Confirm or edit `description`.
+  #   3. Optional: add the official logo file at public/images/affiliations/kora-design-solutions-logo.png
+  #      (the Facebook profile picture or an original file from the owner), then set `logo` and `logoAlt`.
+  #      Do not redraw, recolour or substitute a similarly named company's logo.
+  #   4. Set verificationStatus: confirmed and published: true.
+  - id: kora-design-solutions
+    name: "Kora Design Solutions"
+    relationship: "CONFIRM_WITH_OWNER"
+    description: "A creative and technology-focused design affiliation working across digital experiences, web solutions, and visual communication."
+    links:
+      facebook: "https://www.facebook.com/koradesignsolutions"
+    verificationStatus: "pending-owner-confirmation"
+    published: false

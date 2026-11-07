@@ -16,7 +16,7 @@ describe('contactSchema', () => {
   ])('rejects an invalid %s', (field, patch) => {
     const result = contactSchema.safeParse({ ...valid, ...patch })
     expect(result.success).toBe(false)
-    if (!result.success) expect(result.error.issues[0]?.path[0]).toBe(field)
+    expect(result.error?.issues[0]?.path[0]).toBe(field)
   })
 
   it('rejects a filled honeypot', () => {

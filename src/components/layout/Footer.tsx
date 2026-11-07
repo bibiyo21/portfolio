@@ -4,8 +4,10 @@ import { profile } from '../../lib/content-loader'
 import { Logo } from '../ui/Logo'
 import { Container } from './Container'
 
+// Read once when the module loads: the year does not need to change while the page is open.
+const year = new Date().getFullYear()
+
 export function Footer() {
-  const year = new Date().getFullYear()
   const { goTo } = useScene()
   return (
     <footer className="on-dark snap-end-footer border-t border-ivory/10 bg-burgundy-deep py-8 text-on-dark-mute">

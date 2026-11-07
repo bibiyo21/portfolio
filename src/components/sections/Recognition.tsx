@@ -3,6 +3,7 @@ import { Scene } from '../scenes/Scene'
 import { SceneBackdrop } from '../scenes/SceneBackdrop'
 import { Reveal } from '../ui/Reveal'
 import { SectionHeading } from '../ui/SectionHeading'
+import { Affiliations } from './Affiliations'
 import { awards, certifications, education } from '../../lib/content-loader'
 
 export function Recognition() {
@@ -76,6 +77,7 @@ export function Recognition() {
             </section>
           </Reveal>
         ) : null}
+        <Affiliations />
       </div>
     </Scene>
   )

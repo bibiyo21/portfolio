@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run content:validate && tsc --noEmit && vite build",
+    "build": "npm run content:validate && tsc --noEmit && vite build && tsx scripts/prerender.ts",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "content:validate": "tsx scripts/validate-content.ts",
@@ -21,7 +21,8 @@
     "capture:gti": "tsx scripts/capture-gti.ts",
     "preview:gti": "node scripts/serve-docs.mjs",
     "preview:brand": "node scripts/serve-docs.mjs brand-preview 4176",
-    "build:brand": "node scripts/build-brand-assets.mjs"
+    "build:brand": "node scripts/build-brand-assets.mjs",
+    "lint": "oxlint --deny-warnings"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
@@ -52,6 +53,7 @@
     "@vitest/coverage-v8": "^5.1.0",
     "jsdom": "^30.1.3",
     "opentype.js": "^2.0.0",
+    "oxlint": "^1.92.0",
     "tailwindcss": "^4.3.4",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",

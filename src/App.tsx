@@ -26,10 +26,9 @@ const ContactModal = lazy(() => loadContactModal().then((m) => ({ default: m.Con
 
 function LazyContactModal() {
   const { open } = useContactModal()
+  // Once opened, the form stays mounted so its exit animation and state survive closing.
   const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    if (open) setMounted(true)
-  }, [open])
+  if (open && !mounted) setMounted(true)
   useEffect(() => {
     const warm = () => void loadContactModal()
     const t = window.setTimeout(warm, 2500)

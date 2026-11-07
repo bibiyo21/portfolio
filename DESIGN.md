@@ -242,7 +242,8 @@ Used for Contact ("Let's Start a Conversation") and Project detail. Built on Rad
 
 - Warm grading: photos feel slightly warm, soft contrast. Cool/blue-heavy imagery is avoided or overlaid with a `burgundy @ 12%` multiply tint.
 - All images sit inside a clipped container with a radius token and a fixed aspect ratio (no layout shift). `object-fit: cover`.
-- Portrait (only when the owner supplies an approved photo): 4:5, radius 28px, an offset `peach` block behind. Until then the hero shows the representative system layers (real content from the Architecture scene) and no person image or silhouette.
+- Portrait: the owner's professional photo in the About scene, 4:5 frame, radius 28px, a `peach` offset block behind (bottom-right), caption in the mono eyebrow style below. CSS-only crop (`object-fit: cover`, `object-position` from YAML). The hero keeps the representative system layers so the hero text is the first paint.
+- "Beyond the build": at most three personal photos in 4:5 frames with a category eyebrow and a one-line factual caption; three columns from tablet up, a swipeable row on phones. Gentle hover zoom, off under reduced motion. Photos are never filtered, recoloured, retouched or recompressed.
 - Project media: 4:3 or 3:2. Hover scale 1.04. Screenshots sit on a `peach-soft` backdrop with 20px inner padding when shown contained.
 - Stock and architectural imagery: desaturate 10-15%, overlay `linear-gradient(to top, rgba(61,20,38,.55), transparent)` when text sits on it.
 - Logos: 48px tile, radius 12px, `peach-soft` fill, `object-contain` with 8px padding. Missing logos use a monogram tile (Space Grotesk initial on `peach`).
@@ -323,3 +324,7 @@ Rules: no horizontal overflow from 320px up. Touch targets at least 44x44px. Inp
 - **Connections.** Capability cards and architecture layers link to the scene that documents the work (Work, GTI, Experience). Architecture examples name only work documented elsewhere on the site.
 - **GTI pair.** The Work cards use different crops of each live site (Main: homepage hero, North: its Ongoing Programs section) so they are told apart at a glance.
 - **Hero motion.** Hero copy fades over 550ms with delays under 0.5s. On phones the intro paragraph is the largest element, so it must paint early.
+
+## Affiliations
+
+Standalone affiliations sit in the Recognition scene as a full-width ivory card under education, certifications and awards: name, owner-approved relationship wording, description and a descriptive link. An official logo appears only when supplied, never redrawn. Unpublished entries are absent from production and appear in development only with a dashed border and a "Draft · not published" label.

@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "jsx-a11y", "import", "vitest"],
+  "categories": { "correctness": "error", "suspicious": "warn" },
+  "env": { "browser": true, "node": true, "es2024": true },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    // Interactive SVG nodes (role="button"/"group") and labelled code regions cannot use the suggested native tags.
+    "jsx-a11y/prefer-tag-over-role": "off",
+    // CSS and test-setup imports are side-effect imports by design.
+    "import/no-unassigned-import": "off",
+    "import/no-named-as-default": "off",
+    // Vitest's expect accepts an optional failure message as its second argument.
+    "vitest/valid-expect": ["error", { "maxArgs": 2 }],
+    "vitest/require-mock-type-parameters": "off"
+  },
+  "overrides": [
+    {
+      "files": ["tests/**", "**/*.test.ts", "**/*.test.tsx"],
+      // Playwright fixtures call `use()` (not a React hook); tests read window globals set by stubs.
+      "rules": { "react-hooks/rules-of-hooks": "off", "no-underscore-dangle": "off" }
+    }
+  ],
+  "ignorePatterns": ["dist", "dist-ssr", "coverage", "playwright-report", "test-results", "node_modules", "portfolio-photo-originals"]
+}

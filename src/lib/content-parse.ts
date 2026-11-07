@@ -10,7 +10,7 @@ export function parseContent<N extends ContentName>(name: N, raw: string): Outpu
     data = load(raw)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
-    throw new Error(`YAML syntax error in src/content/${name}.yaml\n${msg}`)
+    throw new Error(`YAML syntax error in src/content/${name}.yaml\n${msg}`, { cause: err })
   }
   const result = contentSchemas[name].safeParse(data)
   if (!result.success) throw new Error(formatZodError(name, result.error))

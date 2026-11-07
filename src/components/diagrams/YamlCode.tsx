@@ -80,6 +80,7 @@ export function YamlCode({ code, label }: { code: string; label: string }) {
     <div
       role="region"
       aria-label={label}
+      // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- focusable scroll region, so keyboard users can scroll it
       tabIndex={0}
       className="max-h-[28rem] overflow-auto rounded-[20px] border border-ivory/12 bg-burgundy-deep p-5 text-[0.8125rem] leading-6"
     >

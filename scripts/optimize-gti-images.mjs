@@ -19,9 +19,9 @@ const page = await browser.newPage()
 await page.setContent('<canvas id="c"></canvas>')
 for (const j of jobs) {
   const b64 = readFileSync(j.from).toString('base64')
-  const result = await page.evaluate(async ({ b64, width, quality }) => {
+  const result = await page.evaluate(async ({ b64: data, width, quality }) => {
     const img = new Image()
-    img.src = `data:image/png;base64,${b64}`
+    img.src = `data:image/png;base64,${data}`
     await img.decode()
     const scale = Math.min(1, width / img.naturalWidth)
     const w = Math.round(img.naturalWidth * scale)

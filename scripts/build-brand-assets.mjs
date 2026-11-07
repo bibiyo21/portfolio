@@ -59,7 +59,7 @@ function symbolA(v, id, { sw = 9, gap = 3.4, r = 8 } = {}) {
 }
 
 // ---------- Concept B: architecture layers ----------
-function symbolB(v, id) {
+function symbolB(v) {
   const [a, b, c] = v === palette.light ? [C.dark, C.burgundy, '#6E2542'] : [C.peach, C.soft, '#E7B79E']
   return `<rect x="6" y="9" width="38" height="11" rx="3" fill="${a}"/>
   <rect x="20" y="26.5" width="38" height="11" rx="3" fill="${b}"/>
@@ -147,7 +147,6 @@ for (const [variant, v] of Object.entries(palette)) {
 // ---------- Favicons: tile + simplified glyph, derived from each concept ----------
 function faviconInner(key, tile, glyph, id) {
   if (key === 'a') {
-    const v = { main: glyph }
     return `<g transform="translate(2.6 5.2) scale(.84)">${symbolA({ main: glyph, deep: glyph }, id, { sw: 11, gap: 4, r: 9 })}</g>`
   }
   if (key === 'b') {

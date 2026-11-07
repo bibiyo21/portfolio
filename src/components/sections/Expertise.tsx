@@ -29,6 +29,7 @@ export function Expertise() {
 
       {/* On phones the cards become a swipeable row, so eight cards do not stack into several screens. */}
       <ul
+        // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- focusable scroll region, so keyboard users can scroll it
         tabIndex={0}
         aria-label="Capabilities"
         data-testid="capability-list"

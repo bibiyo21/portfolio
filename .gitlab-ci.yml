@@ -43,6 +43,7 @@ validate:types:
   script:
     - *install
     - npm run typecheck
+    - npm run lint
 
 build:
   stage: build

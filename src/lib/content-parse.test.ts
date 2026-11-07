@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -77,10 +78,37 @@ describe('optional fields and empty collections', () => {
     expect(parseContent('awards', 'items: []\n').items).toEqual([])
   })
 
-  it('defaults availability to empty and keeps the portrait optional', () => {
+  it('defaults availability to empty, and the portrait is the supplied professional photo', () => {
     const profile = parseContent('profile', read('profile'))
     expect(profile.availability).toBe('')
-    expect(profile.portrait).toBeUndefined()
+    expect(profile.portrait?.src).toBe('/images/profile/ibrahem-professional-portrait.jpg')
+    expect(profile.portrait?.alt).toMatch(/^Ibrahem Sotejo/)
+  })
+
+  it('serves the personal photos byte-for-byte as supplied (no resizing, recompression or edits)', () => {
+    // SHA-256 of the original uploads in portfolio-photo-originals/. A changed file fails this test.
+    const originals: Record<string, string> = {
+      'ibrahem-professional-portrait.jpg': '5f1dad547b2fe32508f7eb0f75fed17ce454cbc126cdac261ec74ce38c95204c',
+      'ibrahem-iron-man-exhibit.jpg': 'a94df9f2b4b8242c63fd5bdff8e8af945b5358308f4abf13da1da86ad9065766',
+      'ibrahem-interactive-art-exhibit.jpg': '9151683d38db0e1428ade56eaae2fea643463326d5f62a9401c7e084ef761d88',
+      'ibrahem-spartan-race.jpg': 'd682515aeba182c0be470a8ed488051502a1b4bc99ce15aa7c8d70b3d29ad997',
+    }
+    const profile = parseContent('profile', read('profile'))
+    const used = [profile.portrait!, ...(profile.personalGallery?.items ?? [])].map((i) => i.src.split('/').pop()!)
+    expect(used.sort()).toEqual(Object.keys(originals).sort())
+    for (const [file, hash] of Object.entries(originals)) {
+      const bytes = readFileSync(join(process.cwd(), 'public/images/profile', file))
+      expect(createHash('sha256').update(bytes).digest('hex'), file).toBe(hash)
+    }
+  })
+
+  it('keeps "Beyond the build" to three captioned photos', () => {
+    const gallery = parseContent('profile', read('profile')).personalGallery!
+    expect(gallery.items.length).toBeLessThanOrEqual(3)
+    for (const g of gallery.items) {
+      expect(g.alt.length).toBeGreaterThan(20)
+      expect(g.caption).toBeTruthy()
+    }
   })
 
   it('defaults skill category kind to confirmed', () => {

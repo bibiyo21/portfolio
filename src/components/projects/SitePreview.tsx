@@ -124,6 +124,7 @@ export function SitePreview({ project, dark }: { project: ProjectItem; dark: boo
             <div
               role="region"
               aria-label={`${project.name} desktop homepage, scrollable`}
+              // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- focusable scroll region, so keyboard users can scroll it
               tabIndex={0}
               className="max-h-[60vh] overflow-auto rounded-[16px] border border-line bg-white"
             >
@@ -140,6 +141,7 @@ export function SitePreview({ project, dark }: { project: ProjectItem; dark: boo
             <div
               role="region"
               aria-label={`${project.name} mobile homepage, scrollable`}
+              // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- focusable scroll region, so keyboard users can scroll it
               tabIndex={0}
               className="mx-auto max-h-[60vh] max-w-[390px] overflow-auto rounded-[24px] border-[6px] border-burgundy-dark bg-white"
             >

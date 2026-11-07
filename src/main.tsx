@@ -1,13 +1,18 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import App from './App'
 import './styles/globals.css'
 
 const root = document.getElementById('root')
 if (!root) throw new Error('Root element #root not found')
 
-createRoot(root).render(
+const app = (
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 )
+
+// Production HTML is prerendered (scripts/prerender.ts), so React attaches to the existing markup instead of
+// replacing it. The dev server serves an empty #root and renders from scratch.
+if (root.firstElementChild) hydrateRoot(root, app)
+else createRoot(root).render(app)

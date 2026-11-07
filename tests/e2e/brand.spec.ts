@@ -77,16 +77,16 @@ test.describe('logo on small screens', () => {
 })
 
 test.describe('favicon and social assets', () => {
-  test('the head links every favicon size, the manifest and the social image', async ({ page }) => {
+  test('the head links every favicon size and an absolute social image, and no fake PWA manifest', async ({ page }) => {
     await page.goto('/')
     await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', '/favicon.svg')
     await expect(page.locator('link[rel="icon"][sizes="32x32"]')).toHaveAttribute('href', '/favicon-32x32.png')
     await expect(page.locator('link[rel="icon"][sizes="16x16"]')).toHaveAttribute('href', '/favicon-16x16.png')
     await expect(page.locator('link[rel="icon"][href="/favicon.ico"]')).toHaveCount(1)
     await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/apple-touch-icon.png')
-    await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', '/site.webmanifest')
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-image\.png$/)
-    await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', /og-image\.png$/)
+    await expect(page.locator('link[rel="manifest"]')).toHaveCount(0)
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /^https:\/\/.+\/images\/illustrations\/og-image\.png$/)
+    await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', /^https:\/\/.+og-image\.png$/)
   })
 
   test('every favicon file exists with the right dimensions and is not the old placeholder', async ({ page }) => {
@@ -112,12 +112,6 @@ test.describe('favicon and social assets', () => {
     expect(svg).toContain('#581C35')
     expect(svg).toContain('#F5C6AD')
     expect(svg).not.toMatch(/<text/)
-  })
-
-  test('the web manifest names the site and lists the app icons', async ({ page }) => {
-    const manifest = await (await page.request.get('/site.webmanifest')).json()
-    expect(manifest.name).toBe('Ibrahem Sotejo')
-    expect(manifest.icons.map((i: { sizes: string }) => i.sizes)).toEqual(['192x192', '512x512'])
   })
 })
 
