@@ -36,7 +36,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -57,7 +57,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -92,60 +92,42 @@
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { parseContent } from './content-parse'
-import profileRaw from '../content/profile.yaml?raw'
-import experienceRaw from '../content/experience.yaml?raw'
-import educationRaw from '../content/education.yaml?raw'
-import certificationsRaw from '../content/certifications.yaml?raw'
-import awardsRaw from '../content/awards.yaml?raw'
-import skillsRaw from '../content/skills.yaml?raw'
-import projectsRaw from '../content/projects.yaml?raw'
-import affiliationsRaw from '../content/affiliations.yaml?raw'
-import philosophyRaw from '../content/philosophy.yaml?raw'
-import cicdRaw from '../content/cicd.yaml?raw'
-import faqRaw from '../content/faq.yaml?raw'
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Content is parsed and validated at build time by scripts/vite-content-plugin.ts, so this module only
+// re-exports plain data. To change what the site says, edit the YAML files in src/content.
+import raw from 'virtual:content'
+import type { ContentData } from './content-schemas'
 &nbsp;
-export const profile = parseContent('profile', profileRaw)
-export const experience = parseContent('experience', experienceRaw)
-export const education = parseContent('education', educationRaw)
-export const certifications = parseContent('certifications', certificationsRaw)
-export const awards = parseContent('awards', awardsRaw)
-export const skills = parseContent('skills', skillsRaw)
-export const projects = parseContent('projects', projectsRaw)
-export const affiliations = parseContent('affiliations', affiliationsRaw)
-export const philosophy = parseContent('philosophy', philosophyRaw)
-export const cicd = parseContent('cicd', cicdRaw).cicd
-export const faq = parseContent('faq', faqRaw)
+const content = raw as ContentData
+&nbsp;
+export const profile = content.profile
+export const experience = content.experience
+export const education = content.education
+export const certifications = content.certifications
+export const awards = content.awards
+export const skills = content.skills
+export const projects = content.projects
+export const affiliations = content.affiliations
+export const philosophy = content.philosophy
+export const cicd = content.cicd.cicd
+export const faq = content.faq
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -153,7 +135,7 @@ export const faq = parseContent('faq', faqRaw)
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-06T06:58:45.056Z
+                at 2026-11-07T07:24:52.558Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

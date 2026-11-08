@@ -43,7 +43,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
@@ -170,20 +170,7 @@
 <a name='L94'></a><a href='#L94'>94</a>
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a>
-<a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a>
-<a name='L101'></a><a href='#L101'>101</a>
-<a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a>
-<a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a>
-<a name='L108'></a><a href='#L108'>108</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -199,6 +186,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -256,20 +245,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -291,10 +269,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { MapPin } from 'lucide-react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Button, ButtonLink } from '../ui/Button'
-import { Img } from '../ui/Img'
-import { LogoMark } from '../ui/Logo'
 import { MaskedLines } from '../ui/MaskedLines'
-import { HeroGeometry } from '../scenes/HeroGeometry'
+import { HeroSystem } from '../scenes/HeroSystem'
 import { Scene } from '../scenes/Scene'
 import { SceneBackdrop } from '../scenes/SceneBackdrop'
 import { useContactModal } from '../../hooks/useContactModal'
@@ -306,10 +282,12 @@ export function <span class="fstat-no" title="function not covered" >Hero() {</s
   const { openModal } = <span class="cstat-no" title="statement not covered" >useContactModal()</span>
   const { goTo } = <span class="cstat-no" title="statement not covered" >useScene()</span>
   const reduce = <span class="cstat-no" title="statement not covered" >useReducedMotion()</span>
+  // Hero copy stays visible from the first paint (it is prerendered into the HTML and is the largest element on
+  // phones); only a small rise plays once the app starts. Opacity is not animated, so nothing waits for JavaScript.
   const <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >fade = (d</span>elay: number) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
-    initial: reduce ? false : { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, ease: ease.out, delay },
+    initial: reduce ? false : { y: 14 },
+    animate: { y: 0 },
+    transition: { duration: 0.55, ease: ease.out, delay },
   })
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;Scene
@@ -321,12 +299,13 @@ export function <span class="fstat-no" title="function not covered" >Hero() {</s
     &gt;
       &lt;div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8"&gt;
         &lt;div className="lg:col-span-7 xl:col-span-8"&gt;
-          &lt;motion.div {...fade(0)} className="mb-5 sm:mb-6"&gt;
-            &lt;LogoMark variant="dark" size={48} /&gt;
-          &lt;/motion.div&gt;
+          &lt;motion.p {...fade(0)} className="t-heading-s mb-3 text-ivory" data-testid="hero-name"&gt;
+            {profile.name}
+            &lt;span className="sr-only"&gt;, {profile.title}&lt;/span&gt;
+          &lt;/motion.p&gt;
           &lt;motion.p
             {...fade(0.05)}
-            className="mb-5 inline-flex items-center gap-2 rounded-full border border-ivory/20 px-4 py-2 text-sm text-on-dark-soft sm:mb-6"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-ivory/20 px-4 py-2 text-sm text-on-dark-soft sm:mb-8"
           &gt;
             &lt;MapPin className="size-4 text-peach" aria-hidden /&gt;
             {profile.location}
@@ -349,15 +328,15 @@ export function <span class="fstat-no" title="function not covered" >Hero() {</s
           /&gt;
 &nbsp;
           &lt;motion.p
-            {...fade(0.7)}
+            {...fade(0.35)}
             className="mt-4 text-sm font-medium uppercase tracking-[0.14em] text-peach sm:mt-6"
           &gt;
             {profile.supportingLine}
           &lt;/motion.p&gt;
-          &lt;motion.p {...fade(0.8)} className="t-lede mt-4 max-w-xl text-on-dark-soft sm:mt-6"&gt;
+          &lt;motion.p {...fade(0.4)} className="t-lede mt-4 max-w-xl text-on-dark-soft sm:mt-6"&gt;
             {profile.intro}
           &lt;/motion.p&gt;
-          &lt;motion.div {...fade(0.95)} className="mt-7 flex flex-wrap gap-3 sm:mt-10 sm:gap-4"&gt;
+          &lt;motion.div {...fade(0.5)} className="mt-7 flex flex-wrap gap-3 sm:mt-10 sm:gap-4"&gt;
             &lt;ButtonLink
               variant="onDark"
               href="#work"
@@ -375,21 +354,9 @@ export function <span class="fstat-no" title="function not covered" >Hero() {</s
           &lt;/motion.div&gt;
         &lt;/div&gt;
 &nbsp;
-        &lt;div className="lg:col-span-5 xl:col-span-4"&gt;
-          {profile.portrait ? (
-            &lt;div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[28px] bg-burgundy lg:max-w-none"&gt;
-              &lt;Img
-                src={profile.portrait.src}
-                alt={profile.portrait.alt}
-                width={profile.portrait.width}
-                height={profile.portrait.height}
-                priority
-                className="size-full object-cover"
-              /&gt;
-            &lt;/div&gt;
-          ) : (
-            &lt;HeroGeometry /&gt;
-          )}
+        {/* The portrait anchors the About scene; the hero keeps the system visual so its text paints first. */}
+        &lt;div className="max-md:hidden lg:col-span-5 xl:col-span-4"&gt;
+          &lt;HeroSystem /&gt;
         &lt;/div&gt;
       &lt;/div&gt;
     &lt;/Scene&gt;
@@ -402,7 +369,7 @@ export function <span class="fstat-no" title="function not covered" >Hero() {</s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-06T06:58:45.056Z
+                at 2026-11-07T07:24:52.558Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
