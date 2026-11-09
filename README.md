@@ -142,7 +142,7 @@ Your own connection is not stated. Fill `relationship` (e.g. "Founder"), `role` 
 - **Initial HTML.** `npm run build` prerenders the whole page (`src/entry-server.tsx`, `scripts/prerender.ts`) into `dist/index.html`, and React hydrates it in the browser. Crawlers and link previews get the content without running JavaScript.
 - **Head.** Title, description, robots, canonical, Open Graph, Twitter card and Person JSON-LD are generated at build time from `profile.yaml` and `skills.yaml` by `src/lib/seo.ts` (through `scripts/vite-content-plugin.ts`). JSON-LD uses only verified facts: name, job title, URL, portrait, LinkedIn, GitHub, country and the résumé-confirmed skills (not the "current interests").
 - **robots.txt and sitemap.xml** are generated into `dist/`. The sitemap lists only the canonical root URL.
-- **Canonical address.** `seo.siteUrl` in `profile.yaml`, currently `https://portfolio-flow-stack-digital.vercel.app` (the live production alias). `SITE_URL` at build time overrides it.
+- **Canonical address.** `seo.siteUrl` in `profile.yaml`, currently `https://www.ibrahemsotejo.com` (the apex `ibrahemsotejo.com` 308-redirects to `www`, so `www` is the canonical host; the old `portfolio-flow-stack-digital.vercel.app` alias still works). `SITE_URL` at build time overrides it.
 - **Previews.** When Vercel builds anything other than production (`VERCEL_ENV` is not `production`), the build emits `noindex, nofollow` and a disallow-all `robots.txt`.
 - No web manifest: the site is not an installable app, so the old `site.webmanifest` was removed.
 

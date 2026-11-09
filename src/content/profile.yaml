@@ -29,7 +29,7 @@ seo:
   description: "Ibrahem Sotejo is a Solutions Architect and Full-Stack Developer focused on system architecture, web platforms, engineering delivery, and practical digital solutions."
   # The canonical address. Keep the current production URL until https://ibrahemsotejo.com is purchased, connected
   # in Vercel and serving HTTPS; then change it here (or set SITE_URL at build time). Never a preview URL.
-  siteUrl: "https://portfolio-flow-stack-digital.vercel.app"
+  siteUrl: "https://www.ibrahemsotejo.com"
   # Branded social preview (1200 x 630). It uses the brand identity only: putting the portrait into it would mean
   # creating an edited derivative of the original photo, which is not allowed.
   ogImage: "/images/illustrations/og-image.png"
