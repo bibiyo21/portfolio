@@ -40,6 +40,7 @@ categories:
     relation: "Query design, schema choices and caching are where a lot of real-world performance and reliability is won."
     skills:
       - name: "MySQL"
+      - name: "MariaDB"
       - name: "PostgreSQL"
       - name: "Redis"
   - id: infra

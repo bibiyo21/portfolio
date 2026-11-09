@@ -53,7 +53,7 @@ diagram:
       label: "Data Stores / External Systems"
       purpose: "Persistent storage and the systems the platform depends on."
       responsibilities: ["Schema and query design", "Caching", "Backups and migrations"]
-      technologies: ["MySQL", "PostgreSQL", "Redis", "AWS"]
+      technologies: ["MySQL", "MariaDB", "PostgreSQL", "Redis", "AWS"]
       examples:
         - { text: "Solutions30: promoted SQL query optimization and a queueing-system implementation.", href: "#experience" }
         - { text: "Venue Seat Planner: SQLite for local development and MongoDB in production.", href: "#work" }

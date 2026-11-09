@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { renderWithApp } from '../../test/render'
@@ -44,5 +44,22 @@ describe('Expertise', () => {
     expect(container.textContent).not.toMatch(/\d+\s?%/)
     expect(container.textContent?.toLowerCase()).not.toMatch(/\bexpert\b/)
     expect(container.textContent).not.toContain('★')
+  })
+
+  it('tours the categories on its own and hands control over once a tab is picked', async () => {
+    const user = userEvent.setup()
+    renderWithApp(<Expertise />)
+    const [first, second] = skills.categories
+    expect(screen.getByRole('button', { name: /pause tour/i })).toBeInTheDocument()
+    // jsdom has no CSS animations, so React listens for the vendor-prefixed event name. Send both.
+    const bar = screen.getByTestId('autoplay-bar')
+    act(() => {
+      for (const type of ['animationend', 'webkitAnimationEnd']) bar.dispatchEvent(new Event(type, { bubbles: true }))
+    })
+    expect(screen.getByRole('tab', { name: second!.title })).toHaveAttribute('aria-selected', 'true')
+
+    await user.click(screen.getByRole('tab', { name: first!.title }))
+    expect(screen.queryByTestId('autoplay-bar')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /play tour/i })).toBeInTheDocument()
   })
 })

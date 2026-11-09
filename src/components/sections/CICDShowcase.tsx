@@ -1,6 +1,18 @@
 import * as Tabs from '@radix-ui/react-tabs'
 import { ExternalLink } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowRightArrowLeft,
+  faCubes,
+  faFileCode,
+  faListOl,
+  faRocket,
+  faScrewdriverWrench,
+  faShieldHalved,
+  faSitemap,
+} from '@fortawesome/free-solid-svg-icons'
+import { FaIcon, platformIcon } from '../../lib/fa-icons'
 import { PipelineDiagram } from '../diagrams/PipelineDiagram'
 import { Scene } from '../scenes/Scene'
 import { SceneBackdrop } from '../scenes/SceneBackdrop'
@@ -29,6 +41,16 @@ function repoLink(platform: CicdPlatform): string | null {
   return `${cicd.repositoryUrl.replace(/\/$/, '')}/${platform.branchPath}`
 }
 
+/** Accordion and summary headings get a small icon so each block reads at a glance. */
+function IconTitle({ icon, children }: { icon: IconDefinition; children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-3">
+      <FaIcon icon={icon} className="size-4 shrink-0 text-peach" />
+      {children}
+    </span>
+  )
+}
+
 function PlatformPanel({ platform }: { platform: CicdPlatform }) {
   const link = repoLink(platform)
   const source = workflowSource[platform.id]
@@ -36,7 +58,8 @@ function PlatformPanel({ platform }: { platform: CicdPlatform }) {
   const details: AccordionItem[] = [
     {
       id: 'stages',
-      title: 'Stages',
+      title: <IconTitle icon={faListOl}>Stages</IconTitle>,
+      label: 'Stages',
       content: (
         <ol className="list-decimal space-y-2 pl-5 marker:text-peach">
           {platform.stages.map((s) => (
@@ -49,7 +72,8 @@ function PlatformPanel({ platform }: { platform: CicdPlatform }) {
     },
     {
       id: 'jobs',
-      title: 'Jobs',
+      title: <IconTitle icon={faCubes}>Jobs</IconTitle>,
+      label: 'Jobs',
       content: (
         <ul className="space-y-2">
           {platform.jobs.map((j) => (
@@ -62,7 +86,8 @@ function PlatformPanel({ platform }: { platform: CicdPlatform }) {
     },
     {
       id: 'gates',
-      title: 'Quality gates',
+      title: <IconTitle icon={faShieldHalved}>Quality gates</IconTitle>,
+      label: 'Quality gates',
       content: (
         <ul className="list-disc space-y-2 pl-5 marker:text-peach">
           {platform.qualityGates.map((g) => (
@@ -73,7 +98,8 @@ function PlatformPanel({ platform }: { platform: CicdPlatform }) {
     },
     {
       id: 'tools',
-      title: 'Tools',
+      title: <IconTitle icon={faScrewdriverWrench}>Tools</IconTitle>,
+      label: 'Tools',
       content: (
         <div className="flex flex-wrap gap-2">
           {uniqueTools(platform).map((t) => (
@@ -88,7 +114,8 @@ function PlatformPanel({ platform }: { platform: CicdPlatform }) {
   if (source)
     details.push({
       id: 'workflow',
-      title: 'Workflow example',
+      title: <IconTitle icon={faFileCode}>Workflow example</IconTitle>,
+      label: 'Workflow example',
       content: (
         <div>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -118,11 +145,15 @@ function PlatformPanel({ platform }: { platform: CicdPlatform }) {
       <div className="grid gap-10 lg:grid-cols-12">
         <div className="space-y-6 lg:col-span-5">
           <div>
-            <h3 className="t-heading-s text-ivory">Pipeline architecture</h3>
+            <h3 className="t-heading-s text-ivory">
+              <IconTitle icon={faSitemap}>Pipeline architecture</IconTitle>
+            </h3>
             <p className="mt-2 text-on-dark-soft">{platform.architecture}</p>
           </div>
           <div>
-            <h3 className="t-heading-s text-ivory">Deployment strategy</h3>
+            <h3 className="t-heading-s text-ivory">
+              <IconTitle icon={faRocket}>Deployment strategy</IconTitle>
+            </h3>
             <p className="mt-2 text-on-dark-soft">{platform.deployment}</p>
           </div>
         </div>
@@ -136,6 +167,13 @@ function PlatformPanel({ platform }: { platform: CicdPlatform }) {
 
 export function CICDShowcase() {
   const [platformId, setPlatformId] = useState(cicd.platforms[0]?.id ?? '')
+  // The panels are long (diagram, accordion, YAML), so they do not switch on their own. Until the
+  // visitor switches once, the other platform carries a pulsing dot and the hint says there is more.
+  const [switched, setSwitched] = useState(false)
+  const choose = (id: string) => {
+    setPlatformId(id)
+    setSwitched(true)
+  }
   return (
     <Scene id="cicd" tone="deep" backdrop={<SceneBackdrop tone="deep" />}>
       <SectionHeading
@@ -159,18 +197,33 @@ export function CICDShowcase() {
         </Reveal>
       ) : null}
 
-      <Tabs.Root value={platformId} onValueChange={setPlatformId}>
-        <Tabs.List aria-label="CI/CD platform" className="mb-10 inline-flex gap-1 rounded-full border border-ivory/15 p-1">
-          {cicd.platforms.map((p) => (
-            <Tabs.Trigger
-              key={p.id}
-              value={p.id}
-              className="min-h-11 rounded-full px-5 text-sm font-medium text-on-dark-soft transition-colors data-[state=active]:bg-peach data-[state=active]:text-burgundy-dark"
-            >
-              {p.name}
-            </Tabs.Trigger>
-          ))}
-        </Tabs.List>
+      <Tabs.Root value={platformId} onValueChange={choose}>
+        <div className="mb-10 flex flex-wrap items-center gap-x-4 gap-y-3">
+          <Tabs.List aria-label="CI/CD platform" className="inline-flex gap-1 rounded-full border border-ivory/15 p-1">
+            {cicd.platforms.map((p) => (
+              <Tabs.Trigger
+                key={p.id}
+                value={p.id}
+                className="relative inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-medium text-on-dark-soft transition-colors hover:text-ivory data-[state=active]:bg-peach data-[state=active]:text-burgundy-dark"
+              >
+                <FaIcon icon={platformIcon(p.id)} className="size-4 shrink-0" />
+                {p.name}
+                {!switched && p.id !== platformId ? (
+                  <span aria-hidden className="absolute right-1.5 top-1.5 flex size-2" data-testid="tab-pulse">
+                    <span className="absolute inline-flex size-full rounded-full bg-peach motion-safe:animate-[ping-soft_1.6s_ease-out_infinite]" />
+                    <span className="relative inline-flex size-2 rounded-full bg-peach" />
+                  </span>
+                ) : null}
+              </Tabs.Trigger>
+            ))}
+          </Tabs.List>
+          {cicd.platforms.length > 1 ? (
+            <p className="inline-flex items-center gap-2 text-sm text-on-dark-soft">
+              <FaIcon icon={faArrowRightArrowLeft} className="size-4 text-peach" />
+              {cicd.platforms.length} pipelines. Switch to compare them.
+            </p>
+          ) : null}
+        </div>
         {cicd.platforms.map((p) => (
           <Tabs.Content key={p.id} value={p.id} className="outline-none">
             <PlatformPanel platform={p} />

@@ -1,6 +1,10 @@
 import { useScene } from '../../hooks/useScene'
 import { motion, useReducedMotion } from 'framer-motion'
-import { useId, useState, type KeyboardEvent } from 'react'
+import { useId, type KeyboardEvent } from 'react'
+import { faBriefcase, faListCheck, faMicrochip } from '@fortawesome/free-solid-svg-icons'
+import { useAutoCycle } from '../../hooks/useAutoCycle'
+import { FaIcon, layerIcon } from '../../lib/fa-icons'
+import { AutoplayBar, AutoplayControl } from '../ui/Autoplay'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { philosophy } from '../../lib/content-loader'
 import type { DiagramNode } from '../../lib/content-schemas'
@@ -9,6 +13,9 @@ import { Tag } from '../ui/Tag'
 
 const H = { w: 168, h: 88, gap: 50, aiW: 220 }
 const V = { w: 300, h: 76, gap: 34, vw: 340 }
+const CYCLE_MS = 6500
+/** Space at the left of each box for its icon. */
+const ICON = { size: 20, pad: 16, text: 46 }
 
 function wrap(text: string, max: number): string[] {
   const lines: string[] = []
@@ -31,6 +38,8 @@ interface Box {
 }
 
 /** Representative architecture. Nodes are buttons. Wide screens flow left to right, narrow screens top to bottom. */
+const nodeIds = philosophy.diagram.nodes.map((n) => n.id)
+
 export function ArchitectureDiagram() {
   const { goTo } = useScene()
   const nodes = philosophy.diagram.nodes
@@ -39,7 +48,9 @@ export function ArchitectureDiagram() {
   const horizontal = useMediaQuery('(min-width: 1024px)')
   const reduce = useReducedMotion()
   const panelId = useId()
-  const [activeId, setActiveId] = useState(main[0]?.id ?? '')
+  const tour = useAutoCycle(nodeIds)
+  const activeId = tour.active
+  const setActiveId = tour.select
   const active: DiagramNode | undefined = nodes.find((n) => n.id === activeId) ?? main[0]
   // AI connects to the application services / tools layer (the third main node, or the middle one).
   const toolsNode = main[Math.min(2, main.length - 1)]
@@ -106,7 +117,16 @@ export function ArchitectureDiagram() {
   }
 
   return (
-    <div>
+    <div {...tour.containerProps}>
+      <AutoplayControl
+        dark
+        className="mb-6"
+        enabled={tour.enabled}
+        onToggle={tour.toggle}
+        reduce={tour.reduce}
+        nudge={tour.inView}
+        hint={tour.enabled ? 'Touring each layer. Select one to explore it yourself.' : 'Select a layer to see its details.'}
+      />
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className={horizontal ? 'h-auto w-full' : 'mx-auto h-auto w-full max-w-[340px]'}
@@ -125,7 +145,7 @@ export function ArchitectureDiagram() {
           const b = boxes.get(n.id)
           if (!b) return null
           const selected = n.id === active?.id
-          const lines = wrap(n.label, horizontal ? 17 : 30)
+          const lines = wrap(n.label, horizontal ? 12 : 24)
           return (
             <motion.g
               key={n.id}
@@ -154,10 +174,18 @@ export function ArchitectureDiagram() {
                 strokeDasharray={n.lane === 'ai' && !selected ? '6 5' : undefined}
                 strokeOpacity={selected ? 0.9 : n.lane === 'ai' ? 0.6 : 0.18}
               />
+              <FaIcon
+                icon={layerIcon(n.id)}
+                x={b.x + ICON.pad}
+                y={b.y + b.h / 2 - ICON.size / 2}
+                width={ICON.size}
+                height={ICON.size}
+                color={selected ? '#581C35' : '#F5C6AD'}
+              />
               {lines.map((line, li) => (
                 <text
                   key={line}
-                  x={b.x + 18}
+                  x={b.x + ICON.text}
                   y={b.y + b.h / 2 - ((lines.length - 1) * 19) / 2 + li * 19 + 5}
                   fontSize={horizontal ? 16 : 17}
                   fill={selected ? '#3D1426' : '#FFF8F2'}
@@ -187,17 +215,31 @@ export function ArchitectureDiagram() {
       {active ? (
         <div
           id={panelId}
-          aria-live="polite"
+          // The tour changes this panel every few seconds, so only the visitor's own choices are announced.
+          aria-live={tour.enabled ? 'off' : 'polite'}
           data-testid="architecture-detail"
-          className="mt-8 rounded-[20px] border border-ivory/12 bg-ivory/[0.04] p-6 md:p-8"
+          className="relative mt-8 overflow-hidden rounded-[20px] border border-ivory/12 bg-ivory/[0.04] p-6 md:p-8"
         >
-          <p className="t-eyebrow text-peach">{active.lane === 'ai' ? 'Optional AI and automation lane' : 'Layer'}</p>
+          {tour.enabled ? (
+            <AutoplayBar
+              cycleKey={active.id}
+              ms={CYCLE_MS}
+              running={tour.running}
+              onEnd={tour.onCycleEnd}
+              className="inset-x-0 top-0 h-[3px] bg-peach"
+            />
+          ) : null}
+          <p className="t-eyebrow inline-flex items-center gap-2 text-peach">
+            <FaIcon icon={layerIcon(active.id)} className="size-4" />{active.lane === 'ai' ? 'Optional AI and automation lane' : 'Layer'}</p>
           <h3 className="t-heading-m mt-2 text-ivory">{active.label}</h3>
           <p className="mt-3 max-w-[62ch] text-on-dark-soft">{active.purpose}</p>
           <div className="mt-6 grid gap-6 md:grid-cols-2">
             {active.responsibilities.length > 0 ? (
               <div>
-                <h4 className="t-eyebrow mb-3 text-peach">Typical responsibilities</h4>
+                <h4 className="t-eyebrow mb-3 inline-flex items-center gap-2 text-peach">
+                  <FaIcon icon={faListCheck} className="size-3.5" />
+                  Typical responsibilities
+                </h4>
                 <ul className="list-disc space-y-1.5 pl-5 text-on-dark-soft marker:text-peach">
                   {active.responsibilities.map((r) => (
                     <li key={r}>{r}</li>
@@ -207,7 +249,10 @@ export function ArchitectureDiagram() {
             ) : null}
             {active.technologies.length > 0 ? (
               <div>
-                <h4 className="t-eyebrow mb-3 text-peach">Technologies I work with here</h4>
+                <h4 className="t-eyebrow mb-3 inline-flex items-center gap-2 text-peach">
+                  <FaIcon icon={faMicrochip} className="size-3.5" />
+                  Technologies I work with here
+                </h4>
                 <ul className="flex flex-wrap gap-2">
                   {active.technologies.map((t) => (
                     <li key={t}>
@@ -219,7 +264,10 @@ export function ArchitectureDiagram() {
             ) : null}
             {active.examples.length > 0 ? (
               <div className="md:col-span-2">
-                <h4 className="t-eyebrow mb-3 text-peach">Where I have worked at this layer</h4>
+                <h4 className="t-eyebrow mb-3 inline-flex items-center gap-2 text-peach">
+                  <FaIcon icon={faBriefcase} className="size-3.5" />
+                  Where I have worked at this layer
+                </h4>
                 <ul className="list-disc space-y-1.5 pl-5 text-on-dark-soft marker:text-peach">
                   {active.examples.map((x) =>
                     typeof x === 'string' ? (

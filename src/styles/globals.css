@@ -164,6 +164,9 @@ h1, h2, h3, h4 {
 .skip-link:focus { top: 1rem; }
 
 @keyframes flow { to { stroke-dashoffset: -24; } }
+/* Autoplay progress: a bar fills while a tab is shown, then the next tab takes over. */
+@keyframes autoplay-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 @keyframes ping-soft { 0% { transform: scale(1); opacity: 0.55; } 80%, 100% { transform: scale(2.4); opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {

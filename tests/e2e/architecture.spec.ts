@@ -17,11 +17,11 @@ test.describe('architecture diagram', () => {
     const nodes = page.locator('#architecture svg g[role="button"]')
     await expect(nodes).toHaveCount(6)
     for (const n of ['User Interfaces', 'Frontend Applications', 'Backend Services / APIs', 'Business Logic and Integrations', 'Data Stores / External Systems', 'AI Models / AI Services'])
-      await expect(page.locator('#architecture svg').getByRole('button', { name: new RegExp(`^${n.replace('/', '\\/')}`) })).toBeVisible()
+      await expect(page.locator('#architecture svg[role="group"]').getByRole('button', { name: new RegExp(`^${n.replace('/', '\\/')}`) })).toBeVisible()
   })
 
   test('clicking a layer explains its purpose, responsibilities and technologies', async ({ page }) => {
-    await page.locator('#architecture svg').getByRole('button', { name: /^Backend Services/ }).click()
+    await page.locator('#architecture svg[role="group"]').getByRole('button', { name: /^Backend Services/ }).click()
     const d = page.getByTestId('architecture-detail')
     await expect(d).toContainText('Backend Services / APIs')
     await expect(d).toContainText('Typical responsibilities')
@@ -31,20 +31,20 @@ test.describe('architecture diagram', () => {
   })
 
   test('an example links to the scene that documents it', async ({ page }) => {
-    await page.locator('#architecture svg').getByRole('button', { name: /^Business Logic/ }).click()
+    await page.locator('#architecture svg[role="group"]').getByRole('button', { name: /^Business Logic/ }).click()
     await page.getByTestId('architecture-detail').getByRole('link', { name: /ERP APIs and XML-RPC/ }).click()
     await expect(page).toHaveURL(/#experience$/)
     await expect(page.locator('#experience')).toBeInViewport({ ratio: 0.2 })
   })
 
   test('the AI lane is marked optional and its details are shown on selection', async ({ page }) => {
-    await page.locator('#architecture svg').getByRole('button', { name: /^AI Models/ }).click()
+    await page.locator('#architecture svg[role="group"]').getByRole('button', { name: /^AI Models/ }).click()
     await expect(page.getByTestId('architecture-detail')).toContainText('Optional AI and automation lane')
     await expect(page.getByTestId('architecture-detail')).toContainText('GPT')
   })
 
   test('is keyboard operable', async ({ page }) => {
-    const node = page.locator('#architecture svg').getByRole('button', { name: /^Frontend Applications/ })
+    const node = page.locator('#architecture svg[role="group"]').getByRole('button', { name: /^Frontend Applications/ })
     await node.focus()
     await page.keyboard.press('Enter')
     await expect(node).toHaveAttribute('aria-pressed', 'true')
@@ -70,7 +70,7 @@ test.describe('architecture diagram on mobile', () => {
   test('becomes a legible vertical flow that fits the screen', async ({ page }) => {
     await page.goto('/')
     await jumpToScene(page, 'architecture')
-    await page.locator('#architecture svg').scrollIntoViewIfNeeded()
+    await page.locator('#architecture svg[role="group"]').scrollIntoViewIfNeeded()
     await page.waitForTimeout(1000)
     const boxes = await page.locator('#architecture svg g[role="button"]').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()))
     expect(boxes).toHaveLength(6)

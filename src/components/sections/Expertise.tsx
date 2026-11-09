@@ -1,5 +1,4 @@
 import * as Tabs from '@radix-ui/react-tabs'
-import { useState } from 'react'
 import { Scene } from '../scenes/Scene'
 import { SceneBackdrop } from '../scenes/SceneBackdrop'
 import { Reveal } from '../ui/Reveal'
@@ -7,13 +6,19 @@ import { SectionHeading } from '../ui/SectionHeading'
 import { SkillTag } from '../ui/SkillTag'
 import { useScene } from '../../hooks/useScene'
 import { profile, skills } from '../../lib/content-loader'
-import { getIcon } from '../../lib/icons'
+import { FaIcon, skillIcon } from '../../lib/fa-icons'
+import { useAutoCycle } from '../../hooks/useAutoCycle'
+import { AutoplayBar, AutoplayControl } from '../ui/Autoplay'
 import { cn } from '../../lib/cn'
+
+const categoryIds = skills.categories.map((c) => c.id)
+const CYCLE_MS = 6000
 
 export function Expertise() {
   const { capabilities } = profile
   const { goTo } = useScene()
-  const [tab, setTab] = useState(skills.categories[0]?.id ?? '')
+  const tour = useAutoCycle(categoryIds)
+  const tab = tour.active
   const current = skills.categories.find((c) => c.id === tab) ?? skills.categories[0]!
 
   return (
@@ -75,29 +80,46 @@ export function Expertise() {
         ))}
       </ul>
 
-      <div className="mt-12">
+      <div className="mt-12" {...tour.containerProps}>
         <Reveal>
           <h3 className="t-heading-m">Skills explorer</h3>
           <p className="mt-3 max-w-2xl text-ink-soft">{skills.intro}</p>
         </Reveal>
-        <Tabs.Root value={tab} onValueChange={setTab} className="mt-8">
+        <AutoplayControl
+          className="mt-6"
+          enabled={tour.enabled}
+          onToggle={tour.toggle}
+          reduce={tour.reduce}
+          nudge={tour.inView}
+          hint={tour.enabled ? 'Touring each category. Pick one to explore it yourself.' : 'Pick a category to see its skills.'}
+        />
+        <Tabs.Root value={tab} onValueChange={tour.select} className="mt-5">
           <Tabs.List aria-label="Skill categories" className="flex flex-wrap gap-2">
             {skills.categories.map((c) => (
               <Tabs.Trigger
                 key={c.id}
                 value={c.id}
                 className={cn(
-                  'min-h-11 rounded-full px-4 text-sm font-medium transition-colors',
+                  'relative inline-flex min-h-11 items-center gap-2 overflow-hidden rounded-full px-4 text-sm font-medium transition-colors',
                   c.kind === 'exploration' ? 'border border-dashed border-burgundy/50' : 'border border-line-strong',
                   'text-ink-soft hover:bg-ivory data-[state=active]:border-burgundy data-[state=active]:bg-burgundy data-[state=active]:text-ivory',
                 )}
               >
+                <FaIcon icon={skillIcon(c.icon)} className="size-3.5 shrink-0" />
                 {c.title}
+                {tour.enabled && c.id === tab ? (
+                  <AutoplayBar
+                    cycleKey={c.id}
+                    ms={CYCLE_MS}
+                    running={tour.running}
+                    onEnd={tour.onCycleEnd}
+                    className="inset-x-0 bottom-0 h-[3px] bg-peach"
+                  />
+                ) : null}
               </Tabs.Trigger>
             ))}
           </Tabs.List>
           {skills.categories.map((c) => {
-            const Icon = getIcon(c.icon)
             return (
               <Tabs.Content
                 key={c.id}
@@ -107,7 +129,7 @@ export function Expertise() {
               >
                 <div className="flex items-start gap-4">
                   <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-peach-soft text-burgundy">
-                    <Icon className="size-6" aria-hidden />
+                    <FaIcon icon={skillIcon(c.icon)} className="size-6" />
                   </div>
                   <div>
                     <h4 className="t-heading-s">{c.title}</h4>
@@ -132,7 +154,8 @@ export function Expertise() {
             )
           })}
         </Tabs.Root>
-        <span className="sr-only" aria-live="polite">
+        {/* Announce only the visitor's own choices, not every step of the tour. */}
+        <span className="sr-only" aria-live={tour.enabled ? 'off' : 'polite'}>
           Showing {current.title}
         </span>
       </div>
