@@ -95,7 +95,7 @@ Use the following latest details supplied by the owner. These supersede older co
 - Email: ibrahem.sotejo.dev@gmail.com
 - Viber / WhatsApp: +639174912048
 - WhatsApp URL: https://wa.me/639174912048
-- LinkedIn: https://www.linkedin.com/in/ibrahem-sotejo-511789103/
+- LinkedIn: https://www.linkedin.com/in/ibrahem-sotejo/
 - GitHub: https://github.com/bibiyo21
 - Country/location label: Philippines
 Use mailto:ibrahem.sotejo.dev@gmail.com for email. Provide clear accessible labels for contact links. Use a Viber deep link only if its behavior is verified; otherwise display the number and offer WhatsApp as the dependable click-to-chat link.
@@ -535,7 +535,7 @@ tagline: Architecting Systems. Engineering Experiences. Building Possibilities.
 email: ibrahem.sotejo.dev@gmail.com
 phone: "+639174912048"
 links:
-  linkedin: https://www.linkedin.com/in/ibrahem-sotejo-511789103/
+  linkedin: https://www.linkedin.com/in/ibrahem-sotejo/
   github: https://github.com/bibiyo21
   whatsapp: https://wa.me/639174912048
 The full name is retained as résumé source data. Use “Ibrahem Sotejo” as the display name unless the owner chooses otherwise.
@@ -773,7 +773,7 @@ Known details:
 - Gameloft Web Developer: June 2016–April 2019, with junior/intermediate periods as detailed above.
 - Email: ibrahem.sotejo.dev@gmail.com.
 - Viber/WhatsApp: +639174912048.
-- LinkedIn: https://www.linkedin.com/in/ibrahem-sotejo-511789103/
+- LinkedIn: https://www.linkedin.com/in/ibrahem-sotejo/
 - GitHub: https://github.com/bibiyo21.
 - Location: Philippines.
 Owner input still needed before final public launch:

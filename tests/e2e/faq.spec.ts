@@ -67,7 +67,7 @@ test.describe('FAQ', () => {
     })()
     await expect(region.getByRole('link', { name: 'ibrahem.sotejo.dev@gmail.com' })).toHaveAttribute('href', 'mailto:ibrahem.sotejo.dev@gmail.com')
     await expect(region).toContainText('+63 917 491 2048')
-    await expect(region.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/ibrahem-sotejo-511789103/')
+    await expect(region.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/ibrahem-sotejo/')
     await expect(region.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/bibiyo21')
   })
 

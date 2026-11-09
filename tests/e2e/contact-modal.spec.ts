@@ -12,7 +12,7 @@ test.describe('contact scene', () => {
     await expect(s).toContainText("Have a project, technical challenge, or collaboration in mind? Let's start a conversation.")
     await expect(s.getByRole('link', { name: /ibrahem\.sotejo\.dev@gmail\.com/ })).toHaveAttribute('href', 'mailto:ibrahem.sotejo.dev@gmail.com')
     await expect(s.getByRole('link', { name: /WhatsApp/ })).toHaveAttribute('href', 'https://wa.me/639174912048')
-    await expect(s.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/ibrahem-sotejo-511789103/')
+    await expect(s.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/ibrahem-sotejo/')
     await expect(s.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/bibiyo21')
     await expect(s).toContainText('Viber')
     await expect(s).toContainText('+63 917 491 2048')

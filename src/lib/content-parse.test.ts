@@ -222,7 +222,7 @@ describe('owner-supplied facts', () => {
     expect(p.email).toBe('ibrahem.sotejo.dev@gmail.com')
     expect(p.phone).toBe('+639174912048')
     expect(p.links.whatsapp).toBe('https://wa.me/639174912048')
-    expect(p.links.linkedin).toBe('https://www.linkedin.com/in/ibrahem-sotejo-511789103/')
+    expect(p.links.linkedin).toBe('https://www.linkedin.com/in/ibrahem-sotejo/')
     expect(p.links.github).toBe('https://github.com/bibiyo21')
     expect(p.location).toBe('Philippines')
   })
