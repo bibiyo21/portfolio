@@ -309,7 +309,7 @@ src/lib/                    scenes, content-schemas, content-parse, content-load
 src/hooks/                  useScene, useMediaQuery, useParallaxScale, useContactModal
 src/components/
   layout/                   Navbar, Footer, Container
-  scenes/                   Scene, ParallaxLayer, SceneBackdrop, SceneControls, HeroSystem
+  scenes/                   Scene, ParallaxLayer, SceneBackdrop, SceneControls, CubeField
   sections/                 Hero, About, Expertise, Work, Experience, Architecture, CICDShowcase, Recognition, Faq, Contact
   projects/                 CaseStudyScene, ProjectCard, ProjectDetail, StatusChip
   diagrams/                 ArchitectureDiagram, PipelineDiagram, YamlCode

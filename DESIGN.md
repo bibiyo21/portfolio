@@ -59,7 +59,7 @@ Self-hosted WOFF2 via `@fontsource` (all three are SIL Open Font License, which 
 
 | Style | Class | Font | Size (fluid) | Weight | Line height | Tracking |
 |---|---|---|---|---|---|---|
-| Display XL (hero) | `.t-display-xl` | Space Grotesk | `clamp(2.15rem, 4.6vw, 4rem)` | 600 | 1 | -0.035em |
+| Display XL (hero) | `.t-display-xl` | Space Grotesk | `clamp(2.15rem, 4.6vw, 4.75rem)` | 600 | 1 | -0.035em |
 | Display L (section) | `.t-display-l` | Space Grotesk | `clamp(2.1rem, 4.6vw, 3.9rem)` | 600 | 1.04 | -0.03em |
 | Heading M (title) | `.t-heading-m` | Space Grotesk | `clamp(1.5rem, 2.6vw, 2.3rem)` | 500 | 1.12 | -0.02em |
 | Heading S (card) | `.t-heading-s` | Space Grotesk | `1.375rem` | 500 | 1.22 | -0.012em |
@@ -110,7 +110,7 @@ Each scene is a semantic `<section>` with a stable `id`, `data-scene`, `aria-lab
 
 | # | id | Tab group | Tone | Content |
 |---|---|---|---|---|
-| 1 | `home` | Home | dark | Hero. Name first, staggered headline, then the representative system layers (from `philosophy.yaml`) at depth, linking to Architecture. Phones show the copy only |
+| 1 | `home` | Home | deep | Hero. Full-bleed block wall (`CubeField`, a 2D canvas in burgundy that rises under the pointer) with the copy anchored bottom-left: name eyebrow, staggered headline, supporting line, intro, two CTAs, location line. The header floats with no surface until the page scrolls |
 | 2 | `about` | About | ivory | Biography, three strengths, layered shapes |
 | 3 | `expertise` | Expertise | soft peach | Capability pillars and categorised skills |
 | 4 | `work` | Work | ivory | Featured work, GTI family entry cards |
@@ -249,7 +249,7 @@ Used for Contact ("Let's Start a Conversation") and Project detail. Built on Rad
 
 - Warm grading: photos feel slightly warm, soft contrast. Cool/blue-heavy imagery is avoided or overlaid with a `burgundy @ 12%` multiply tint.
 - All images sit inside a clipped container with a radius token and a fixed aspect ratio (no layout shift). `object-fit: cover`.
-- Portrait: the owner's professional photo in the About scene, 4:5 frame, radius 28px, a `peach` offset block behind (bottom-right), caption in the mono eyebrow style below. CSS-only crop (`object-fit: cover`, `object-position` from YAML). The hero keeps the representative system layers so the hero text is the first paint.
+- Portrait: the owner's professional photo in the About scene, 4:5 frame, radius 28px, a `peach` offset block behind (bottom-right), caption in the mono eyebrow style below. CSS-only crop (`object-fit: cover`, `object-position` from YAML). The hero carries no photograph (its backdrop is the canvas block wall), so the hero text is the first paint.
 - "Beyond the build": at most three personal photos in 4:5 frames with a category eyebrow and a one-line factual caption; three columns from tablet up, a swipeable row on phones. Gentle hover zoom, off under reduced motion. Photos are never filtered, recoloured, retouched or recompressed.
 - Project media: 4:3 or 3:2. Hover scale 1.04. Screenshots sit on a `peach-soft` backdrop with 20px inner padding when shown contained.
 - Stock and architectural imagery: desaturate 10-15%, overlay `linear-gradient(to top, rgba(61,20,38,.55), transparent)` when text sits on it.
@@ -330,7 +330,7 @@ Rules: no horizontal overflow from 320px up. Touch targets at least 44x44px. Inp
 - **Short scenes.** CI/CD keeps the pipeline diagram, stage detail and the two summaries visible; stages, jobs, quality gates, tools and the workflow file sit in an accordion. On phones the pipeline nodes are single-line, and capability cards become a swipeable row (scroll-snap, focusable region).
 - **Connections.** Capability cards and architecture layers link to the scene that documents the work (Work, GTI, Experience). Architecture examples name only work documented elsewhere on the site.
 - **GTI pair.** The Work cards use different crops of each live site (Main: homepage hero, North: its Ongoing Programs section) so they are told apart at a glance.
-- **Hero motion.** Hero copy fades over 550ms with delays under 0.5s. On phones the intro paragraph is the largest element, so it must paint early.
+- **Hero motion.** Hero copy uses the CSS-only `.hero-rise` entrance (700ms, 20px rise, 4px blur, `ease-out`, delays under 0.8s) so it runs on the prerendered HTML before JavaScript; the intro uses `.hero-lift` (no opacity). The block wall starts when the browser is idle, pauses off screen and is a still frame under reduced motion. Section reveals share the same rise-and-unblur. On phones the intro paragraph is the largest element, so it must paint early.
 
 ## Affiliations
 

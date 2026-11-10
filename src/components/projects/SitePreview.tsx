@@ -1,6 +1,6 @@
 import * as Tabs from '@radix-ui/react-tabs'
 import { Maximize2 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import type { ProjectItem } from '../../lib/content-schemas'
 import { cn } from '../../lib/cn'
 import { Button } from '../ui/Button'
@@ -27,6 +27,8 @@ export function SitePreview({ project, dark }: { project: ProjectItem; dark: boo
   return (
     <div>
       <div className="relative pb-12 pr-6 sm:pr-10">
+        {/* Both frames drift on small opposite orbits. The orbit sits outside the reveal so its clip never crops it. */}
+        <div className="orbit" style={{ '--orbit-r': '5px', '--orbit-t': '16s' } as CSSProperties}>
         <ImageReveal>
           <div
             className={cn(
@@ -63,10 +65,12 @@ export function SitePreview({ project, dark }: { project: ProjectItem; dark: boo
             />
           </div>
         </ImageReveal>
+        </div>
 
         <div
+          style={{ '--orbit-r': '8px', '--orbit-t': '11s' } as CSSProperties}
           className={cn(
-            'absolute bottom-0 right-0 w-[27%] min-w-[88px] max-w-[150px] overflow-hidden rounded-[18px] border-[5px] shadow-float',
+            'orbit-reverse absolute bottom-0 right-0 w-[27%] min-w-[88px] max-w-[150px] overflow-hidden rounded-[18px] border-[5px] shadow-float',
             dark ? 'border-burgundy-deep bg-burgundy-deep' : 'border-burgundy-dark bg-burgundy-dark',
           )}
           data-testid="mobile-preview"
@@ -88,10 +92,8 @@ export function SitePreview({ project, dark }: { project: ProjectItem; dark: boo
           aria-haspopup="dialog"
           className="min-h-11 px-5 py-2.5"
         >
-          <span className="inline-flex items-center gap-2">
-            <Maximize2 className="size-4" aria-hidden />
-            View full homepage
-          </span>
+          <Maximize2 className="size-4" aria-hidden />
+          View full homepage
         </Button>
       </div>
       <p className={cn('mt-3 text-xs', dark ? 'text-on-dark-mute' : 'text-burgundy-dark/75')}>

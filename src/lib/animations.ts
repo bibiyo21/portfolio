@@ -17,8 +17,9 @@ export const transition = {
 }
 
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: transition.reveal },
+  hidden: { opacity: 0, y: 24, filter: 'blur(4px)' },
+  // The filter is removed once the reveal ends so revealed blocks do not keep their own stacking context.
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: transition.reveal, transitionEnd: { filter: 'none' } },
 }
 
 export const fadeIn: Variants = {

@@ -13,8 +13,9 @@ const variants: Record<Variant, string> = {
 }
 
 const base =
-  'group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-[0.9375rem] font-medium leading-none transition-colors duration-200 active:translate-y-px disabled:pointer-events-none disabled:opacity-45'
+  'group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-[0.9375rem] font-medium leading-none transition-[color,background-color,border-color,transform] duration-200 ease-out active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45'
 
+// The label wrapper is a flex row so an icon passed alongside the text is centred on it, not on the baseline.
 interface Common {
   variant?: Variant
   arrow?: boolean
@@ -39,7 +40,7 @@ export function Button({
       aria-busy={loading || undefined}
       {...rest}
     >
-      <span>{children}</span>
+      <span className="inline-flex items-center gap-2">{children}</span>
       {loading ? (
         <Loader2 className="size-4 animate-spin" aria-hidden />
       ) : arrow ? (
@@ -58,7 +59,7 @@ export function ButtonLink({
 }: Omit<Common, 'loading'> & AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
     <a className={cn(base, variants[variant], className)} {...rest}>
-      <span>{children}</span>
+      <span className="inline-flex items-center gap-2">{children}</span>
       {arrow ? (
         <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden />
       ) : null}

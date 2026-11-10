@@ -12,7 +12,7 @@ export interface SceneDef {
 }
 
 export const scenes: readonly SceneDef[] = [
-  { id: 'home', label: 'Home', tab: 'home', tone: 'dark' },
+  { id: 'home', label: 'Home', tab: 'home', tone: 'deep' },
   { id: 'about', label: 'About', tab: 'about', tone: 'ivory' },
   { id: 'expertise', label: 'Expertise', tab: 'expertise', tone: 'soft' },
   { id: 'work', label: 'Work', tab: 'work', tone: 'ivory' },

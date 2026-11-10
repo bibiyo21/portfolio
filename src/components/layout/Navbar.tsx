@@ -1,7 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { useState, type MouseEvent } from 'react'
+import { useEffect, useState, type MouseEvent } from 'react'
 import { useScene } from '../../hooks/useScene'
 import { profile } from '../../lib/content-loader'
 import { cn } from '../../lib/cn'
@@ -21,6 +21,15 @@ export function Navbar() {
   const [open, setOpen] = useState(false)
   const reduce = useReducedMotion()
   const dark = isDarkTone(active.tone)
+  // At the very top the header floats over the hero with no surface of its own; it gains one on scroll.
+  const [atTop, setAtTop] = useState(true)
+  useEffect(() => {
+    const update = () => setAtTop(window.scrollY < 12)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [])
+  const floating = atTop && activeId === 'home'
 
   const nav = (id: string) => (e: MouseEvent) => {
     e.preventDefault()
@@ -37,8 +46,12 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-40 border-b backdrop-blur-[14px] transition-[background-color,border-color,color] duration-300',
-        dark ? 'border-ivory/10 bg-burgundy-dark/80 text-ivory' : 'border-line bg-ivory/88 text-charcoal',
+        'fixed inset-x-0 top-0 z-40 border-b transition-[background-color,border-color,color,backdrop-filter] duration-300',
+        floating
+          ? 'border-transparent bg-transparent text-ivory'
+          : dark
+            ? 'border-ivory/10 bg-burgundy-dark/80 text-ivory backdrop-blur-[14px]'
+            : 'border-line bg-ivory/88 text-charcoal backdrop-blur-[14px]',
       )}
     >
       <Container className="flex h-[var(--nav-h)] items-center justify-between gap-4">

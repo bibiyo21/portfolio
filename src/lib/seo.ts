@@ -17,7 +17,9 @@ export function absolute(siteUrl: string, path: string): string {
   return new URL(path, siteUrl + '/').toString()
 }
 
-type SeoContent = Pick<ContentData, 'profile' | 'skills'> & Partial<Pick<ContentData, 'affiliations'>>
+type SeoContent = Pick<ContentData, 'profile' | 'skills'> & Partial<Pick<ContentData, 'affiliations' | 'faq'>>
+
+const personId = (siteUrl: string) => `${siteUrl}/#person`
 
 export function personJsonLd(content: SeoContent, siteUrl: string) {
   const { profile, skills } = content
@@ -39,6 +41,7 @@ export function personJsonLd(content: SeoContent, siteUrl: string) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': personId(siteUrl),
     name: profile.name,
     jobTitle: profile.title,
     description: profile.seo.description,
@@ -51,23 +54,87 @@ export function personJsonLd(content: SeoContent, siteUrl: string) {
   }
 }
 
+/**
+ * The site, the page as a profile of the person, and the on-page FAQ, linked to the Person by @id.
+ * Only text that is visible on the page is described.
+ */
+export function siteJsonLd(content: SeoContent, siteUrl: string) {
+  const { profile, faq } = content
+  const url = siteUrl + '/'
+  const person = { '@id': personId(siteUrl) }
+  // FAQ answers carry {email}-style tokens that the page turns into links; here they become plain text.
+  const tokens: Record<string, string> = {
+    email: profile.email,
+    phone: profile.phoneDisplay,
+    whatsapp: 'WhatsApp',
+    linkedin: 'LinkedIn',
+    github: 'GitHub',
+  }
+  const plain = (answer: string) => answer.replace(/\{([a-z]+)\}/g, (all, key: string) => tokens[key] ?? all)
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${siteUrl}/#website`,
+        url,
+        name: profile.name,
+        description: profile.seo.description,
+        inLanguage: 'en',
+        publisher: person,
+      },
+      {
+        '@type': 'ProfilePage',
+        '@id': `${siteUrl}/#profile`,
+        url,
+        name: profile.seo.title,
+        inLanguage: 'en',
+        isPartOf: { '@id': `${siteUrl}/#website` },
+        about: person,
+        mainEntity: person,
+        primaryImageOfPage: absolute(siteUrl, profile.seo.ogImage),
+      },
+      ...(faq?.items.length
+        ? [
+            {
+              '@type': 'FAQPage',
+              '@id': `${siteUrl}/#faq`,
+              isPartOf: { '@id': `${siteUrl}/#website` },
+              mainEntity: faq.items.map((item) => ({
+                '@type': 'Question',
+                name: item.question,
+                acceptedAnswer: { '@type': 'Answer', text: plain(item.answer) },
+              })),
+            },
+          ]
+        : []),
+    ],
+  }
+}
+
 export function headTags(content: SeoContent, opts: SeoOptions): string {
   const { seo } = content.profile
   const url = opts.siteUrl + '/'
   const image = absolute(opts.siteUrl, seo.ogImage)
   // "<" is escaped so the JSON can never close the script element.
-  const jsonLd = JSON.stringify(personJsonLd(content, opts.siteUrl)).replace(/</g, '\\u003c')
+  const safe = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c')
+  const jsonLd = safe(personJsonLd(content, opts.siteUrl))
+  const siteLd = safe(siteJsonLd(content, opts.siteUrl))
   return [
     `<title>${esc(seo.title)}</title>`,
     `<meta name="description" content="${esc(seo.description)}" />`,
-    `<meta name="robots" content="${opts.indexable ? 'index, follow' : 'noindex, nofollow'}" />`,
+    `<meta name="author" content="${esc(content.profile.name)}" />`,
+    // Lets search results use the full description and the large preview image.
+    `<meta name="robots" content="${opts.indexable ? 'index, follow, max-image-preview:large, max-snippet:-1' : 'noindex, nofollow'}" />`,
     `<link rel="canonical" href="${esc(url)}" />`,
-    `<meta property="og:type" content="website" />`,
+    `<meta property="og:type" content="profile" />`,
+    `<meta property="og:locale" content="en_US" />`,
     `<meta property="og:site_name" content="${esc(content.profile.name)}" />`,
     `<meta property="og:title" content="${esc(seo.title)}" />`,
     `<meta property="og:description" content="${esc(seo.description)}" />`,
     `<meta property="og:url" content="${esc(url)}" />`,
     `<meta property="og:image" content="${esc(image)}" />`,
+    `<meta property="og:image:type" content="image/png" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
     `<meta property="og:image:alt" content="${esc(seo.ogImageAlt)}" />`,
@@ -77,6 +144,7 @@ export function headTags(content: SeoContent, opts: SeoOptions): string {
     `<meta name="twitter:image" content="${esc(image)}" />`,
     `<meta name="twitter:image:alt" content="${esc(seo.ogImageAlt)}" />`,
     `<script type="application/ld+json">${jsonLd}</script>`,
+    `<script type="application/ld+json">${siteLd}</script>`,
   ].join('\n    ')
 }
 

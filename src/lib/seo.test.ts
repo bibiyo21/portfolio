@@ -11,7 +11,7 @@ describe('SEO metadata', () => {
     const html = headTags(content, prod)
     expect(html).toContain('<title>Ibrahem Sotejo | Solutions Architect &amp; Full-Stack Developer</title>')
     expect(html).toContain('<link rel="canonical" href="https://example.com/" />')
-    expect(html).toContain('<meta name="robots" content="index, follow" />')
+    expect(html).toContain('<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />')
     for (const p of ['og:title', 'og:description', 'og:type', 'og:url', 'og:image', 'og:image:alt', 'og:site_name'])
       expect(html, p).toContain(`property="${p}"`)
     expect(html).toContain('<meta property="og:image" content="https://example.com/images/illustrations/og-image.png" />')
