@@ -269,7 +269,7 @@ describe('owner-supplied facts', () => {
 
   it('marks GTI architecture details as proposed, not implemented', () => {
     const { items } = parseContent('projects', read('projects'))
-    expect(items.map((i) => i.id)).toEqual(['gti-main', 'gti-north', 'venue-seat-planner'])
+    expect(items.map((i) => i.id)).toEqual(['gti-main', 'gti-north', 'venue-seat-planner', 'nutridense-inventory', 'sconnect-integration'])
     for (const i of items.filter((x) => x.type === 'client')) for (const a of i.approach) expect(a.status).toBe('proposed')
   })
 })

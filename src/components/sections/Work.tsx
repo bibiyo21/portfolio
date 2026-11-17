@@ -24,7 +24,9 @@ export function Work() {
   const family = projects.family
 
   // Client and technical work is listed first. Personal side projects get their own block below it.
-  const featured = useMemo(() => projects.items.filter((p) => p.type !== 'personal'), [])
+  const featured = useMemo(() => projects.items.filter((p) => p.type === 'client'), [])
+  const applications = useMemo(() => projects.items.filter((p) => p.type === 'technical'), [])
+  const applicationsIntro = projects.applications
   const personal = useMemo(() => projects.items.filter((p) => p.type === 'personal'), [])
   const personalIntro = projects.personal
 
@@ -113,6 +115,25 @@ export function Work() {
         <p className="text-ink-soft">No projects in this category yet.</p>
       ) : null}
 
+      {applications.length > 0 ? (
+        <section aria-labelledby="applications-title" className="mt-16 md:mt-20" data-testid="application-projects">
+          <Reveal>
+            <p className="t-eyebrow mb-4 text-burgundy">{applicationsIntro?.eyebrow ?? 'Business applications'}</p>
+            <h3 id="applications-title" className="t-heading-m max-w-3xl">
+              {applicationsIntro?.title ?? 'Business applications'}
+            </h3>
+            {applicationsIntro?.intro ? <p className="mt-4 max-w-2xl text-ink-soft">{applicationsIntro.intro}</p> : null}
+          </Reveal>
+          <ul className="mt-8 grid gap-6 lg:grid-cols-2">
+            {applications.map((p) => (
+              <Reveal as="li" key={p.id}>
+                <PersonalProjectCard project={p} onOpen={() => setSelected(p)} />
+              </Reveal>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {personal.length > 0 ? (
         <section aria-labelledby="personal-projects-title" className="mt-16 md:mt-20" data-testid="personal-projects">
           <Reveal>
@@ -144,7 +165,7 @@ export function Work() {
           if (!open) setSelected(null)
         }}
         title={selected?.name ?? ''}
-        description={selected ? (selected.type === 'personal' ? 'Personal project · Proof of concept' : `${selected.category} project`) : undefined}
+        description={selected ? (selected.type === 'personal' ? 'Personal project · Proof of concept' : selected.type === 'technical' ? 'Business application · Demo data' : `${selected.category} project`) : undefined}
         size="lg"
       >
         {selected ? <ProjectDetail project={selected} /> : null}

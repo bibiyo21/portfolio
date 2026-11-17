@@ -9,7 +9,7 @@ describe('Work', () => {
   it('shows the GTI family heading and one card per client project', () => {
     renderWithApp(<Work />)
     expect(screen.getByRole('heading', { level: 2, name: projects.family!.title })).toBeInTheDocument()
-    expect(screen.getAllByTestId('project-card')).toHaveLength(projects.items.filter((p) => p.type !== 'personal').length)
+    expect(screen.getAllByTestId('project-card')).toHaveLength(projects.items.filter((p) => p.type === 'client').length)
   })
 
   it('links each GTI card to its dedicated scene', () => {
@@ -34,8 +34,23 @@ describe('Work', () => {
     renderWithApp(<Work />)
     const cards = screen.getAllByTestId('project-card')
     expect(cards.map((c) => within(c).getByRole('heading', { level: 3 }).textContent)).toEqual(['GTI Main', 'GTI North'])
-    const personal = screen.getAllByTestId('personal-card')
+    const personal = within(screen.getByTestId('personal-projects')).getAllByTestId('personal-card')
     expect(personal.map((c) => within(c).getByRole('heading', { level: 4 }).textContent)).toEqual(['Venue Seat Planner'])
+  })
+
+  it('lists the two business applications in their own section with demo-data screenshots', () => {
+    renderWithApp(<Work />)
+    const section = screen.getByTestId('application-projects')
+    expect(within(section).getByRole('heading', { level: 3, name: 'Internal tools and integrations' })).toBeInTheDocument()
+    const cards = within(section).getAllByTestId('personal-card')
+    expect(cards.map((c) => within(c).getByRole('heading', { level: 4 }).textContent)).toEqual([
+      'Nutridense Inventory System',
+      'Samsung S Connect Integration',
+    ])
+    for (const c of cards) {
+      expect(within(c).getByText('Demo data')).toBeInTheDocument()
+      expect(within(c).getByRole('img')).toHaveAttribute('alt', expect.stringMatching(/.{20,}/))
+    }
   })
 
   it('keeps the personal project in its own labelled section, separate from the client work', () => {

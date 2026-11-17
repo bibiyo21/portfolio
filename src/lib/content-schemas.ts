@@ -205,6 +205,8 @@ export const projectsSchema = z.object({
     .optional(),
   // Heading for personal side projects and proofs of concept, shown separately from client work.
   personal: z.object({ eyebrow: nonEmpty, title: nonEmpty, intro: nonEmpty }).optional(),
+  // Heading for the business-application block (type `technical`), shown below the GTI case studies.
+  applications: z.object({ eyebrow: nonEmpty, title: nonEmpty, intro: nonEmpty }).optional(),
   categories: z.array(nonEmpty).min(1),
   items: z.array(
     z.object({

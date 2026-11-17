@@ -13,8 +13,14 @@ personal:
   eyebrow: "Personal project"
   title: "Side projects and proofs of concept"
   intro: "Independent experiments built outside client work, to explore product ideas, interface design and practical application development."
+# Heading for business web applications shown with demo-data screenshots.
+applications:
+  eyebrow: "Business applications"
+  title: "Internal tools and integrations"
+  intro: "Laravel applications for inventory control and for purchase-order handling. Screenshots come from local copies filled with fictional demo data."
 categories:
   - "Web Platforms"
+  - "Business Applications"
   - "Personal Projects / Proof of Concept"
 items:
   - id: gti-main
@@ -239,3 +245,122 @@ items:
     learned: []
     outcome: []
 
+  # ---------------------------------------------------------------------------------------------------
+  # Business applications. Screenshots were captured from local copies with fictional demo data.
+  # Stack details come from each repository's composer.json and package.json. No role, client or result is claimed.
+  # ---------------------------------------------------------------------------------------------------
+  - id: nutridense-inventory
+    type: technical
+    name: "Nutridense Inventory System"
+    siteLabel: "Inventory control web application"
+    statusLabel: "Demo data"
+    category: "Business Applications"
+    summary: "A Laravel and React web application for tracking raw materials, finished goods and production in a snack factory, from purchase orders through to stock reports."
+    overview: "An inventory system for a snack-food manufacturer. It records purchase orders, materials received and released, and production runs, and reports on daily stock, critical stock levels and near-expiring materials."
+    technologies: ["Laravel", "PHP", "React", "MySQL / MariaDB"]
+    thumbnail:
+      src: "/images/projects/nutridense-inventory-report.webp"
+      alt: "Inventory Report page listing materials such as corn grits, rice flour and palm oil with begin balance, received, release, spillage, production and end-day columns."
+      width: 1440
+      height: 900
+    gallery:
+      - src: "/images/projects/nutridense-inventory-report.webp"
+        alt: "Inventory Report page with date and category filters and a table of begin balance, received, release, spillage, production and end-day quantities per material."
+        width: 1440
+        height: 900
+        caption: "Daily inventory report. Demo data."
+      - src: "/images/projects/nutridense-productions.webp"
+        alt: "Productions list with reference numbers, production and expiration dates, shift, storage area and Draft or Active status."
+        width: 1440
+        height: 900
+        caption: "Production runs with status. Demo data."
+      - src: "/images/projects/nutridense-new-production.webp"
+        alt: "Add Production form with production and expiration dates, shift, storage area and remarks, and Save As Draft and Save buttons."
+        width: 1440
+        height: 900
+        caption: "New production form. Demo data."
+      - src: "/images/projects/nutridense-receive-materials.webp"
+        alt: "Receive Materials list with receive number, date, supplier, purchase order number, reference number and status."
+        width: 1440
+        height: 900
+        caption: "Materials received against purchase orders. Demo data."
+      - src: "/images/projects/nutridense-purchase-orders.webp"
+        alt: "Purchase Orders list with supplier, PO date, target delivery date and net amount."
+        width: 1440
+        height: 900
+        caption: "Purchase orders. Demo data."
+    features:
+      - "Sign-in with role-based access to management, inventory control and report menus."
+      - "Purchase orders, materials received and materials released, each with a draft and active status."
+      - "Production runs with shift, storage area and expiration date."
+      - "Daily inventory report with date, category and search filters."
+      - "Critical stocks and near-expiring materials reports, with export."
+      - "Master data for products, materials, suppliers, units and storage areas."
+    techSpec:
+      - group: "Backend"
+        items: ["Laravel 10", "PHP 8.1+", "Laravel Sanctum", "Laratrust for roles and permissions", "Laravel Excel for exports"]
+      - group: "Frontend"
+        items: ["Blade views", "React 18 components", "TanStack Query", "react-select", "react-to-print", "Vite"]
+      - group: "Data storage"
+        items: ["Relational database through Laravel migrations (MySQL or MariaDB)"]
+    limitations:
+      - "The screenshots come from a local copy with fictional suppliers, materials and quantities."
+      - "No live demo is available."
+
+  - id: sconnect-integration
+    type: technical
+    name: "Samsung S Connect Integration"
+    siteLabel: "Purchase-order dashboard"
+    statusLabel: "Demo data"
+    category: "Business Applications"
+    summary: "A Laravel dashboard for handling Samsung purchase orders, product catalogue entries and IMEI returns from one interface."
+    overview: "A back-office web application with three working areas: purchase orders that can be searched, edited and exported, a product catalogue with prices and validity dates, and IMEI returns that can be listed and submitted. The code includes a middleware that keeps a session with the Samsung API alive for the actions that write data."
+    technologies: ["Laravel", "PHP", "Livewire", "Tailwind CSS"]
+    thumbnail:
+      src: "/images/projects/sconnect-purchase-orders.webp"
+      alt: "Purchase Order page with a search box, paging controls and a table of status, sales order, billing document, PO number, model code, quantities, prices, delivery mode and updated-by columns."
+      width: 1440
+      height: 900
+    gallery:
+      - src: "/images/projects/sconnect-purchase-orders.webp"
+        alt: "Purchase order table with colour-coded status dots, search, export button and paging."
+        width: 1440
+        height: 900
+        caption: "Purchase order list with search, paging and export. Demo data."
+      - src: "/images/projects/sconnect-purchase-order-edit.webp"
+        alt: "Edit Purchase Order form with status, billing document, sales order and remarks fields above an items section with model code and order quantity."
+        width: 1440
+        height: 900
+        caption: "Editing a purchase order and its items. Demo data."
+      - src: "/images/projects/sconnect-product-catalogue.webp"
+        alt: "Product catalogue table with model code, description, price, status, discount, start and end dates, and a Create Product Catalogue button."
+        width: 1440
+        height: 900
+        caption: "Product catalogue. Demo data."
+      - src: "/images/projects/sconnect-imei-returns.webp"
+        alt: "IMEI return list with PO number, site code, IMEI, status and updated-by columns and a Send IMEI Return button."
+        width: 1440
+        height: 900
+        caption: "IMEI returns. Demo data."
+      - src: "/images/projects/sconnect-imei-return-form.webp"
+        alt: "Send IMEI Return Item form with PO number, site code, IMEI and status fields."
+        width: 1440
+        height: 900
+        caption: "Send IMEI return form. Demo data."
+    features:
+      - "Sign-in, with a dashboard that links to purchase orders, product catalogue and IMEI returns."
+      - "Purchase orders with search, paging, export and an edit form for status, billing document, sales order, remarks and items."
+      - "Product catalogue list with price, discount and validity dates, and a form to create entries."
+      - "IMEI return list and a form to send a return for a PO number, site code and IMEI."
+      - "User list and management."
+    techSpec:
+      - group: "Backend"
+        items: ["Laravel 8", "PHP 7.3 / 8", "Laravel Jetstream", "Laravel Sanctum", "Laravel Excel for exports", "Guzzle HTTP client"]
+      - group: "Frontend"
+        items: ["Blade views", "Livewire 2", "Alpine.js", "Tailwind CSS", "Laravel Mix"]
+      - group: "Data storage"
+        items: ["Relational database through Laravel migrations"]
+    limitations:
+      - "The screenshots come from a local copy with fictional purchase orders, staff names and IMEIs, not from the live integration."
+      - "The Samsung name and logo belong to Samsung and appear only because the dashboard is branded that way."
+      - "No live demo is available."
