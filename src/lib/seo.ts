@@ -148,20 +148,91 @@ export function headTags(content: SeoContent, opts: SeoOptions): string {
   ].join('\n    ')
 }
 
+export interface PageSeo {
+  /** Path of the page, e.g. /case-studies/nutridense-inventory. */
+  path: string
+  title: string
+  description: string
+  /** Breadcrumb trail after "Home", in order. The last item is the page itself. */
+  trail: { name: string; path: string }[]
+}
+
+/** Head tags for a standalone page: its own title, description and canonical URL, plus a breadcrumb trail. */
+export function pageHeadTags(content: SeoContent, opts: SeoOptions, page: PageSeo): string {
+  const { seo } = content.profile
+  const url = absolute(opts.siteUrl, page.path)
+  const image = absolute(opts.siteUrl, seo.ogImage)
+  const safe = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c')
+  const crumbs = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'Home', path: '/' }, ...page.trail].map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: absolute(opts.siteUrl, c.path),
+    })),
+  }
+  return [
+    `<title>${esc(page.title)}</title>`,
+    `<meta name="description" content="${esc(page.description)}" />`,
+    `<meta name="author" content="${esc(content.profile.name)}" />`,
+    `<meta name="robots" content="${opts.indexable ? 'index, follow, max-image-preview:large, max-snippet:-1' : 'noindex, nofollow'}" />`,
+    `<link rel="canonical" href="${esc(url)}" />`,
+    `<meta property="og:type" content="article" />`,
+    `<meta property="og:locale" content="en_US" />`,
+    `<meta property="og:site_name" content="${esc(content.profile.name)}" />`,
+    `<meta property="og:title" content="${esc(page.title)}" />`,
+    `<meta property="og:description" content="${esc(page.description)}" />`,
+    `<meta property="og:url" content="${esc(url)}" />`,
+    `<meta property="og:image" content="${esc(image)}" />`,
+    `<meta property="og:image:type" content="image/png" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`,
+    `<meta property="og:image:alt" content="${esc(seo.ogImageAlt)}" />`,
+    `<meta name="twitter:card" content="summary_large_image" />`,
+    `<meta name="twitter:title" content="${esc(page.title)}" />`,
+    `<meta name="twitter:description" content="${esc(page.description)}" />`,
+    `<meta name="twitter:image" content="${esc(image)}" />`,
+    `<meta name="twitter:image:alt" content="${esc(seo.ogImageAlt)}" />`,
+    `<script type="application/ld+json">${safe(crumbs)}</script>`,
+  ].join('\n    ')
+}
+
 export function robotsTxt(opts: SeoOptions): string {
   if (!opts.indexable) return 'User-agent: *\nDisallow: /\n'
   return `User-agent: *\nAllow: /\n\nSitemap: ${opts.siteUrl}/sitemap.xml\n`
 }
 
-export function sitemapXml(opts: SeoOptions, lastmod: string): string {
-  return [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    '  <url>',
-    `    <loc>${esc(opts.siteUrl)}/</loc>`,
-    `    <lastmod>${lastmod}</lastmod>`,
-    '  </url>',
-    '</urlset>',
-    '',
-  ].join('\n')
+/** `paths` are extra standalone pages (case studies), listed after the home page. */
+export function sitemapXml(opts: SeoOptions, lastmod: string, paths: string[] = []): string {
+  const urls = ['/', ...paths].map((p) =>
+    ['  <url>', `    <loc>${esc(p === '/' ? opts.siteUrl + '/' : absolute(opts.siteUrl, p))}</loc>`, `    <lastmod>${lastmod}</lastmod>`, '  </url>'].join('\n'),
+  )
+  return ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', ...urls, '</urlset>', ''].join('\n')
+}
+
+/** Every standalone page of the site as path, title and description, in sitemap order. */
+export function standalonePages(projects: ContentData['projects']): PageSeo[] {
+  const index = projects.caseStudiesPage
+  if (!index) return []
+  const indexPage: PageSeo = {
+    path: '/case-studies',
+    title: index.seoTitle,
+    description: index.seoDescription,
+    trail: [{ name: 'Case studies', path: '/case-studies' }],
+  }
+  const studies = projects.items.flatMap((p) =>
+    p.caseStudy
+      ? [
+          {
+            path: `/case-studies/${p.caseStudy.slug}`,
+            title: p.caseStudy.seoTitle,
+            description: p.caseStudy.seoDescription,
+            trail: [indexPage.trail[0]!, { name: p.name, path: `/case-studies/${p.caseStudy.slug}` }],
+          },
+        ]
+      : [],
+  )
+  return [indexPage, ...studies]
 }

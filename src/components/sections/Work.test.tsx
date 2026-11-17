@@ -53,6 +53,17 @@ describe('Work', () => {
     }
   })
 
+  it('links each legacy project card to its own case-study page, and the section to the index', () => {
+    renderWithApp(<Work />)
+    const section = screen.getByTestId('application-projects')
+    const cards = within(section).getAllByTestId('personal-card')
+    expect(within(cards[0]!).getByRole('link', { name: /Read the case study/ })).toHaveAttribute('href', '/case-studies/nutridense-inventory')
+    expect(within(cards[1]!).getByRole('link', { name: /Read the case study/ })).toHaveAttribute('href', '/case-studies/sconnect-integration')
+    expect(within(section).getByRole('link', { name: 'See all case studies' })).toHaveAttribute('href', '/case-studies')
+    // The personal project has no case-study page, and GTI keeps its scenes.
+    expect(within(screen.getByTestId('personal-projects')).queryByRole('link', { name: /case study/i })).not.toBeInTheDocument()
+  })
+
   it('keeps the personal project in its own labelled section, separate from the client work', () => {
     renderWithApp(<Work />)
     const section = screen.getByTestId('personal-projects')

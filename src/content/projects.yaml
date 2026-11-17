@@ -18,6 +18,14 @@ applications:
   eyebrow: "Business applications"
   title: "Internal tools and integrations"
   intro: "Laravel applications for inventory control and for purchase-order handling. Screenshots come from local copies filled with fictional demo data."
+# Copy for the /case-studies index page. GTI Main and GTI North keep their own scenes on the home page.
+caseStudiesPage:
+  seoTitle: "Case studies | Ibrahem Sotejo"
+  seoDescription: "Case studies by Ibrahem Sotejo: the GTI Main and GTI North web platforms, and reviews of two legacy Laravel systems, an inventory system and a Samsung API integration dashboard."
+  eyebrow: "Case studies"
+  title: "Recent platform work and reviews of legacy systems"
+  intro: "GTI Main and GTI North are recent projects and keep their own case studies on the home page. The two Laravel systems below are older work, so each gets a review: how it is built, what holds up, and what I would change today."
+  reviewNote: "These reviews are written in November 2026 from the source code of each project, using local copies with fictional demo data. They describe the code as it stands, not any live deployment."
 categories:
   - "Web Platforms"
   - "Business Applications"
@@ -307,6 +315,73 @@ items:
       - "The screenshots come from a local copy with fictional suppliers, materials and quantities."
       - "No live demo is available."
 
+    caseStudy:
+      slug: "nutridense-inventory"
+      seoTitle: "Nutridense Inventory System: Laravel inventory case study | Ibrahem Sotejo"
+      seoDescription: "A review of a legacy Laravel and React inventory system for a snack factory: how it is built, what holds up, what I would fix and how I would modernise it."
+      headline: "Nutridense Inventory System, reviewed"
+      lede: "A legacy Laravel application that tracks raw materials, finished goods and production for a snack factory. This page explains how it is built, then gives a plain review of what holds up and what I would change today."
+      snapshot:
+        - { label: "Type", value: "Inventory control web application" }
+        - { label: "Stack", value: "Laravel 10, PHP 8.1+, Blade with React 18 components, MySQL or MariaDB" }
+        - { label: "Access", value: "Role-based: superadministrator, administrator and user" }
+        - { label: "Size", value: "16 admin controllers, 24 migrations, six Excel report exports" }
+        - { label: "Status", value: "Legacy codebase, no live demo" }
+      architecture:
+        - title: "Domain modules instead of a flat app folder"
+          text: "Business code lives in app/Inventory, split by domain: productions, inventories, products, materials, purchase orders, customers, employees and options. Controllers depend on repository interfaces rather than on Eloquent models directly."
+        - title: "Inventory as a ledger"
+          text: "Stock is not a single editable number. A production run, for example, writes inventory entries tagged with the run's id and a process type, so the daily report can show begin balance, received, release, spillage, production and end-of-day figures, with day and night shifts kept apart."
+        - title: "Roles enforced at the route"
+          text: "Laratrust roles gate the routes. Master data such as suppliers, materials and products is for superadministrators, day-to-day receiving, releasing and production is open to all three roles, and reports are for administrators and above."
+        - title: "React only where the form needs it"
+          text: "Pages are server-rendered Blade. The production form is a React component that asks two JSON endpoints for the finished goods and the materials each one consumes, then lets the user build the run."
+        - title: "Reports exported to Excel"
+          text: "Daily inventory, critical stocks, near-expiring materials and products, and received and released items each have an export class built on Laravel Excel."
+      interfaces:
+        - name: "GET /api/productions/products"
+          text: "Lists the finished goods that can be produced."
+        - name: "GET /api/productions/materials/{id}"
+          text: "Returns the materials a given product consumes, used by the production form."
+      strengths:
+        - title: "Stock is checked before a run is saved"
+          text: "A validation step collects every material that would run short and blocks the production with a message naming them, so stock cannot silently go negative."
+        - title: "Draft and active runs"
+          text: "A run can be saved as a draft. Only when it is active are materials deducted and the finished goods added to inventory, which matches how a factory floor plans before it commits."
+        - title: "Clear module boundaries"
+          text: "Repository interfaces and per-domain folders make it easy to find where a rule lives and to swap or test a piece in isolation."
+        - title: "Reports shaped like the operation"
+          text: "Shift columns, near-expiry lists and critical-stock levels reflect questions a food manufacturer actually asks every day."
+      concerns:
+        - title: "No database transactions"
+          text: "Saving a production writes the run, its lines, the material deductions and the finished-goods entry as separate statements, and no transaction is used anywhere in the app code. A failure halfway leaves stock inconsistent."
+        - title: "A race between the check and the deduction"
+          text: "Stock is validated first and deducted afterwards, without a lock. Two runs submitted at the same moment can both pass the check against the same stock."
+        - title: "Business rules in fat controllers"
+          text: "The production controller is about 370 lines and holds validation, stock arithmetic and persistence calls. The repository layer exists, but the rules themselves sit in controller methods."
+        - title: "Unauthenticated lookup API"
+          text: "The two /api/productions routes have no authentication middleware, so product and bill-of-materials data is readable by anyone who can reach the server."
+        - title: "Rule changes recorded as comments"
+          text: "The material-deduction call is wrapped in comments noting it was removed after one meeting and put back after another. The decision history belongs in a test or a setting, not in a comment."
+        - title: "Almost no automated tests"
+          text: "The test folder contains only Laravel's two example tests, so none of the stock rules are protected against regressions."
+        - title: "Housekeeping debt"
+          text: "Resource routes for receiving, releasing and productions are registered twice under different role groups, a routes backup file is still in the repository, and several class names and the footer app name are misspelled."
+        - title: "Framework age"
+          text: "Laravel 10 no longer receives security fixes, and the project mixes Laravel UI, Blade and a separate React build."
+      modernisation:
+        - title: "Tests and transactions first"
+          text: "Write feature tests for production, receiving and releasing, then wrap each stock-changing flow in a database transaction. These flows hold the money-and-stock logic, so they get protection before any refactor."
+        - title: "Lock the stock being consumed"
+          text: "Re-check and deduct inside the transaction with row locks, so concurrent runs cannot overdraw a material."
+        - title: "Extract action classes"
+          text: "Move the stock check, deduction and inventory writes into named actions such as ProduceFinishedGoods. Controllers then validate and delegate."
+        - title: "Protect and shape the API"
+          text: "Put the lookup endpoints behind Sanctum or session auth and return API resources instead of raw rows."
+        - title: "Upgrade in steps"
+          text: "Move to a supported Laravel release one major version at a time, with the new tests as the safety net, and decide whether Laratrust still fits or policies are simpler."
+      verdict: "A sensible domain-oriented design with the right business rules in the right places. It is held back by missing transactions, missing tests and an open API, which makes it a candidate for incremental hardening rather than a rewrite."
+
   - id: sconnect-integration
     type: technical
     name: "Samsung S Connect Integration"
@@ -314,8 +389,8 @@ items:
     statusLabel: "Demo data"
     category: "Business Applications"
     summary: "A Laravel dashboard for handling Samsung purchase orders, product catalogue entries and IMEI returns from one interface."
-    overview: "A back-office web application with three working areas: purchase orders that can be searched, edited and exported, a product catalogue with prices and validity dates, and IMEI returns that can be listed and submitted. The code includes a middleware that keeps a session with the Samsung API alive for the actions that write data."
-    technologies: ["Laravel", "PHP", "Livewire", "Tailwind CSS"]
+    overview: "A back-office web application with three working areas: purchase orders that can be searched, edited and exported, a product catalogue with prices and validity dates, and IMEI returns that can be listed and submitted. The code includes a middleware that signs in to the Samsung API for the actions that write data, and a Sanctum-secured API that receives purchase orders."
+    technologies: ["Laravel", "PHP", "Sanctum", "Tailwind CSS"]
     thumbnail:
       src: "/images/projects/sconnect-purchase-orders.webp"
       alt: "Purchase Order page with a search box, paging controls and a table of status, sales order, billing document, PO number, model code, quantities, prices, delivery mode and updated-by columns."
@@ -357,10 +432,90 @@ items:
       - group: "Backend"
         items: ["Laravel 8", "PHP 7.3 / 8", "Laravel Jetstream", "Laravel Sanctum", "Laravel Excel for exports", "Guzzle HTTP client"]
       - group: "Frontend"
-        items: ["Blade views", "Livewire 2", "Alpine.js", "Tailwind CSS", "Laravel Mix"]
+        items: ["Blade views", "Jetstream (Livewire stack) for sign-in and profile screens", "Alpine.js", "Tailwind CSS", "Laravel Mix"]
       - group: "Data storage"
         items: ["Relational database through Laravel migrations"]
     limitations:
       - "The screenshots come from a local copy with fictional purchase orders, staff names and IMEIs, not from the live integration."
       - "The Samsung name and logo belong to Samsung and appear only because the dashboard is branded that way."
       - "No live demo is available."
+
+    caseStudy:
+      slug: "sconnect-integration"
+      seoTitle: "Samsung S Connect Integration: Laravel API integration case study | Ibrahem Sotejo"
+      seoDescription: "A review of a legacy Laravel dashboard that integrates with the Samsung S Connect API and exposes its own Sanctum-secured API: design, strengths, risks and a modernisation path."
+      headline: "Samsung S Connect Integration, reviewed"
+      lede: "A legacy Laravel back-office dashboard that connects a retailer's order handling to the Samsung S Connect API, and exposes an API of its own, secured with Sanctum, for receiving purchase orders. This page explains the design, then reviews it honestly."
+      snapshot:
+        - { label: "Type", value: "Integration dashboard and REST API" }
+        - { label: "Stack", value: "Laravel 8, PHP 7.3 or 8, Jetstream, Sanctum, Blade with Tailwind CSS, MySQL or PostgreSQL" }
+        - { label: "Outbound", value: "Samsung S Connect API: purchase-order status, product catalogue and IMEI returns" }
+        - { label: "Inbound", value: "Sanctum bearer-token API for creating purchase orders" }
+        - { label: "Size", value: "7 controllers, 4 form requests, 21 migrations, built in 2022" }
+        - { label: "Status", value: "Legacy codebase, no live demo" }
+      architecture:
+        - title: "Two directions in one application"
+          text: "Staff use the dashboard, which calls the Samsung API. Other systems call this app's own API, which creates purchase orders. The two sides use different authentication."
+        - title: "A local mirror of partner data"
+          text: "Purchase orders, items, catalogue entries and IMEI returns are stored locally with an update-by audit column on every table. Lists, search and Excel export read the local database, so they work whether or not the partner API is reachable."
+        - title: "Write-through to the partner"
+          text: "Editing a purchase order sends its status, remarks and invoice lines to Samsung first. The local record is updated only when that call succeeds, and failures return to the form with the partner's error messages."
+        - title: "Partner session held in the user's session"
+          text: "A middleware on the write routes signs in to the partner API and keeps the returned token in the user's session. The catalogue and IMEI return forms reuse it for their own calls."
+        - title: "Two kinds of login"
+          text: "Staff sign in through Jetstream with sessions. Machine callers exchange credentials for a Sanctum bearer token and send it on every request."
+        - title: "One codebase, two database engines"
+          text: "The purchase-order list switches its SQL by the configured connection, so the same code runs on MySQL locally and PostgreSQL on a Heroku-style host."
+      interfaces:
+        - name: "POST /api/login"
+          text: "Exchanges a user id and password for a Sanctum bearer token."
+        - name: "POST /api/request"
+          text: "Protected by auth:sanctum. Receives a purchase order with its items and creates or updates the order by PO number."
+        - name: "GET /api/user"
+          text: "Protected by auth:sanctum. Returns the authenticated user, useful to check a token."
+        - name: "Outbound: Samsung S Connect"
+          text: "Three partner interfaces called with a bearer token: purchase-order status updates, product catalogue entries and IMEI returns."
+      strengths:
+        - title: "Write-through keeps local state honest"
+          text: "Because the partner is called before the local save, the dashboard never shows a status Samsung rejected."
+        - title: "Clean split between staff and machine access"
+          text: "Sessions for people, bearer tokens for systems, each on its own routes, so one cannot be mistaken for the other."
+        - title: "Validation at the edges"
+          text: "Form requests guard the purchase-order create and update, the catalogue and the IMEI return paths."
+        - title: "Audit trail by default"
+          text: "Every business table records who last changed a row, which is what a support team asks first when a number looks wrong."
+        - title: "Useful even when the partner is down"
+          text: "Reads, search and export never depend on the partner API."
+      concerns:
+        - title: "Re-sending an order duplicates its lines"
+          text: "The order intake upserts the header by PO number but creates item rows every time, so posting the same order twice doubles its items. Header and items are not wrapped in a transaction either, so a failure leaves a partial order."
+        - title: "Partner sign-in on every write"
+          text: "The check that would reuse the stored token is commented out, so every write signs in again. A failed sign-in is not caught and surfaces as an error page."
+        - title: "Push then save, with nothing to reconcile"
+          text: "If Samsung accepts an update and the local save then fails, the two systems disagree and nothing records that."
+        - title: "Tokens that never expire"
+          text: "Sanctum expiration is not set and tokens are issued with full abilities, so a leaked token stays valid and unrestricted."
+        - title: "Raw SQL with a broken variant"
+          text: "The purchase-order list builds raw aggregate SQL. The PostgreSQL variant wraps column names in lower() as quoted strings, so it would aggregate text rather than the columns."
+        - title: "Schema and code drift"
+          text: "A migration renames modelCode to model_code, but most of the code still reads modelCode, so the full migration set breaks the screens until the name is reconciled."
+        - title: "Loops that query"
+          text: "Updating a purchase order looks each item up by id inside a loop with no check that it exists, and the keyword search uses leading-wildcard LIKE across eight columns."
+        - title: "Only the framework's default tests"
+          text: "The test folder covers Jetstream's own features. Nothing exercises purchase orders, the API or the partner calls."
+        - title: "Framework age"
+          text: "Laravel 8 reached the end of security support some time ago."
+      modernisation:
+        - title: "A dedicated partner client"
+          text: "Move every Samsung call into one service class: configuration in config/services.php, the token cached until it expires, one retry on a 401, timeouts, typed errors and a log line per request."
+        - title: "Idempotent order intake"
+          text: "Give each order line a natural key, upsert inside a transaction and return a consistent response when the same order arrives twice."
+        - title: "Queue the outbound push"
+          text: "Record the intended update in an outbox table and send it from a queued job with retries, so a partner outage or a local failure leaves a visible, replayable state."
+        - title: "Harden Sanctum"
+          text: "Issue tokens with specific abilities such as orders:create, set an expiry, and rate-limit the login route."
+        - title: "Replace raw SQL and settle the schema"
+          text: "Use Eloquent relationships and scopes for the list, add indexes for the searched columns and pick one column name."
+        - title: "Contract tests, then upgrade"
+          text: "Cover each partner interface with Http::fake tests and the API with feature tests, then upgrade Laravel one major version at a time."
+      verdict: "The shape is right: a local mirror, write-through to the partner and a separate token-secured API. The integration layer needs idempotency, token caching and tests before I would trust it with unattended traffic."

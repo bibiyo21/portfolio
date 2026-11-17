@@ -199,7 +199,33 @@ export type ProjectStatus = z.infer<typeof projectStatus>
 export const projectType = z.enum(['client', 'technical', 'personal'])
 export type ProjectType = z.infer<typeof projectType>
 
+const titledText = z.object({ title: nonEmpty, text: nonEmpty })
+
+// Dedicated case-study page (/case-studies/<slug>) for a project. Every section renders only when it has content.
+export const caseStudySchema = z.object({
+  slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+  seoTitle: nonEmpty,
+  seoDescription: nonEmpty,
+  headline: nonEmpty,
+  lede: nonEmpty,
+  // Short label/value facts shown at the top of the page.
+  snapshot: z.array(z.object({ label: nonEmpty, value: nonEmpty })).default([]),
+  architecture: z.array(titledText).default([]),
+  // The API surface: `name` is shown in monospace, e.g. "POST /api/login".
+  interfaces: z.array(z.object({ name: nonEmpty, text: nonEmpty })).default([]),
+  // Evaluation: what holds up, what to fix, and the order in which to modernise.
+  strengths: z.array(titledText).default([]),
+  concerns: z.array(titledText).default([]),
+  modernisation: z.array(titledText).default([]),
+  verdict: z.string().default(''),
+})
+export type CaseStudy = z.infer<typeof caseStudySchema>
+
 export const projectsSchema = z.object({
+  // Copy for the /case-studies index page.
+  caseStudiesPage: z
+    .object({ seoTitle: nonEmpty, seoDescription: nonEmpty, eyebrow: nonEmpty, title: nonEmpty, intro: nonEmpty, reviewNote: nonEmpty })
+    .optional(),
   family: z
     .object({ eyebrow: nonEmpty, title: nonEmpty, intro: nonEmpty, relationship: z.string().default('') })
     .optional(),
@@ -259,6 +285,8 @@ export const projectsSchema = z.object({
           fullMobile: imageRef,
         })
         .optional(),
+      // Dedicated case-study page. Its presence adds a "Read the case study" link to the project card.
+      caseStudy: caseStudySchema.optional(),
       liveUrl: url.optional(),
       repoUrl: url.optional(),
     }),

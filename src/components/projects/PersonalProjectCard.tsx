@@ -3,6 +3,7 @@ import type { ProjectItem } from '../../lib/content-schemas'
 import { Button, ButtonLink } from '../ui/Button'
 import { Img } from '../ui/Img'
 import { Tag } from '../ui/Tag'
+import { caseStudyPath } from '../../lib/routes'
 
 /**
  * Card for a personal side project or proof of concept. It is visibly different from the client-work cards
@@ -55,6 +56,12 @@ export function PersonalProjectCard({ project, onOpen }: { project: ProjectItem;
       <p className="relative mt-4 max-w-[62ch] text-ink-soft">{project.summary}</p>
 
       <div className="relative mt-auto flex flex-wrap items-center gap-3 pt-6">
+        {project.caseStudy ? (
+          <ButtonLink href={caseStudyPath(project.caseStudy.slug)} arrow className="min-h-11 px-5 py-2.5">
+            Read the case study
+            <span className="sr-only"> for {project.name}</span>
+          </ButtonLink>
+        ) : null}
         {project.liveUrl ? (
           <ButtonLink href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="min-h-11 px-5 py-2.5">
             <span className="inline-flex items-center gap-2">

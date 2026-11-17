@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { seoOptions } from '../../scripts/vite-content-plugin.ts'
 import { affiliations, profile, skills } from './content-loader'
-import { headTags, personJsonLd, robotsTxt, sitemapXml } from './seo'
+import { headTags, pageHeadTags, personJsonLd, robotsTxt, sitemapXml, standalonePages } from './seo'
+import { projects } from './content-loader'
 
 const content = { profile, skills }
 const prod = { siteUrl: 'https://example.com', indexable: true }
@@ -73,5 +74,18 @@ describe('SEO metadata', () => {
     expect(seoOptions({ profile }, { VERCEL_ENV: 'preview' }).indexable).toBe(false)
     expect(seoOptions({ profile }, { VERCEL_ENV: 'production' }).indexable).toBe(true)
     expect(profile.seo.siteUrl).not.toMatch(/-git-|localhost/)
+  })
+
+  it('gives each standalone page its own title, canonical URL and breadcrumb, and lists it in the sitemap', () => {
+    const pages = standalonePages(projects)
+    expect(pages.map((p) => p.path)).toEqual(['/case-studies', '/case-studies/nutridense-inventory', '/case-studies/sconnect-integration'])
+    const html = pageHeadTags(content, prod, pages[1]!)
+    expect(html).toContain(`<title>${pages[1]!.title}</title>`)
+    expect(html).toContain('<link rel="canonical" href="https://example.com/case-studies/nutridense-inventory" />')
+    expect(html).toContain('BreadcrumbList')
+    expect(html.match(/<title>/g)).toHaveLength(1)
+    const xml = sitemapXml(prod, '2026-11-17', pages.map((p) => p.path))
+    expect(xml).toContain('<loc>https://example.com/</loc>')
+    expect(xml).toContain('<loc>https://example.com/case-studies/sconnect-integration</loc>')
   })
 })

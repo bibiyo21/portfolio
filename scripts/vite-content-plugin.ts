@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 import type { Plugin } from 'vite'
 import { parseContent } from '../src/lib/content-parse.ts'
 import { contentSchemas, type ContentData, type ContentName } from '../src/lib/content-schemas.ts'
-import { headTags, robotsTxt, sitemapXml, type SeoOptions } from '../src/lib/seo.ts'
+import { headTags, robotsTxt, sitemapXml, standalonePages, type SeoOptions } from '../src/lib/seo.ts'
 
 const ID = 'virtual:content'
 const RESOLVED = '\0' + ID
@@ -56,7 +56,7 @@ export function contentPlugin(): Plugin {
       const data = readAll()
       const opts = seoOptions(data)
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robotsTxt(opts) })
-      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(opts, new Date().toISOString().slice(0, 10)) })
+      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(opts, new Date().toISOString().slice(0, 10), standalonePages(data.projects).map((p) => p.path)) })
     },
     handleHotUpdate({ file, server }) {
       if (!file.startsWith(dir) || !file.endsWith('.yaml')) return

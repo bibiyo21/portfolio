@@ -5,11 +5,13 @@ import { SceneBackdrop } from '../scenes/SceneBackdrop'
 import { PersonalProjectCard } from '../projects/PersonalProjectCard'
 import { ProjectCard } from '../projects/ProjectCard'
 import { ProjectDetail } from '../projects/ProjectDetail'
+import { ButtonLink } from '../ui/Button'
 import { Modal } from '../ui/Modal'
 import { Reveal } from '../ui/Reveal'
 import { SectionHeading } from '../ui/SectionHeading'
 import { useScene } from '../../hooks/useScene'
 import { projects } from '../../lib/content-loader'
+import { CASE_STUDIES_PATH } from '../../lib/routes'
 import type { ProjectItem } from '../../lib/content-schemas'
 import { cn } from '../../lib/cn'
 import { ease } from '../../lib/animations'
@@ -131,6 +133,11 @@ export function Work() {
               </Reveal>
             ))}
           </ul>
+          <div className="mt-8">
+            <ButtonLink variant="secondary" href={CASE_STUDIES_PATH} arrow>
+              See all case studies
+            </ButtonLink>
+          </div>
         </section>
       ) : null}
 
