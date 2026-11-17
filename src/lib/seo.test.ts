@@ -88,4 +88,27 @@ describe('SEO metadata', () => {
     expect(xml).toContain('<loc>https://example.com/</loc>')
     expect(xml).toContain('<loc>https://example.com/case-studies/sconnect-integration</loc>')
   })
+
+  it('gives each case study its own share image, keywords, article dates and TechArticle data', () => {
+    const pages = standalonePages(projects).filter((p) => p.article)
+    expect(pages).toHaveLength(2)
+    for (const p of pages) {
+      const html = pageHeadTags(content, prod, p)
+      const slug = p.path.split('/').pop()
+      expect(html).toContain(`<meta property="og:image" content="https://example.com/images/projects/og-${slug}.jpg" />`)
+      expect(html).toContain('<meta property="og:image:type" content="image/jpeg" />')
+      expect(html).toContain('<meta property="og:type" content="article" />')
+      expect(html).toContain('<meta property="article:published_time" content="2026-11-17" />')
+      expect(html).toContain('<meta name="keywords" content="')
+      expect(html).toContain('"@type":"TechArticle"')
+      expect(html).toContain('"@type":"BreadcrumbList"')
+      expect(html).toContain(`<meta name="twitter:image" content="https://example.com/images/projects/og-${slug}.jpg" />`)
+      expect(html.match(/<title>/g)).toHaveLength(1)
+      expect(html.match(/rel="canonical"/g)).toHaveLength(1)
+    }
+    // The index page has no article data and keeps the site share image.
+    const index = pageHeadTags(content, prod, standalonePages(projects)[0]!)
+    expect(index).not.toContain('TechArticle')
+    expect(index).toContain('og-image.png')
+  })
 })

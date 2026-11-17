@@ -206,6 +206,13 @@ export const caseStudySchema = z.object({
   slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
   seoTitle: nonEmpty,
   seoDescription: nonEmpty,
+  // Search and share metadata beyond the title and description.
+  keywords: z.array(nonEmpty).default([]),
+  // 1200x630 social share image for this page; falls back to the site image when absent.
+  ogImage: imageRef.extend({ width: z.number().int().positive(), height: z.number().int().positive() }).optional(),
+  // ISO dates (YYYY-MM-DD) for the article structured data.
+  published: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  modified: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   headline: nonEmpty,
   lede: nonEmpty,
   // Short label/value facts shown at the top of the page.

@@ -319,6 +319,14 @@ items:
       slug: "nutridense-inventory"
       seoTitle: "Nutridense Inventory System: Laravel inventory case study | Ibrahem Sotejo"
       seoDescription: "A review of a legacy Laravel and React inventory system for a snack factory: how it is built, what holds up, what I would fix and how I would modernise it."
+      keywords: ["Laravel inventory system", "Laravel case study", "inventory management", "production and stock control", "Laratrust roles", "legacy code review", "Laravel modernisation"]
+      ogImage:
+        src: "/images/projects/og-nutridense-inventory.jpg"
+        alt: "Nutridense Inventory System case study: the Productions list from a Laravel inventory application, with demo data."
+        width: 1200
+        height: 630
+      published: "2026-11-17"
+      modified: "2026-11-17"
       headline: "Nutridense Inventory System, reviewed"
       lede: "A legacy Laravel application that tracks raw materials, finished goods and production for a snack factory. This page explains how it is built, then gives a plain review of what holds up and what I would change today."
       snapshot:
@@ -444,6 +452,14 @@ items:
       slug: "sconnect-integration"
       seoTitle: "Samsung S Connect Integration: Laravel API integration case study | Ibrahem Sotejo"
       seoDescription: "A review of a legacy Laravel dashboard that integrates with the Samsung S Connect API and exposes its own Sanctum-secured API: design, strengths, risks and a modernisation path."
+      keywords: ["Samsung API integration", "Laravel Sanctum", "Laravel API", "purchase order integration", "REST API token authentication", "legacy code review", "Laravel modernisation"]
+      ogImage:
+        src: "/images/projects/og-sconnect-integration.jpg"
+        alt: "Samsung S Connect Integration case study: the purchase order list from a Laravel integration dashboard, with demo data."
+        width: 1200
+        height: 630
+      published: "2026-11-17"
+      modified: "2026-11-17"
       headline: "Samsung S Connect Integration, reviewed"
       lede: "A legacy Laravel back-office dashboard that connects a retailer's order handling to the Samsung S Connect API, and exposes an API of its own, secured with Sanctum, for receiving purchase orders. This page explains the design, then reviews it honestly."
       snapshot:

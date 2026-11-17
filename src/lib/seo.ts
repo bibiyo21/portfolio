@@ -155,14 +155,44 @@ export interface PageSeo {
   description: string
   /** Breadcrumb trail after "Home", in order. The last item is the page itself. */
   trail: { name: string; path: string }[]
+  /** Case studies only: share image, keywords and dates, which also switch on the article structured data. */
+  article?: {
+    headline: string
+    keywords: string[]
+    image?: { src: string; alt: string; width: number; height: number }
+    published?: string
+    modified?: string
+  }
 }
 
 /** Head tags for a standalone page: its own title, description and canonical URL, plus a breadcrumb trail. */
 export function pageHeadTags(content: SeoContent, opts: SeoOptions, page: PageSeo): string {
   const { seo } = content.profile
   const url = absolute(opts.siteUrl, page.path)
-  const image = absolute(opts.siteUrl, seo.ogImage)
+  const art = page.article
+  const image = absolute(opts.siteUrl, art?.image?.src ?? seo.ogImage)
+  const imageAlt = art?.image?.alt ?? seo.ogImageAlt
+  const imageType = /\.jpe?g$/i.test(art?.image?.src ?? '') ? 'image/jpeg' : 'image/png'
+  const imageW = art?.image?.width ?? 1200
+  const imageH = art?.image?.height ?? 630
   const safe = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c')
+  const article = art && {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    '@id': `${url}#article`,
+    headline: art.headline,
+    description: page.description,
+    url,
+    mainEntityOfPage: url,
+    inLanguage: 'en',
+    image,
+    ...(art.keywords.length ? { keywords: art.keywords.join(', ') } : {}),
+    ...(art.published ? { datePublished: art.published } : {}),
+    ...(art.modified ?? art.published ? { dateModified: art.modified ?? art.published } : {}),
+    author: { '@id': personId(opts.siteUrl) },
+    publisher: { '@id': personId(opts.siteUrl) },
+    isPartOf: { '@id': `${opts.siteUrl}/#website` },
+  }
   const crumbs = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -177,24 +207,30 @@ export function pageHeadTags(content: SeoContent, opts: SeoOptions, page: PageSe
     `<title>${esc(page.title)}</title>`,
     `<meta name="description" content="${esc(page.description)}" />`,
     `<meta name="author" content="${esc(content.profile.name)}" />`,
+    ...(art?.keywords.length ? [`<meta name="keywords" content="${esc(art.keywords.join(', '))}" />`] : []),
     `<meta name="robots" content="${opts.indexable ? 'index, follow, max-image-preview:large, max-snippet:-1' : 'noindex, nofollow'}" />`,
     `<link rel="canonical" href="${esc(url)}" />`,
     `<meta property="og:type" content="article" />`,
+    ...(art?.published ? [`<meta property="article:published_time" content="${art.published}" />`] : []),
+    ...(art?.modified ?? art?.published ? [`<meta property="article:modified_time" content="${art.modified ?? art.published}" />`] : []),
+    ...(art ? [`<meta property="article:author" content="${esc(content.profile.name)}" />`, `<meta property="article:section" content="Case studies" />`] : []),
+    ...(art?.keywords ?? []).map((k) => `<meta property="article:tag" content="${esc(k)}" />`),
     `<meta property="og:locale" content="en_US" />`,
     `<meta property="og:site_name" content="${esc(content.profile.name)}" />`,
     `<meta property="og:title" content="${esc(page.title)}" />`,
     `<meta property="og:description" content="${esc(page.description)}" />`,
     `<meta property="og:url" content="${esc(url)}" />`,
     `<meta property="og:image" content="${esc(image)}" />`,
-    `<meta property="og:image:type" content="image/png" />`,
-    `<meta property="og:image:width" content="1200" />`,
-    `<meta property="og:image:height" content="630" />`,
-    `<meta property="og:image:alt" content="${esc(seo.ogImageAlt)}" />`,
+    `<meta property="og:image:type" content="${imageType}" />`,
+    `<meta property="og:image:width" content="${imageW}" />`,
+    `<meta property="og:image:height" content="${imageH}" />`,
+    `<meta property="og:image:alt" content="${esc(imageAlt)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${esc(page.title)}" />`,
     `<meta name="twitter:description" content="${esc(page.description)}" />`,
     `<meta name="twitter:image" content="${esc(image)}" />`,
-    `<meta name="twitter:image:alt" content="${esc(seo.ogImageAlt)}" />`,
+    `<meta name="twitter:image:alt" content="${esc(imageAlt)}" />`,
+    ...(article ? [`<script type="application/ld+json">${safe(article)}</script>`] : []),
     `<script type="application/ld+json">${safe(crumbs)}</script>`,
   ].join('\n    ')
 }
@@ -230,6 +266,13 @@ export function standalonePages(projects: ContentData['projects']): PageSeo[] {
             title: p.caseStudy.seoTitle,
             description: p.caseStudy.seoDescription,
             trail: [indexPage.trail[0]!, { name: p.name, path: `/case-studies/${p.caseStudy.slug}` }],
+            article: {
+              headline: p.caseStudy.headline,
+              keywords: p.caseStudy.keywords,
+              image: p.caseStudy.ogImage,
+              published: p.caseStudy.published,
+              modified: p.caseStudy.modified,
+            },
           },
         ]
       : [],
