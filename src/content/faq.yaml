@@ -40,7 +40,7 @@ items:
     answer: "Certified SAFe 5 Agilist, Certified SAFe 5 Architect, and Certified Lean Six Sigma White Belt."
   - id: availability
     question: "Is Ibrahem available for freelance or consulting work?"
-    answer: "For project, consulting, or collaboration inquiries, please get in touch."
+    answer: "Yes. Ibrahem is open to freelance web development projects, as well as consulting and collaboration inquiries. Get in touch with a short description of what you need."
   - id: contact
     question: "How can someone contact Ibrahem?"
     answer: "Email {email}, WhatsApp or Viber at {phone}, or connect on LinkedIn ({linkedin}) or GitHub ({github})."

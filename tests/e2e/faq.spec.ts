@@ -53,7 +53,7 @@ test.describe('FAQ', () => {
       return page.getByRole('region', { name })
     }
     await expect(await open('What is the GTI Digital Platform project?')).toContainText('proposed or designed unless the delivered status has been confirmed')
-    await expect(await open('Is Ibrahem available for freelance or consulting work?')).toContainText('For project, consulting, or collaboration inquiries, please get in touch.')
+    await expect(await open('Is Ibrahem available for freelance or consulting work?')).toContainText('Ibrahem is open to freelance web development projects')
     await expect(await open('What certifications does Ibrahem hold?')).toContainText('Certified Lean Six Sigma White Belt')
     const ai = await open('Does Ibrahem work with AI?')
     await expect(ai).toContainText('GPT, Gemini and DeepSeek')

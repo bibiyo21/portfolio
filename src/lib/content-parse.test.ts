@@ -78,9 +78,9 @@ describe('optional fields and empty collections', () => {
     expect(parseContent('awards', 'items: []\n').items).toEqual([])
   })
 
-  it('defaults availability to empty, and the portrait is the supplied professional photo', () => {
+  it('shows the owner-confirmed availability, and the portrait is the supplied professional photo', () => {
     const profile = parseContent('profile', read('profile'))
-    expect(profile.availability).toBe('')
+    expect(profile.availability).toBe('Open to freelance web development projects')
     expect(profile.portrait?.src).toBe('/images/profile/ibrahem-professional-portrait.jpg')
     expect(profile.portrait?.alt).toMatch(/^Ibrahem Sotejo/)
   })
@@ -260,11 +260,11 @@ describe('owner-supplied facts', () => {
     expect(confirmed).not.toContain('Model Context Protocol (MCP)')
   })
 
-  it('has twelve FAQ entries and a neutral availability answer', () => {
+  it('has twelve FAQ entries and a freelance availability answer', () => {
     const faq = parseContent('faq', read('faq'))
     expect(faq.items).toHaveLength(12)
     const availability = faq.items.find((q) => q.id === 'availability')!
-    expect(availability.answer).toBe('For project, consulting, or collaboration inquiries, please get in touch.')
+    expect(availability.answer).toMatch(/^Yes\. Ibrahem is open to freelance web development projects/)
   })
 
   it('marks GTI architecture details as proposed, not implemented', () => {

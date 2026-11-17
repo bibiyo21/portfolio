@@ -4,8 +4,8 @@ import { expect, test } from '@playwright/test'
 test.describe('search and share metadata in the initial HTML', () => {
   test('title, description, canonical, Open Graph, Twitter and JSON-LD are present', async ({ request }) => {
     const html = await (await request.get('/')).text()
-    expect(html).toContain('<title>Ibrahem Sotejo | Solutions Architect &amp; Full-Stack Developer</title>')
-    expect(html).toMatch(/<meta name="description" content="Ibrahem Sotejo is a Solutions Architect and Full-Stack Developer[^"]+" \/>/)
+    expect(html).toContain('<title>Ibrahem Sotejo | Freelance Web Developer, Philippines</title>')
+    expect(html).toMatch(/<meta name="description" content="Freelance web developer in the Philippines[^"]+" \/>/)
     expect(html).toMatch(/<link rel="canonical" href="https:\/\/[^"]+\/" \/>/)
     for (const p of ['og:title', 'og:description', 'og:type', 'og:url', 'og:image', 'og:image:alt', 'og:site_name'])
       expect(html, p).toContain(`property="${p}"`)

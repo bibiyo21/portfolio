@@ -25,8 +25,8 @@ links:
 # Viber deep-link behaviour is not verified, so the number is shown as text and WhatsApp is the click-to-chat link.
 viber: "+63 917 491 2048"
 seo:
-  title: "Ibrahem Sotejo | Solutions Architect & Full-Stack Developer"
-  description: "Ibrahem Sotejo is a Solutions Architect and Full-Stack Developer focused on system architecture, web platforms, engineering delivery, and practical digital solutions."
+  title: "Ibrahem Sotejo | Freelance Web Developer, Philippines"
+  description: "Freelance web developer in the Philippines building websites and web apps with React, Node.js, Laravel and WordPress. Solutions Architect experience."
   # The canonical address. Keep the current production URL until https://ibrahemsotejo.com is purchased, connected
   # in Vercel and serving HTTPS; then change it here (or set SITE_URL at build time). Never a preview URL.
   siteUrl: "https://www.ibrahemsotejo.com"
@@ -34,8 +34,8 @@ seo:
   # creating an edited derivative of the original photo, which is not allowed.
   ogImage: "/images/illustrations/og-image.png"
   ogImageAlt: "Ibrahem Sotejo, Solutions Architect. Architecting Systems. Engineering Experiences. Building Possibilities."
-# Availability is not asserted. Set `availability` to a short label only when the owner confirms it, e.g. "Open to project inquiries".
-availability: ""
+# Availability is shown in the hero. Confirmed by the owner on 17 November 2026; set it to "" to hide it again.
+availability: "Open to freelance web development projects"
 # Portrait: an owner-supplied original photo, shown exactly as uploaded. The file in public/images/profile is a
 # byte-identical copy of the original (no resizing, recompression, retouching or filters). Only CSS sizes and crops it.
 # `position` is the CSS object-position used when a frame crops the photo, chosen to keep the face in view.

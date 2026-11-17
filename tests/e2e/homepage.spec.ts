@@ -34,11 +34,11 @@ test.describe('homepage', () => {
     for (const s of info) await expect(page.locator(`#${s.labelled}`), `${s.id} heading`).toBeAttached()
   })
 
-  test('hero has both calls to action, and no availability claim', async ({ page }) => {
+  test('hero has both calls to action, and shows the confirmed freelance availability', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('link', { name: 'Explore My Work' })).toBeVisible()
     await expect(page.getByRole('button', { name: /Let.s Connect/ })).toBeVisible()
-    await expect(page.getByTestId('availability')).toHaveCount(0)
+    await expect(page.getByTestId('availability')).toHaveText('Open to freelance web development projects')
   })
 
   test('shows no placeholders, no résumé full name, no residential address and no invented numbers', async ({ page }) => {

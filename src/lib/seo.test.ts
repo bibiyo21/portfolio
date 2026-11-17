@@ -9,7 +9,7 @@ const prod = { siteUrl: 'https://example.com', indexable: true }
 describe('SEO metadata', () => {
   it('builds title, description, canonical, Open Graph and Twitter tags from the content', () => {
     const html = headTags(content, prod)
-    expect(html).toContain('<title>Ibrahem Sotejo | Solutions Architect &amp; Full-Stack Developer</title>')
+    expect(html).toContain('<title>Ibrahem Sotejo | Freelance Web Developer, Philippines</title>')
     expect(html).toContain('<link rel="canonical" href="https://example.com/" />')
     expect(html).toContain('<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />')
     for (const p of ['og:title', 'og:description', 'og:type', 'og:url', 'og:image', 'og:image:alt', 'og:site_name'])

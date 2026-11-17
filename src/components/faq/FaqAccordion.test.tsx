@@ -85,11 +85,11 @@ describe('FaqAccordion', () => {
     expect(region).toHaveTextContent('+63 917 491 2048')
   })
 
-  it('uses neutral wording for availability', async () => {
+  it('answers the availability question with the freelance wording', async () => {
     const user = userEvent.setup()
     renderWithApp(<FaqAccordion />)
     await user.click(screen.getByRole('button', { name: 'Is Ibrahem available for freelance or consulting work?' }))
-    expect(await screen.findByText('For project, consulting, or collaboration inquiries, please get in touch.')).toBeInTheDocument()
+    expect(await screen.findByText(/Ibrahem is open to freelance web development projects/)).toBeInTheDocument()
   })
 })
 
